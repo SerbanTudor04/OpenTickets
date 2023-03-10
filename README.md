@@ -1,2 +1,2 @@
-# OpenTickets
-A free open-source support system.
+# Open Tickets
+A free support software for any little bussiness.
