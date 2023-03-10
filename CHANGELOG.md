@@ -1,0 +1,24 @@
+# 0.1.0
+## Features
+- Added ui interface with react in the admin interface
+- Admin interface:
+    - Handle ticket creation,editing and deleting
+    - Handle authentication
+    - Added management interface for super users:
+        - Added user creation system 
+        - Added user updating system
+        - Added user deleting system
+    - Tickets handling page:
+        - Added my created tickets view(CRUD)
+        - Added my pending to solve tickets view(CRUD)
+        - Added tickets in pending to be assigned view (CRUD)
+- Backend:
+    -   Added system for database connections pooling
+    - Added support for postgresql
+    - Added support for endpoints
+    - Split endpoints into multiple files
+    - Create a logging system 
+    - Added authentication system, with cookie support and a databased stored sessions
+    - Implement middlewares for handling user authentication and rights
+    - Implement backend support for tickets CRUD
+    - Implement emails processing system, which can be runned on scheduler
