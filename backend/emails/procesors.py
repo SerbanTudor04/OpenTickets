@@ -211,7 +211,7 @@ class MailerProcessor:
                     return template.replace(comp,blockContent)
                 return template.replace(comp,"")
 
-        if "variable" in comp.lower():
+        elif "variable" in comp.lower():
             indexOfString=comp.find("'")
             if indexOfString==-1:
                 indexOfString=comp.find('"')
@@ -235,4 +235,5 @@ class MailerProcessor:
                     blockContent=str((data)[0])
                     return template.replace(comp,blockContent)
                 return template.replace(comp,"")
+       
         return template

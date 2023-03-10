@@ -1,3 +1,8 @@
+# 0.2.1
+## Fixes:
+- Fix in emails/processor/MailerProcessor  from `if "variable" in comp.lower():` to `elif "variable" in comp.lower():` for a little optimization.
+
+
 # 0.2.0
 ## Features
 - Finished system for mails that are send and not directly connected to a ticket.
