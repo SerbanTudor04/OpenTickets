@@ -1,5 +1,5 @@
+from structures import DbEnv,EmailConfig
 
-from emails.emails import EmailConfig
 cfg=EmailConfig()
 cfg.smtp_host="localhost"
 cfg.smtp_port=587
@@ -12,6 +12,5 @@ cfg.imap_port=993
 cfg.imap_username="support@example.com"
 cfg.imap_password="passwd"
 
-from structures import DbEnv
 
 dbCfg=DbEnv(host="localhost",database="opentickets",username='opentickets',password='opentickets')
