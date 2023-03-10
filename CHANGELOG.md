@@ -1,3 +1,10 @@
+# 0.3.0
+## Features
+- Added handling for emails in which is found in subject the ticket code.
+- Added template for email
+## Fixes
+- Fix error log at ` log.error("Exception"+str(e))` to ` log.error("Exception  at ticket creating"+str(e))`, to be more informative in table of logs
+
 # 0.2.1
 ## Fixes:
 - Fix in emails/processor/MailerProcessor  from `if "variable" in comp.lower():` to `elif "variable" in comp.lower():` for a little optimization.

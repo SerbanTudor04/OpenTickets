@@ -201,3 +201,13 @@ def addInboxMessageForDepartment(conn,subject,department_id):
         
     conn.commit()
 
+
+def addInboxMessageForUser(conn,subject,user_id):
+    cursor=conn.cursor()
+    currDate=datetime.datetime.now()
+    cursor.execute("""
+        insert into admin_users_inbox ( user_id, message, created_at, viewed, state)
+        values (%s,%s,%s,false,'INFO');
+    """,(user_id,subject,currDate))
+        
+    conn.commit()

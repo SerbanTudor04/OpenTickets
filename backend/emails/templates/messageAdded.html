@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <style>
+            body {
+                background-color: white;
+            }
+            .message{
+                width: 50%;
+                text-align: center;
+                background-color: gainsboro;
+                padding: 1rem 1rem 1rem 1rem;
+                border-radius: 1rem;
+
+            }
+            .info{
+                width: 50%;
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .info h1{
+                text-align: center;
+
+            }
+            .info h4{
+                color: gray;
+                opacity: 70%;
+            }
+            .position{
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="info position">
+            <h1>Message added with success</h1>
+            <h4>#TGS..</h4>
+        </div>
+        <div class="message position">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. In quas repellendus explicabo cupiditate distinctio nulla laudantium molestias saepe architecto quos inventore at et ipsum voluptate, quisquam enim ut. Modi, distinctio?
+        </div>
+        <div class="footer position">
+           <div>
+            ${block 'EMAIL_FOOTER'}
+           </div>
+        </div>
+    </body>
+
+</html>

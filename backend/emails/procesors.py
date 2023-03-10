@@ -2,8 +2,7 @@ import uuid
 import datetime
 
 from __main__ import db,mailer,logger as log
-from libs import makeReturnResponse, genTicketCode, addInboxMessageForDepartment
-
+from libs import  genTicketCode,addInboxMessageForUser
 
 class MailerProcessor:
     def __init__(self) -> None:
@@ -66,6 +65,113 @@ class MailerProcessor:
             return "INVALID" 
         return "VALID"
 
+    def __handleEmailValid(self,eId,email,conn)->str:
+
+        ticketCodeIndex=subject.upper().find("#TGS")
+        subject=str(email.subject)
+
+        ticketCode=""
+        for i in range(ticketCodeIndex+1,subject.__len__()):
+            if subject[i] in [" ","'"]:
+                break
+        cursor = conn.cursor()
+        cursor.execute("SET search_path TO tickets")
+        cursor.execute("""select id,subject,content,status from tickets where code = %s""",[ticketCode])
+
+        tData=cursor.fetchone()
+
+        if tData is None:
+            cursor.close()
+            self.__handleEmailInvalid(eId,email,conn)
+            return
+
+        ticketID = str(tData[0])
+        ticketDateTime = str(datetime.datetime.now())
+        ticketContent=str(tData[2])
+        ticketSubject=str(tData[1])
+        ticketStatus=str(tData[3])
+
+        if ticketStatus in ["CLOSED","TEMP_CLOSED"]:
+            try:
+                
+                cursor.execute("""
+                update tickets set status='PENDING'
+                where id = %s;
+                            """, (ticketID))
+                conn.commit()
+
+                # insert into inbox of who is assigned to ticket, that the ticket has a new message
+                cursor.execute("""
+                    select user_id from tickets_users_assigned where ticket_id =%s
+                            """, [ticketID])
+                __subject=f"Ticket with code {ticketCode} has a new message. Please consider to check up the ticket. Ticket status has been updated to pending."
+                for i in cursor.fetchall():
+                    __userID=i[0]
+                    addInboxMessageForUser(conn,__subject,__userID)
+                conn.commit()
+            except Exception as e:
+
+                log.error("Exception at ticket status update: "+str(e))
+                return  
+        emailSender=email.from_.split('@')
+
+        senderMailBox=str(emailSender[0])
+        senderHost=str(emailSender[1])
+        timelineContent = f"{senderMailBox}@{senderHost} has added a new message to ticket,at {ticketDateTime}. "
+
+        cursor.execute("""
+        insert into tickets_timeline (content, created_at, ticket_id,ticket_code)
+        values (%s,%s,%s,%s);
+        """, (timelineContent, ticketDateTime, ticketID, ticketCode))
+
+
+
+        timelineContent = f"Ticket status has been updated to pending."
+
+        cursor.execute("""
+        insert into tickets_timeline (content, created_at, ticket_id,ticket_code)
+        values (%s,%s,%s,%s);
+        """, (timelineContent, ticketDateTime, ticketID, ticketCode))
+
+        # insert into tickets_emails
+
+        cursor.execute("""
+        insert into tickets_emails (ticket_id, ticket_code, subject, content, send_date, status, from_address, mailbox,
+                        "domain", email_id, "isSendByAdmin", send_by)
+        values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        """,(ticketID, ticketCode, ticketSubject,ticketContent,str(email.date),'RECIVED',f"{senderMailBox}@{senderHost}",senderMailBox,senderHost,eId,False,None))
+
+        conn.commit()
+
+        cursor.execute("""
+            select id from emails_templates where name='MESSAGE_ADDED_TO_TICKET'
+        """)
+
+
+        # mailer.createFolder('Support/Assigned',ticketCode)
+
+        mailer.moveEmailsToFolder(eId,'Support/Assigned/'+ticketCode)
+
+        # print("Pre build template")
+
+        eData=cursor.fetchone()
+        if eData is None: return 
+
+        template_id=int(eData[0])
+        
+        cursor.close()
+        
+        template_html=self.__buildEmailTemplate(template_id,conn)
+        
+        emailContent=str(email.html)
+
+
+        mailer.send(to=[f"{senderMailBox}@{senderHost}"],subject=f"[Ticket {ticketCode}] Message added with success.",content="",htmlContent=template_html,parameters={
+            "ticket_code": ticketCode,
+            "message": emailContent
+        })
+
+
     def __handleEmailNotFound(self,eId,email,conn)->str:
 
         ticketID = str(uuid.uuid4())
@@ -86,7 +192,7 @@ class MailerProcessor:
 
         except Exception as e:
 
-            log.error("Exception "+str(e))
+            log.error("Exception  at ticket creating"+str(e))
             return 
 
         timelineContent = f"Automatiically generated ticket on {ticketDateTime}."
@@ -139,16 +245,10 @@ class MailerProcessor:
         mailer.send(to=[f"{senderMailBox}@{senderHost}"],subject=f"[Request received] {ticketSubject}",content="",htmlContent=template_html,parameters={
             "ticket_code": ticketCode
         })
-        # print("After send email")
 
-
-
-    def __handleEmailValid(self,eId,email,conn)->str:
-
-        pass
 
     def __handleEmailInvalid(self,eId,email,conn)->str:
-
+        # TODO: "Do "handleEmailInValid" in emails procesor"
         pass
 
     def __buildEmailTemplate(self,template_id:int,conn):
@@ -159,11 +259,6 @@ class MailerProcessor:
         cursor.execute("""
             select name,content from emails_templates where id=%s
         """,[template_id])
-
-        
-        # TODO to parse ${component ''}
-        # TODO to build the jinja template
-
 
 
         retTemplate=str(cursor.fetchone()[1])
