@@ -16,6 +16,7 @@ class MailerProcessor:
 
 
         for key,value in data.items():
+            print("Executing for email address",value.subject)
             r= self.__checkIfEmailIsAssignedToTicket(value,conn)
             if  r== "NOTFOUND":
                 self.__handleEmailNotFound(key,value,conn)
@@ -126,14 +127,20 @@ class MailerProcessor:
 
         mailer.moveEmailsToFolder(eId,'Support/Assigned/'+ticketCode)
 
+        # print("Pre build template")
+
 
         template_id=int(cursor.fetchone()[0])
         cursor.close()
         template_html=self.__buildEmailTemplate(template_id,conn)
+        # print(template_html)
+        # print("Pre send mail" , ticketCode)
 
-        mailer.send(to=[],subject=f"[Request received] {ticketSubject}",content="",htmlContent=template_html,paremeters={
-            "ticketCode": ticketCode
+        mailer.send(to=[f"{senderMailBox}@{senderHost}"],subject=f"[Request received] {ticketSubject}",content="",htmlContent=template_html,parameters={
+            "ticket_code": ticketCode
         })
+        # print("After send email")
+
 
 
     def __handleEmailValid(self,eId,email,conn)->str:
@@ -163,8 +170,9 @@ class MailerProcessor:
 
         cursor.close()
         indexOfBlock=retTemplate.find("${")
-        while indexOfBlock>=0:
-            retTemplate=self.__buildEmailTemplate_FindAndReplaceComponents(indexOfBlock,retTemplate)
+        while indexOfBlock!=-1:
+            # print("indexOfBlock",indexOfBlock)
+            retTemplate=self.__buildEmailTemplate_FindAndReplaceComponents(indexOfBlock,retTemplate,conn)
             
             indexOfBlock=retTemplate.find("${")
 
@@ -173,7 +181,7 @@ class MailerProcessor:
     def __buildEmailTemplate_FindAndReplaceComponents(self,start_index:int,template:str,conn):
         comp=""
         for i in range(start_index,template.__len__()):
-            if i in ["}","\n"]:
+            if template[i] in ["}","\n"]:
                 comp+=template[i]
                 break
             comp+=template[i]
@@ -186,19 +194,22 @@ class MailerProcessor:
             if indexOfString>=0:
                 compName=""
                 for i in range(indexOfString+1,comp.__len__()):
-                    if i in ["'","\n",'"']:
+                    if comp[i] in ["'","\n",'"']:
                         break 
                     compName+=comp[i]
                 compName=compName.strip()
                 cursor = conn.cursor()
+                # print("search compname",compName)
                 cursor.execute("SET search_path TO tickets")
                 cursor.execute("""
                     select content from emails_blocks where upper(name) = %s
                 """,[compName.upper()])
-
-                blockContent=cursor.fetchone()[0]
-
-                return template.replace(comp,blockContent)
+                data=cursor.fetchone()
+                # print("data val",data)
+                if data is not None:
+                    blockContent=str((data)[0])
+                    return template.replace(comp,blockContent)
+                return template.replace(comp,"")
 
         if "variable" in comp.lower():
             indexOfString=comp.find("'")
@@ -207,17 +218,21 @@ class MailerProcessor:
             
             if indexOfString>=0:
                 compName=""
-                for i in range(indexOfString+1,comp.__len__()):
+                for comp[i] in range(indexOfString+1,comp.__len__()):
                     if i in ["'","\n",'"']:
                         break 
                     compName+=comp[i]
                 compName=compName.strip()
                 cursor = conn.cursor()
+
                 cursor.execute("SET search_path TO tickets")
                 cursor.execute("""
                     select content from emails_variables where upper(name) = %s
                 """,[compName.upper()])
-
-                blockContent=cursor.fetchone()[0]
-
-                return template.replace(comp,blockContent) 
+                data=cursor.fetchone()
+                # print("data val",data)
+                if data is not None:
+                    blockContent=str((data)[0])
+                    return template.replace(comp,blockContent)
+                return template.replace(comp,"")
+        return template

@@ -39,14 +39,15 @@ class Mailer:
         
         
 
-    def send(self,to:list[str],subject,content:str="",htmlContent:str="",paremeters:dict={}):
+    def send(self,to:list[str],subject,content:str="",htmlContent:str="",parameters:dict={}):
+        print("params",parameters)
         self.smtp_connection.send(
             subject=subject,
             sender=self.config.smtp_sender,
             receivers=to,
             text=content,
             html=htmlContent,
-            body_params=paremeters
+            body_params=parameters
         )
 
 
@@ -73,7 +74,7 @@ class Mailer:
             for msg in self.imap_connection.fetch(charset='utf8'):
                 retData[msg.uid]=msg
         except Exception as err:
-            logger.error("Failed to fetch messages from imbox with error: "+err)
+            logger.error("Failed to fetch messages from imbox with error: "+str(err))
         return retData
     
 
@@ -87,9 +88,9 @@ class Mailer:
         param name: The name of the folder
         
         """
-        path=path.replace('/','|')
+        path=path.replace('/','.')
         try:
-            self.imap_connection.folder.create(f"{path}|{name}")
+            self.imap_connection.folder.create(f"{path}.{name}")
             return True
         except Exception as e:
             print(e)
@@ -102,7 +103,7 @@ class Mailer:
         param path: The path to the folder separated by /
         
         """
-        path=path.replace('/','|')
+        path=path.replace('/','.')
 
         try:
             self.imap_connection.folder.delete(path)
@@ -119,7 +120,7 @@ class Mailer:
         
         """
         try:
-            path=path.replace('/','|')
+            path=path.replace('/','.')
             self.imap_connection.move(emailsID,path)
             return True
         except Exception as e:

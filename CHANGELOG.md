@@ -1,3 +1,10 @@
+# 0.2.0
+## Features
+- Finished system for mails that are send and not directly connected to a ticket.
+- Build databse dynamically templating system for standard emails.
+## Fixes:
+- Small typos fixes in env.example.py
+
 # 0.1.0
 ## Features
 - Added ui interface with react in the admin interface
