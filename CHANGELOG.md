@@ -1,3 +1,8 @@
+# 0.3.1
+## Fixes
+- Fix getting open or released tickets query from geting your own tickets
+
+
 # 0.3.0
 ## Features
 - Added handling for emails in which is found in subject the ticket code.

@@ -217,9 +217,11 @@ def getOpenOrReleasedTickets():
     cursor.execute("""
     select a.id,a.code,a.subject,(select q.label from tickets_status_codes q where q.code=a.status) as status,
         (select q.name from admin_departments q where q.id=a.department_id) as department,a.created_at,a.closed_at  
-        from tickets a where a.status in ('OPEN','RELEASED') and (a.department_id = (select q.department_id from admin_departments_members q where q.user_id=%s ) or a.department_id is null)
+        from tickets a where a.status in ('OPEN','RELEASED') 
+                            and (a.department_id = (select q.department_id from admin_departments_members q where q.user_id=%s ) or a.department_id is null)
+                           and (a.created_by!=%s or a.created_by is null)
 
-    """, [request.user.id])
+    """, [request.user.id,request.user.id])
 
     data = []
 
