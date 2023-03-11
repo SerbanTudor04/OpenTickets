@@ -1,3 +1,8 @@
+# 0.4.0
+## Features
+- Added handling for emails in which has an invalid ticket code in subject.
+- Added template for emails with invalid ticket code in subject.
+
 # 0.3.1
 ## Fixes
 - Fix getting open or released tickets query from geting your own tickets

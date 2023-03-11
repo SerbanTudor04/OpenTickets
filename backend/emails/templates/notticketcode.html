@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <style>
+            body {
+                background-color: white;
+            }
+            .message{
+                width: 50%;
+                text-align: center;
+                background-color: gainsboro;
+                padding: 1rem 1rem 1rem 1rem;
+                border-radius: 1rem;
+
+            }
+            .info{
+                width: 50%;
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .position{
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="message position">
+            <p>
+                The following code <strong>{{ ticket_code }}</strong> is not associated with a ticket.
+            </p>
+            <p>
+                Please consider check if the provided <strong>code</strong> is right.
+            </p>
+            <p>
+                If you want to create a new ticket, please send an email <strong>without</strong> a <strong>#TICKET_CODE</strong> in subject field.
+            </p>
+        </div>
+        <div class="footer position">
+           <div>
+            ${block 'EMAIL_FOOTER'}
+           </div>
+        </div>
+    </body>
+
+</html>

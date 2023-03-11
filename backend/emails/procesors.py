@@ -172,8 +172,40 @@ class MailerProcessor:
         })
 
 
-    def __handleEmailNotFound(self,eId,email,conn)->str:
+    def __handleEmailInvalid(self,eId,email,conn)->str:
+        subject=str(email.subject)
+        ticketCodeIndex=subject.upper().find("#TGS")
 
+
+        if ticketCodeIndex<0:
+            # If we couldn't find the TGS in subject of the ticket, go to not found
+            self.__handleEmailNotFound(eId,email,conn)
+            return 
+        
+        ticketCode=""
+        for i in range(ticketCodeIndex+1,subject.__len__()):
+            if subject[i] in [" ","'"]:
+                break
+
+        # print("Pre build template")
+        cursor = conn.cursor()
+        cursor.execute("SET search_path TO tickets")
+        cursor.execute("""
+            select id from emails_templates where name='INVALID_TICKETCODE'
+        """)
+        template_id=int(cursor.fetchone()[0])
+        cursor.close()
+        template_html=self.__buildEmailTemplate(template_id,conn)
+        print(template_html)
+        # print("Pre send mail" , ticketCode)
+        mailer.moveEmailsToFolder(eId,'Support/Error')
+
+        mailer.send(to=[email.from_],subject=f"[Invalid ticket] We couldn't find a ticket with the associated ticket code.",content="",htmlContent=template_html,parameters={
+            "ticket_code": ticketCode
+        })
+
+
+    def __handleEmailNotFound(self,eId,email,conn)->str:
         ticketID = str(uuid.uuid4())
         ticketCode = genTicketCode()
         ticketDateTime = str(datetime.datetime.now())
@@ -245,11 +277,6 @@ class MailerProcessor:
         mailer.send(to=[f"{senderMailBox}@{senderHost}"],subject=f"[Request received] {ticketSubject}",content="",htmlContent=template_html,parameters={
             "ticket_code": ticketCode
         })
-
-
-    def __handleEmailInvalid(self,eId,email,conn)->str:
-        # TODO: "Do "handleEmailInValid" in emails procesor"
-        pass
 
     def __buildEmailTemplate(self,template_id:int,conn):
         cursor = conn.cursor()

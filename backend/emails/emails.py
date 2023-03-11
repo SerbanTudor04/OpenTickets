@@ -40,7 +40,8 @@ class Mailer:
         
 
     def send(self,to:list[str],subject,content:str="",htmlContent:str="",parameters:dict={}):
-        print("params",parameters)
+        # print("params",parameters)
+        print("to",to)
         self.smtp_connection.send(
             subject=subject,
             sender=self.config.smtp_sender,
