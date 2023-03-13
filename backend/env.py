@@ -5,7 +5,7 @@ from structures import DbEnv, EmailConfig
 
 try:
     envFile = json.load(
-        open(os.path.join(os.path.dirname(__file__), 'env.json')))
+        open(os.path.join(os.getcwd(), 'env.json')))
 except Exception as e:
     print("Error loading environment")
     print(str(e))
