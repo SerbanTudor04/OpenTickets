@@ -17,8 +17,8 @@ export default function Authenticate() {
     let token  = await doLogin(email,password);
 
     console.debug("current token",token)
-    Cookies.remove("__tgssessiontoken")
-    Cookies.set("__tgssessiontoken",String(token))
+    Cookies.remove("__open-tickets-sessiontoken")
+    Cookies.set("__open-tickets-sessiontoken",String(token))
     setIsLoading(false)
 
 

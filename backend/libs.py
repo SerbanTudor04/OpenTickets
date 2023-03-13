@@ -4,6 +4,7 @@ import random, string
 
 from flask import jsonify,make_response,request
 from __main__ import server,db
+from env import DB_QUERY_STRING
 # import db
 from functools import wraps
 from dataclasses import dataclass
@@ -46,7 +47,7 @@ def admin_decode_auth_token(auth_token) ->tuple[str,bool]:
     """
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     try:
         # print('Token Validation with key',server.config.get('SECRET_KEY'))
@@ -67,7 +68,7 @@ def admin_decode_auth_token(auth_token) ->tuple[str,bool]:
 
     except jwt.ExpiredSignatureError:
         conn.rollback()
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
 
         cursor.execute("""insert into admin_users_sessions_blacklisted(user_id,"token")
                         select user_id, "token" from admin_users_sessions where token=%s ;
@@ -83,7 +84,7 @@ def admin_decode_auth_token(auth_token) ->tuple[str,bool]:
     
     except jwt.InvalidTokenError:
         # db.rollback()
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
 
         cursor.execute("""insert into admin_users_sessions_blacklisted(user_id,"token")
                 select user_id, "token" from admin_users_sessions where token=%s ;
@@ -105,7 +106,7 @@ def adminLoginCheck(f):
     def wrap(*args, **kwargs):
         headers = request.headers
         bearer = headers.get('Authorization')
-        cookie=request.cookies.get("__tgssessiontoken")
+        cookie=request.cookies.get("__open-tickets-sessiontoken")
 
         if bearer is None and cookie is None:
             print("No cookie specified and no authorization")
@@ -139,7 +140,7 @@ def adminLoginCheck(f):
 
         conn=db.getConnection()
         cursor = conn.cursor()
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
 
         cursor.execute("SELECT id,is_su,username,email from admin_users WHERE id = %s",[response[0]])
         r=cursor.fetchone()

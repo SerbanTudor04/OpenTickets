@@ -4,6 +4,8 @@ from flask import request, jsonify
 from libs import makeReturnResponse, adminLoginCheck, superUserCheck, genTicketCode, addInboxMessageForDepartment
 import psycopg2.errors as dbErrors
 import datetime
+from env import DB_QUERY_STRING
+
 log = logger
 
 
@@ -23,7 +25,7 @@ def createTicket():
 
     conn = db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     try:
         ticketID = str(uuid.uuid4())
@@ -117,7 +119,7 @@ def getmyTickets():
 
     conn = db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""
         select a.id,a.code,a.subject,(select q.label from tickets_status_codes q where q.code=a.status) as status,
@@ -150,7 +152,7 @@ def getMyPendingRequests():
 
     conn = db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""
     select a.id,a.code,a.subject,(select q.label from tickets_status_codes q where q.code=a.status) as status,
@@ -184,7 +186,7 @@ def getTicketsStatusCodes():
 
     conn = db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""
     select id,code,label from tickets_status_codes where code not in ('ASSIGNED','OPEN')
@@ -212,7 +214,7 @@ def getOpenOrReleasedTickets():
 
     conn = db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""
     select a.id,a.code,a.subject,(select q.label from tickets_status_codes q where q.code=a.status) as status,
@@ -258,7 +260,7 @@ def getTicketByID():
 
     conn = db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     ticketID = str(jsonData["id"])
 
@@ -329,7 +331,7 @@ def assignTicket2Me():
 
     conn = db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     ticketID = str(jsonData["id"])
 
@@ -396,12 +398,6 @@ def assignTicket2Me():
 
     conn.commit()
 
-    # TODO Notify user who created the ticket via email
-
-
-
-
-    conn.commit()
     cursor.close()
     db.releaseConnection(conn)
     return makeReturnResponse({"status": "success", "message": "Ticket assigned with success!", "data": {
@@ -424,7 +420,7 @@ def addMessage2TicketsOrMessage():
         return makeReturnResponse(__responseObject), 400
     conn = db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     ticketID = str(jsonData["ticket_id"])
 
@@ -482,7 +478,7 @@ def getTicketMessages():
     
     conn = db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     ticketID = str(jsonData["ticket_id"])
 

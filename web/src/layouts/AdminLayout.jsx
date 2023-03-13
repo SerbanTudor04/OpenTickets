@@ -4,13 +4,14 @@ import ASideBar from "../components/admin/Sidebar";
 export default function AdminLayout(props){
     return (
         <>
+
         <div className="h-screen flex">
             <div className="flex-col w-fit">
                 <ASideBar/>
             </div>
             <div className="flex-col w-full">
                 <section id="navbar" className="mb-5">
-                    <ANavbar/>
+                    <ANavbar appTitle={props.appTitle} />
                 </section>
                 <section id="content">
                     {props.children}

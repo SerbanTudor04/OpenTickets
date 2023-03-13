@@ -1,9 +1,11 @@
-from __main__ import server,db,logger
+from __main__ import server,db,logger,cache
 import uuid
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from libs import encode_auth_token, makeReturnResponse,adminLoginCheck,superUserCheck
 import psycopg2.errors as dbErrors
+from env import DB_QUERY_STRING
+
 
 log=logger
 
@@ -49,7 +51,7 @@ def create_user():
     conn=db.getConnection()
     cursor = conn.cursor()
     try:
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
 
         cursor.execute(f"""
         INSERT INTO admin_users
@@ -127,7 +129,7 @@ def updateUser():
 
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
     cursor.execute(f"""
         update admin_users
         set username=%s, "password"=%s, email=%s, updated_at=now(), is_su=%s
@@ -171,7 +173,7 @@ def deleteUser():
 
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
     cursor.execute("""
         delete from admin_users where id=%s;
     """, [jsonData['id']])
@@ -203,7 +205,7 @@ def login_user():
 
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("SELECT id,password FROM admin_users where email = %s", [
                    jsonData["email"]])
@@ -242,7 +244,7 @@ def login_user():
 
     except dbErrors.UniqueViolation as err:
         conn.rollback()
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
 
         log.warn(f"Invalidating all sessions for user {userID}.")
 
@@ -327,7 +329,7 @@ def info_user():
     cursor = conn.cursor()
 
     
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("select id,username, email,first_name ,last_name,is_su from admin_users where id =  %s",[request.user.id])
 
@@ -356,7 +358,7 @@ def signout_user():
     cursor = conn.cursor()
 
     
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
 
     log.warn(f"Invalidating all sessions for user {request.user.id}.")
@@ -375,7 +377,7 @@ def get_user_inbox_number():
     conn=db.getConnection()
     cursor = conn.cursor()
     
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("SELECT count(*) viewed FROM admin_users_inbox where user_id = %s  and viewed=false",[request.user.id])
 
@@ -399,7 +401,7 @@ def get_user_inbox_messages():
     conn=db.getConnection()
     cursor = conn.cursor()
     
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("select id,user_id,message,created_at,viewed,state from admin_users_inbox where user_id = %s and viewed=false;",[request.user.id])
 
@@ -440,7 +442,7 @@ def markMessageAsViewed():
 
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
     cursor.execute("update  admin_users_inbox set viewed=true where user_id = %s and id=%s;",[request.user.id,jsonData["id"]])
 
     conn.commit()
@@ -477,7 +479,7 @@ def isSuperUser_user():
 def getUsers():
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""                select i.*,
                 (select q.name as department_name from admin_departments q where i.department_id = q.id) as department_name
@@ -523,7 +525,7 @@ def getUsers():
 def getDepartments():
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""
         select id,name,description,created_at,updated_at from tickets.admin_departments;
@@ -572,7 +574,7 @@ def deleteDepartment():
 
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     _id=int(jsonData["id"])
 
@@ -633,7 +635,7 @@ def updateDepartment():
         desc=jsonData["description"]
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""
        update admin_departments set name=%s ,description=%s,updated_at=now()  where id=%s;
@@ -683,7 +685,7 @@ def createDepartment():
 
     conn=db.getConnection()
     cursor = conn.cursor()
-    cursor.execute("SET search_path TO tickets")
+    cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""
        insert into admin_departments(name,description,created_at,updated_at) 
@@ -699,6 +701,31 @@ def createDepartment():
             'status': 'success',
             'message': 'OK',
             # "data":data
+        }
+
+    
+    return makeReturnResponse(__responseObject),200
+
+@server.route("/admin/getAdminPageTitle", methods=["GET"])
+@cache.cached(timeout=600)
+@adminLoginCheck
+def getAdminPageTitle():
+    conn=db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("select value from app_config where name ='APP_ADMIN_PAGE_TITLE'")
+
+    app_title=cursor.fetchone()[0]
+
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+            'status': 'success',
+            'message': 'OK',
+            "data":{
+                "title":app_title
+            }
         }
 
     

@@ -7,6 +7,7 @@ class DbEnv:
     database:str="postgres"
     username:str="postgres"
     password:str="postgres"
+    schema=["public"]
 
 @dataclass
 class EmailConfig:

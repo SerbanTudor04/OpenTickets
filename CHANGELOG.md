@@ -1,3 +1,15 @@
+# 0.5.0
+## Features
+- Added a system for config file loading, by removing static config from `env.py` to `env.json`
+- Added ability to setup the schema for querying database by dynamically setting up in `env.json`
+- Added app_config table in database.
+- Added functionality to cache responses of routes.
+- Added route for getting application title from app_config 
+- Added in frontend:
+    - Dynamically loading navbar title from app title
+    - Dynamically load application header title from backend
+    - Change login token name
+
 # 0.4.0
 ## Features
 - Added handling for emails in which has an invalid ticket code in subject.

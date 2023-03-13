@@ -4,7 +4,7 @@ import { getUserInfo, signOutUser } from "../../../../package/api/auth";
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 
-export default  function ANavbar(){
+export default  function ANavbar(props){
     const [userData,setUserData] =  useState(null)
     const [loading,setLoading] =  useState(true)
     const navigator = useNavigate()
@@ -38,7 +38,7 @@ export default  function ANavbar(){
       alt="Flowbite Logo"
     /> */}
     <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-      TGS Software
+      {props.appTitle}
     </span>
   </Navbar.Brand>
   <div className="flex md:order-2">
