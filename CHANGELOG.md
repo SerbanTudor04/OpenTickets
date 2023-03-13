@@ -1,3 +1,6 @@
+# 0.5.1
+## Fixes
+- Add missing libraries from backend
 # 0.5.0
 ## Features
 - Added a system for config file loading, by removing static config from `env.py` to `env.json`
