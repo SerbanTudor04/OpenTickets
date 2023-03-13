@@ -1,3 +1,7 @@
+from emails.emails import Mailer
+from env import cfg
+from logger import Logger
+import db as dbInit
 from flask import Flask
 from flask_cors import CORS
 from flask_caching import Cache
@@ -7,27 +11,22 @@ server = Flask(__name__)
 server.config.update(
     DEBUG=True,
     SECRET_KEY="TGSWORLDisAwesome",
-    CACHE_TYPE= "SimpleCache",  # Flask-Caching related configs
-    CACHE_DEFAULT_TIMEOUT= 300
+    CACHE_TYPE="SimpleCache",  # Flask-Caching related configs
+    CACHE_DEFAULT_TIMEOUT=300
 )
 
 cache = Cache(server)
-
-import db as dbInit
 
 
 db = dbInit.Database()
 
 server.config['CORS_HEADERS'] = 'Content-Type'
-CORS(server,supports_credentials =True)
-from logger import Logger
+CORS(server, supports_credentials=True)
 
-logger=Logger()
+logger = Logger()
 
-from emails.emails import EmailConfig,Mailer
-from env import cfg
 
-mailer=Mailer(cfg)   
+mailer = Mailer(cfg)
 
 if __name__ == '__main__':
     import endpoints.backoffice

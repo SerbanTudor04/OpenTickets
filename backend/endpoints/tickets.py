@@ -110,7 +110,7 @@ def createTicket():
     cursor.close()
     db.releaseConnection(conn)
     return makeReturnResponse({"status": "success", "message": "Ok", "data": {"ticketID": ticketCode
-                                                                                                            }}), 200
+                                                                              }}), 200
 
 
 @server.route("/admin/tickets/getmyTickets", methods=['GET'])
@@ -180,6 +180,7 @@ def getMyPendingRequests():
     db.releaseConnection(conn)
     return makeReturnResponse({"status": "success", "message": "Ok", "data": data}), 200
 
+
 @server.route("/admin/tickets/getTicketsStatusCodes", methods=['GET'])
 @adminLoginCheck
 def getTicketsStatusCodes():
@@ -207,7 +208,6 @@ def getTicketsStatusCodes():
     return makeReturnResponse({"status": "success", "message": "Department created with success!", "data": data}), 200
 
 
-
 @server.route("/admin/tickets/getOpenOrReleasedTickets", methods=['GET'])
 @adminLoginCheck
 def getOpenOrReleasedTickets():
@@ -223,7 +223,7 @@ def getOpenOrReleasedTickets():
                             and (a.department_id = (select q.department_id from admin_departments_members q where q.user_id=%s ) or a.department_id is null)
                            and (a.created_by!=%s or a.created_by is null)
 
-    """, [request.user.id,request.user.id])
+    """, [request.user.id, request.user.id])
 
     data = []
 
@@ -275,9 +275,7 @@ def getTicketByID():
         }}), 200
 
     typeOFView = retValue[0]
-    
-    
-    
+
     cursor.execute("""select a.id,a.code,a.subject,(select q.label from tickets_status_codes q where q.code=a.status) as status,
         (select q.name from admin_departments q where q.id=a.department_id) as department,a.created_at,a.closed_at ,a.description,
         a.content ,a.status as raw_status,a.updated_at
@@ -298,12 +296,11 @@ def getTicketByID():
         "department": retValue[4],
         "created_at": retValue[5],
         "closed_at": retValue[6],
-        "description":retValue[7],
-        "content":retValue[8],
-        "raw_status":retValue[9],
-        "updated_at":retValue[10],
+        "description": retValue[7],
+        "content": retValue[8],
+        "raw_status": retValue[9],
+        "updated_at": retValue[10],
     }
-
 
     cursor.close()
     db.releaseConnection(conn)
@@ -336,7 +333,8 @@ def assignTicket2Me():
     ticketID = str(jsonData["id"])
 
     # Validate if tickt exists and get also get the code
-    cursor.execute("select code from tickets where id=%s and status in ('OPEN','RELEASED')", [ticketID])
+    cursor.execute(
+        "select code from tickets where id=%s and status in ('OPEN','RELEASED')", [ticketID])
     retVal = cursor.fetchone()
     if retVal is None:
         __responseObject = {
@@ -379,12 +377,12 @@ def assignTicket2Me():
             where id =%s ;
         """, (ticketDateTime, ticketID))
     conn.commit()
-    
+
     try:
         cursor.execute("""
             insert into tickets_rights (user_id, code, ticket_id,created_at, updated_at)
             values (%s,'ADD_CONTENT',%s,%s,%s);
-        """,(request.user.id,ticketID,ticketDateTime,ticketDateTime))
+        """, (request.user.id, ticketID, ticketDateTime, ticketDateTime))
 
     except dbErrors.UniqueViolation:
         conn.rollback()
@@ -394,7 +392,8 @@ def assignTicket2Me():
             updated_at =%s
             where ticket_id =%s and user_id =%s;
         """, (ticketDateTime, ticketID, request.user.id))
-        log.warn(f"Rights of user {request.user.id} has been adjusted on ticket {ticketID}.")
+        log.warn(
+            f"Rights of user {request.user.id} has been adjusted on ticket {ticketID}.")
 
     conn.commit()
 
@@ -412,7 +411,7 @@ def addMessage2TicketsOrMessage():
 
     jsonData = data.json
 
-    if "ticket_id" not in jsonData or  "content" not in jsonData:
+    if "ticket_id" not in jsonData or "content" not in jsonData:
         __responseObject = {
             'status': 'invalid',
             'message': 'Missing ticket_id or content',
@@ -424,34 +423,33 @@ def addMessage2TicketsOrMessage():
 
     ticketID = str(jsonData["ticket_id"])
 
-    messageMasterID=None
+    messageMasterID = None
     if "master_message_id" in jsonData:
-        messageMasterID=str(jsonData["master_message_id"])
-    
+        messageMasterID = str(jsonData["master_message_id"])
 
     if "ticket_status" in jsonData and jsonData["ticket_status"] is not None:
         cursor.execute("""
             update tickets
                 set status = %s, updated_at =%s
                 where id =%s ;
-            """, (jsonData["ticket_status"],datetime.datetime.now(), ticketID))
+            """, (jsonData["ticket_status"], datetime.datetime.now(), ticketID))
         cursor.execute("""
             select label from tickets_status_codes where code=%s
-        """,[jsonData["ticket_status"]])
+        """, [jsonData["ticket_status"]])
 
-        status_label=(cursor.fetchone())[0]
+        status_label = (cursor.fetchone())[0]
 
-        markMessage=jsonData["content"]+f"\n*********\nAction: Marked ticket as {status_label}\n*********"
+        markMessage = jsonData["content"] + \
+            f"\n*********\nAction: Marked ticket as {status_label}\n*********"
         cursor.execute("""
         insert into ticket_messages (id, content, created_by, id_master, ticket_id, created_at)
         values (%s,%s,%s,%s,%s,%s); 
-        """,(str(uuid.uuid4()),markMessage,request.user.id,messageMasterID,ticketID,datetime.datetime.now()))
+        """, (str(uuid.uuid4()), markMessage, request.user.id, messageMasterID, ticketID, datetime.datetime.now()))
     else:
         cursor.execute("""
         insert into ticket_messages (id, content, created_by, id_master, ticket_id, created_at)
         values (%s,%s,%s,%s,%s,%s); 
-        """,(str(uuid.uuid4()),jsonData["content"],request.user.id,messageMasterID,ticketID,datetime.datetime.now()))
-
+        """, (str(uuid.uuid4()), jsonData["content"], request.user.id, messageMasterID, ticketID, datetime.datetime.now()))
 
     conn.commit()
     cursor.close()
@@ -474,8 +472,7 @@ def getTicketMessages():
             'message': 'Missing ticket_id',
         }
         return makeReturnResponse(__responseObject), 400
-    
-    
+
     conn = db.getConnection()
     cursor = conn.cursor()
     cursor.execute(DB_QUERY_STRING)
@@ -483,18 +480,18 @@ def getTicketMessages():
     ticketID = str(jsonData["ticket_id"])
 
     if "master_message_id" in jsonData and jsonData["master_message_id"] is not None:
-        messageMasterID=str(jsonData["master_message_id"])
+        messageMasterID = str(jsonData["master_message_id"])
         cursor.execute("""
         select a.id,a.content,(select q.username from admin_users q where q.id=a.created_by )as user_username,
         (select q.name from admin_departments q where q.id=(select qq.department_id from admin_departments_members qq where qq.user_id=a.created_by))as user_department,
         created_at,updated_at from ticket_messages a where a.ticket_id =%s and a.id_master=%s
-        """,[ticketID,messageMasterID])
+        """, [ticketID, messageMasterID])
     else:
         cursor.execute("""
         select a.id,a.content,(select q.username from admin_users q where q.id=a.created_by )as user_username,
         (select q.name from admin_departments q where q.id=(select qq.department_id from admin_departments_members qq where qq.user_id=a.created_by))as user_department,
         created_at,updated_at from ticket_messages a where a.ticket_id =%s and a.id_master is null
-        """,[ticketID])
+        """, [ticketID])
 
     data = []
 
@@ -508,7 +505,6 @@ def getTicketMessages():
             "updated_at": i[5],
         }
         data.append(idata)
-
 
     conn.commit()
     cursor.close()

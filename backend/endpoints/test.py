@@ -5,6 +5,6 @@ from libs import makeReturnResponse
 
 @server.route("/test/emailProcessor", methods=['GET'])
 def tst_emailProcessor():
-    a=MailerProcessor()
+    a = MailerProcessor()
     a.processInboxMails()
-    return makeReturnResponse({"ok": True}),200
+    return makeReturnResponse({"ok": True}), 200
