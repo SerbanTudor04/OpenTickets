@@ -30,7 +30,7 @@ export default  function ASideBar(){
     <Sidebar.Items>
       <Sidebar.ItemGroup>
         <Sidebar.Item
-          href="/admin/"
+          href="/"
           icon={HiChartPie}
         >
           Dashboard
@@ -38,7 +38,7 @@ export default  function ASideBar(){
         {(()=>{
           if (inboxNumber>0){
             return  <Sidebar.Item
-            href="/admin/inbox"
+            href="/inbox"
             icon={HiInbox}
             label={inboxNumber}
           >
@@ -46,7 +46,7 @@ export default  function ASideBar(){
           </Sidebar.Item>
           }
           return <Sidebar.Item
-          href="/admin/inbox"
+          href="/inbox"
           icon={HiInbox}
           
         >
@@ -59,28 +59,28 @@ export default  function ASideBar(){
           icon={HiChatAlt2}
           label="Tickets"
         >
-          <Sidebar.Item icon={HiPlus} href="/admin/tickets/create">
+          <Sidebar.Item icon={HiPlus} href="/tickets/create">
             Create Ticket
           </Sidebar.Item>          
-          <Sidebar.Item icon={HiUser} href="/admin/tickets/mytickets">
+          <Sidebar.Item icon={HiUser} href="/tickets/mytickets">
             Your Tickets
           </Sidebar.Item>
-          <Sidebar.Item icon={HiClock} href="/admin/tickets/pending-tickets">
+          <Sidebar.Item icon={HiClock} href="/tickets/pending-tickets">
             In Pending Tickets
           </Sidebar.Item>
-          <Sidebar.Item icon={HiBell} href="/admin/tickets/free-tickets">
+          <Sidebar.Item icon={HiBell} href="/tickets/free-tickets">
             Free Tickets
           </Sidebar.Item>
         </Sidebar.Collapse>
         <Sidebar.Collapse
-          href="/admin/users"
+          href="/users"
           icon={BiStore}
           label="Mangement"
         >
-          <Sidebar.Item icon={HiUser} href="/admin/management/users">
+          <Sidebar.Item icon={HiUser} href="/management/users">
             Users 
           </Sidebar.Item>
-          <Sidebar.Item icon={HiOfficeBuilding} href="/admin/management/departments">
+          <Sidebar.Item icon={HiOfficeBuilding} href="/management/departments">
             Departments
           </Sidebar.Item>
         </Sidebar.Collapse>

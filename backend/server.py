@@ -1,7 +1,4 @@
-from emails.emails import Mailer
 from env import cfg
-from logger import Logger
-import db as dbInit
 from flask import Flask
 from flask_cors import CORS
 from flask_caching import Cache
@@ -18,14 +15,17 @@ server.config.update(
 cache = Cache(server)
 
 
+import db as dbInit
 db = dbInit.Database()
 
 server.config['CORS_HEADERS'] = 'Content-Type'
 CORS(server, supports_credentials=True)
 
+from logger import Logger
 logger = Logger()
 
 
+from emails.emails import Mailer
 mailer = Mailer(cfg)
 
 if __name__ == '__main__':

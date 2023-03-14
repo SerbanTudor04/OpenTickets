@@ -20,9 +20,9 @@ function App() {
     <>
       <Layout>
         <Routes>
-          <Route path="/admin/authenticate" element={<Authenticate />} />
+          <Route path="/authenticate" element={<Authenticate />} />
             <Route
-              path="/admin/"
+              path="/"
               element={
                 <ProtectedRoute>
                   <ADashboard />
@@ -30,7 +30,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/dashboard"
+              path="/dashboard"
               element={
                 <ProtectedRoute>
                   <ADashboard />
@@ -38,7 +38,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/inbox"
+              path="/inbox"
               element={
                 <ProtectedRoute>
                   <AInbox />
@@ -46,7 +46,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/management/users"
+              path="/management/users"
               element={
                 <ProtectedRoute>
                   <AMgmUsers />
@@ -54,7 +54,7 @@ function App() {
               }
             /> 
             <Route
-            path="/admin/management/departments"
+            path="/management/departments"
             element={
               <ProtectedRoute>
                 <ADepartment />
@@ -62,7 +62,7 @@ function App() {
             }
           />
             <Route
-              path="/admin/tickets/mydepartments"
+              path="/tickets/mydepartments"
               element={
                 <ProtectedRoute>
                   <ADepartmentsTickets />
@@ -70,7 +70,7 @@ function App() {
               }
             />            
             <Route
-            path="/admin/tickets/create"
+            path="/tickets/create"
             element={
               <ProtectedRoute>
                 <ACreateTicket />
@@ -78,7 +78,7 @@ function App() {
             }
           />
            <Route
-            path="/admin/tickets/view/:id"
+            path="/tickets/view/:id"
             element={
               <ProtectedRoute>
                 <AViewTicket />
@@ -86,7 +86,7 @@ function App() {
             }
           />
           <Route
-            path="/admin/tickets/mytickets"
+            path="/tickets/mytickets"
             element={
               <ProtectedRoute>
                 <AMyTickets />
@@ -94,7 +94,7 @@ function App() {
             }
           />
             <Route
-            path="/admin/tickets/pending-tickets"
+            path="/tickets/pending-tickets"
             element={
               <ProtectedRoute>
                 <APendingTickets />
@@ -102,7 +102,7 @@ function App() {
             }
           />
            <Route
-            path="/admin/tickets/free-tickets"
+            path="/tickets/free-tickets"
             element={
               <ProtectedRoute>
                 <AFreeTickets />

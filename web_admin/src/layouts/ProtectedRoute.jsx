@@ -10,7 +10,7 @@ import { getAdminPageTitle } from "../../../package/api/aAppData";
 
 
 export default function ProtectedRoute  ({
-    redirectPath = '/admin/authenticate',
+    redirectPath = '/authenticate',
     children,
   })  {
     const [authToken] = useState(Cookies.get("__open-tickets-sessiontoken"))
