@@ -1,7 +1,11 @@
+import atexit
+
 from env import cfg
 from flask import Flask
 from flask_cors import CORS
 from flask_caching import Cache
+from apscheduler.schedulers.background import BackgroundScheduler
+
 
 server = Flask(__name__)
 
@@ -27,6 +31,18 @@ logger = Logger()
 
 from emails.emails import Mailer
 mailer = Mailer(cfg)
+
+from emails.procesors import MailerProcessor
+
+mailerProcessor=MailerProcessor()
+
+scheduler  = BackgroundScheduler(daemon=True)
+# Explicitly kick off the background thread
+scheduler.add_job(func=mailerProcessor.processInboxMails, trigger="interval", seconds=300)
+scheduler.start()
+
+atexit.register(lambda: scheduler.shutdown())
+
 
 if __name__ == '__main__':
     import endpoints.backoffice

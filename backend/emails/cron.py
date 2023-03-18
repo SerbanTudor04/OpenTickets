@@ -1,4 +1,0 @@
-
-
-def emailsCron():
-    pass

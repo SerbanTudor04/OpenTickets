@@ -3,18 +3,22 @@ import datetime
 
 from __main__ import db,mailer,logger as log
 from libs import  genTicketCode,addInboxMessageForUser
+from env import DB_QUERY_STRING
 
 class MailerProcessor:
     def __init__(self) -> None:
         self.isProcessFinished = True
 
     def processInboxMails(self):
+        if not self.isProcessFinished:
+            return
+        log.info("Start indexing inbox emails")
         self.isProcessFinished=False
         data=mailer.fetchInbox()
         conn = db.getConnection()
 
         cursor= conn.cursor()
-
+        cursor.execute(DB_QUERY_STRING) 
         cursor.execute('select "value" from app_config where name = %s ',["APP_TICKET_CODE_PREFIX"])
         
         self.ticket_prefix=(cursor.fetchone())[0]
@@ -35,17 +39,17 @@ class MailerProcessor:
                 self.__handleEmailValid(key,value,conn)
             conn.commit()
 
-
             
 
         db.releaseConnection(conn)
         self.isProcessFinished=True
+        log.info("Indexing of emails has been finished")
 
     
     def __checkIfEmailIsAssignedToTicket(self, email,conn):
         # parse subject
         cursor = conn.cursor()
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
         subject=str(email.subject)
         ticketCodeIndex=subject.upper().find("#"+self.ticket_prefix)
 
@@ -81,7 +85,7 @@ class MailerProcessor:
             if subject[i] in [" ","'"]:
                 break
         cursor = conn.cursor()
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
         cursor.execute("""select id,subject,content,status from tickets where code = %s""",[ticketCode])
 
         tData=cursor.fetchone()
@@ -195,7 +199,7 @@ class MailerProcessor:
 
         # print("Pre build template")
         cursor = conn.cursor()
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
         cursor.execute("""
             select id from emails_templates where name='INVALID_TICKETCODE'
         """)
@@ -220,7 +224,7 @@ class MailerProcessor:
         ticketDescription=f"Email sended at {str(email.date)}"
 
         cursor = conn.cursor()
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
 
         try:
             cursor.execute("""
@@ -286,7 +290,7 @@ class MailerProcessor:
 
     def __buildEmailTemplate(self,template_id:int,conn):
         cursor = conn.cursor()
-        cursor.execute("SET search_path TO tickets")
+        cursor.execute(DB_QUERY_STRING)
 
         
         cursor.execute("""
@@ -328,7 +332,7 @@ class MailerProcessor:
                 compName=compName.strip()
                 cursor = conn.cursor()
                 # print("search compname",compName)
-                cursor.execute("SET search_path TO tickets")
+                cursor.execute(DB_QUERY_STRING)
                 cursor.execute("""
                     select content from emails_blocks where upper(name) = %s
                 """,[compName.upper()])
@@ -353,7 +357,7 @@ class MailerProcessor:
                 compName=compName.strip()
                 cursor = conn.cursor()
 
-                cursor.execute("SET search_path TO tickets")
+                cursor.execute(DB_QUERY_STRING)
                 cursor.execute("""
                     select content from emails_variables where upper(name) = %s
                 """,[compName.upper()])
