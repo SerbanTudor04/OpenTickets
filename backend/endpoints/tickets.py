@@ -29,7 +29,14 @@ def createTicket():
 
     try:
         ticketID = str(uuid.uuid4())
-        ticketCode = genTicketCode()
+
+        # get tickets code configured prefix
+        cursor.execute('select "value" from app_config where name = %s ',["APP_TICKET_CODE_PREFIX"])
+
+        ticketPrefix=(cursor.fetchone())[0]
+
+
+        ticketCode = genTicketCode(prefix=ticketPrefix)
         ticketDateTime = str(datetime.datetime.now())
         try:
             cursor.execute("""

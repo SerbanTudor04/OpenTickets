@@ -1,3 +1,7 @@
+# 0.5.2
+## Features:
+- Added capability to customize prefix of the tickets code.
+
 # 0.5.1
 ## Fixes
 - Add missing libraries from backend

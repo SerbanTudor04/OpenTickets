@@ -177,9 +177,9 @@ def superUserCheck(f):
     return wrap
 
 
-def genTicketCode(length: int = 10):
+def genTicketCode(length: int = 10,prefix:str="OT"):
     letters = string.ascii_lowercase
-    return 'TGS'+''.join(random.choice(letters) for _ in range(length))
+    return prefix+''.join(random.choice(letters) for _ in range(length))
 
 
 def addInboxMessageForDepartment(conn, subject, department_id):

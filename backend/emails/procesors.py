@@ -13,6 +13,13 @@ class MailerProcessor:
         data=mailer.fetchInbox()
         conn = db.getConnection()
 
+        cursor= conn.cursor()
+
+        cursor.execute('select "value" from app_config where name = %s ',["APP_TICKET_CODE_PREFIX"])
+        
+        self.ticket_prefix=(cursor.fetchone())[0]
+
+        cursor.close()
 
         for key,value in data.items():
             print("Executing for email address",value.subject)
@@ -31,7 +38,6 @@ class MailerProcessor:
 
             
 
-        # cursor.close()
         db.releaseConnection(conn)
         self.isProcessFinished=True
 
@@ -41,7 +47,7 @@ class MailerProcessor:
         cursor = conn.cursor()
         cursor.execute("SET search_path TO tickets")
         subject=str(email.subject)
-        ticketCodeIndex=subject.upper().find("#TGS")
+        ticketCodeIndex=subject.upper().find("#"+self.ticket_prefix)
 
 
         if ticketCodeIndex<0:
@@ -67,7 +73,7 @@ class MailerProcessor:
 
     def __handleEmailValid(self,eId,email,conn)->str:
 
-        ticketCodeIndex=subject.upper().find("#TGS")
+        ticketCodeIndex=subject.upper().find("#"+self.ticket_prefix)
         subject=str(email.subject)
 
         ticketCode=""
@@ -174,7 +180,7 @@ class MailerProcessor:
 
     def __handleEmailInvalid(self,eId,email,conn)->str:
         subject=str(email.subject)
-        ticketCodeIndex=subject.upper().find("#TGS")
+        ticketCodeIndex=subject.upper().find("#"+self.ticket_prefix)
 
 
         if ticketCodeIndex<0:
