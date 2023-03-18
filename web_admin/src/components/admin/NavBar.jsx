@@ -31,7 +31,7 @@ export default  function ANavbar(props){
   fluid={true}
   rounded={true}
 >
-  <Navbar.Brand href="/admin">
+  <Navbar.Brand href="/">
     {/* <img
       src="https://flowbite.com/docs/images/logo.svg"
       className="mr-3 h-6 sm:h-9"

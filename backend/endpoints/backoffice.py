@@ -12,6 +12,7 @@ log = logger
 
 @server.route("/admin/create_user", methods=['POST'])
 @adminLoginCheck
+@superUserCheck
 def create_user():
 
     data = jsonify(request.json)
@@ -92,6 +93,7 @@ def create_user():
 
 @server.route("/admin/updateUser", methods=['POST'])
 @adminLoginCheck
+@superUserCheck
 def updateUser():
 
     data = jsonify(request.json)
@@ -159,6 +161,7 @@ def updateUser():
 
 @server.route("/admin/deleteUser", methods=['POST'])
 @adminLoginCheck
+@superUserCheck
 def deleteUser():
 
     data = jsonify(request.json)
@@ -734,6 +737,71 @@ def getAdminPageTitle():
         "data": {
             "title": app_title
         }
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+
+@server.route("/admin/getAppConfig", methods=["GET"])
+@adminLoginCheck
+@superUserCheck
+def getAppConfig():
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute(
+        "select name , value from app_config")
+
+    r=cursor.fetchall()
+    appData = []
+    for i in r:
+        insertData={
+            "name":i[0],
+            "value":i[1]
+        }
+        appData.append(insertData)
+
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data": appData
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/updateAppConfig", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def updateAppConfig():
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "name" not in jsonData and "value" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing name or value',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+    # print(jsonData["value"],jsonData["name"])
+    cursor.execute(
+        "update app_config set value=%s where name=%s",(jsonData["value"],jsonData["name"]))
+
+    conn.commit()
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":{}
+        
     }
 
     return makeReturnResponse(__responseObject), 200

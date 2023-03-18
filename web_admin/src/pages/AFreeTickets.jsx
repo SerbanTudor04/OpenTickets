@@ -110,7 +110,7 @@ function Assign2MeModal(props) {
     let r = await assignTicket2Me(props?.item?.id)
     setIsAssinging(false);
     if(r){
-      navigate(`/admin/tickets/view/${props?.item?.id}`)
+      navigate(`/tickets/view/${props?.item?.id}`)
       return
     }
 

@@ -1,11 +1,13 @@
 import { Sidebar } from "flowbite-react";
-import { HiChartPie,HiViewBoards,HiUser,HiInbox,HiOfficeBuilding, HiChatAlt2, HiBell, HiPlus, HiClock } from "react-icons/hi";
+import { HiChartPie,HiViewBoards,HiUser,HiInbox,HiOfficeBuilding, HiChatAlt2, HiBell, HiPlus, HiClock,  } from "react-icons/hi";
+import { HiTableCells,  } from "react-icons/hi2";
+
 import { BiBuoy,BiStore } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { getUserInboxNumber } from "../../../../package/api/ausers";
 
 
-export default  function ASideBar(){
+export default  function ASideBar(props){
   const [inboxNumber,setInboxNumber] = useState(null)
 
   useEffect(()=>{
@@ -82,6 +84,9 @@ export default  function ASideBar(){
           </Sidebar.Item>
           <Sidebar.Item icon={HiOfficeBuilding} href="/management/departments">
             Departments
+          </Sidebar.Item>
+          <Sidebar.Item icon={HiTableCells} href="/management/config">
+            Config
           </Sidebar.Item>
         </Sidebar.Collapse>
         

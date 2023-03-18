@@ -1,3 +1,10 @@
+# 0.6.0
+## Features:
+- Added a view in `managment` on admin panel to update configs values.
+## Fixes:
+- Fix security on users actions, add superUser middleware to apis, which was missing
+- Fix in pages redirects link from `/admin` to `/`
+
 # 0.5.2
 ## Features:
 - Added capability to customize prefix of the tickets code.

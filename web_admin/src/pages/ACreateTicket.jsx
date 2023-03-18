@@ -34,12 +34,12 @@ export default function ACreateTicket() {
 
   async function create(){
     setIsLoading(true)
-    console.debug(ticketData);
+    // console.debug(ticketData);
     let r =await createTicket(ticketData)
     setIsLoading(false)
     if(r){
         // navigate to home
-        navigator('/admin')
+        navigator('/')
     }
   }
 

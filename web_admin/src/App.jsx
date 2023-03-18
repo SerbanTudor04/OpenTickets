@@ -14,6 +14,7 @@ import AViewTicket from "./pages/AViewTicket";
 import AMyTickets from "./pages/AMyTickets";
 import APendingTickets from "./pages/APendingTickets";
 import AFreeTickets from "./pages/AFreeTickets";
+import AMgmConfig from "./pages/AMgmConfig";
 
 function App() {
   return (
@@ -58,6 +59,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ADepartment />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/management/config"
+            element={
+              <ProtectedRoute>
+                <AMgmConfig />
               </ProtectedRoute>
             }
           />
@@ -109,6 +118,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+                   
         </Routes>
 
       </Layout>
