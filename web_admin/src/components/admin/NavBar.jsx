@@ -23,7 +23,7 @@ export default  function ANavbar(props){
     async function doSingOut(){
         Cookies.remove("__tgssessiontoken")
         await signOutUser()
-        navigator('/admin/authenticate')
+        navigator('/authenticate')
     }
     
     return (<>
