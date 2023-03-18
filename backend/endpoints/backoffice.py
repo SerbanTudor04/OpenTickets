@@ -714,8 +714,8 @@ def createDepartment():
 
 
 @server.route("/admin/getAdminPageTitle", methods=["GET"])
-@cache.cached(timeout=600)
 @adminLoginCheck
+@cache.cached(timeout=600)
 def getAdminPageTitle():
     conn = db.getConnection()
     cursor = conn.cursor()
