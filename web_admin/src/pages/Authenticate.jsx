@@ -22,7 +22,7 @@ export default function Authenticate() {
     setIsLoading(false)
 
 
-    navigator("/admin/")
+    navigator("/")
   }
 
 
