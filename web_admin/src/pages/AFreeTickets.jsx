@@ -73,7 +73,7 @@ export default function AFreeTickets() {
                     >
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         <a
-                          href={"/admin/tickets/view/" + item.id}
+                          href={"/tickets/view/" + item.id}
                           className="text-blue-600"
                         >
                           #{item.code}

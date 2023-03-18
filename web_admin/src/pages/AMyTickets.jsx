@@ -67,7 +67,7 @@ export default function AMyTickets(){
                       
                     >
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        <a href={"/admin/tickets/view/"+item.id} className="text-blue-600">#{item.code}</a>
+                        <a href={"/tickets/view/"+item.id} className="text-blue-600">#{item.code}</a>
                       </Table.Cell>
                       <Table.Cell>{item.subject}</Table.Cell>
                       <Table.Cell>{item.status}</Table.Cell>
