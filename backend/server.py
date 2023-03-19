@@ -10,7 +10,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 server = Flask(__name__)
 
 server.config.update(
-    DEBUG=True,
+    DEBUG=envFile["SERVER_DEBUG"],
     SECRET_KEY=envFile["SECRET_KEY"],
     CACHE_TYPE="SimpleCache",  # Flask-Caching related configs
     CACHE_DEFAULT_TIMEOUT=300
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     if server.config.get('DEBUG'):
         import endpoints.test
     try:
-        server.run("0.0.0.0", port=8080)
+        server.run(envFile["SERVER_HOST"], port=envFile["SERVER_PORT"])
     except Exception as e:
         print(e)
         exit(1)
