@@ -1,6 +1,6 @@
 import atexit
 
-from env import cfg
+from env import cfg,envFile
 from flask import Flask
 from flask_cors import CORS
 from flask_caching import Cache
@@ -11,7 +11,7 @@ server = Flask(__name__)
 
 server.config.update(
     DEBUG=True,
-    SECRET_KEY="TGSWORLDisAwesome",
+    SECRET_KEY=envFile["SECRET_KEY"],
     CACHE_TYPE="SimpleCache",  # Flask-Caching related configs
     CACHE_DEFAULT_TIMEOUT=300
 )
