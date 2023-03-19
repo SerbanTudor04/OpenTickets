@@ -1,4 +1,4 @@
-from __main__ import server, db, logger, cache
+from __main__ import server, db, logger
 import uuid
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -718,7 +718,6 @@ def createDepartment():
 
 @server.route("/admin/getAdminPageTitle", methods=["GET"])
 @adminLoginCheck
-@cache.cached(timeout=600)
 def getAdminPageTitle():
     conn = db.getConnection()
     cursor = conn.cursor()

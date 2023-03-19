@@ -3,7 +3,6 @@ import atexit
 from env import cfg,envFile
 from flask import Flask
 from flask_cors import CORS
-from flask_caching import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
@@ -16,7 +15,6 @@ server.config.update(
     CACHE_DEFAULT_TIMEOUT=300
 )
 
-cache = Cache(server)
 
 
 import db as dbInit
