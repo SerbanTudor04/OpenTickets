@@ -1,3 +1,6 @@
+# 0.7.0
+- Added `web_install` in order to serve the frontend for the installation application 
+
 # 0.6.0
 ## Features:
 - Added a view in `managment` on admin panel to update configs values.
