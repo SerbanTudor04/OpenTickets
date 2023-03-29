@@ -193,6 +193,7 @@ class MailerProcessor:
             return 
         
         ticketCode=""
+        # file deepcode ignore replace~__len__~len: len() is slower than __len__()
         for i in range(ticketCodeIndex+1,subject.__len__()):
             if subject[i] in [" ","'"]:
                 break

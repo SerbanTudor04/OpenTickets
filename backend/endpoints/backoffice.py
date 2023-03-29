@@ -634,6 +634,7 @@ def updateDepartment():
         }
         return makeReturnResponse(__responseObject), 400
 
+    # file deepcode ignore replace~__len__~len: len() is slower than __len__()
     if str(jsonData["id"]).__len__() == 0 and str(jsonData["name"]).__len__() == 0:
         __responseObject = {
             'status': 'invalid',

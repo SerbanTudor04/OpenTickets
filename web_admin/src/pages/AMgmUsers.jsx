@@ -81,7 +81,7 @@ export default function AMgmUsers() {
               <Table.Body className="divide-y">
                 {users.map((item, key) => {
                   return (
-                    <Table.Row
+                    <Table.Row key={"tbr__"+item.email}
                       id={key + "usersTR--" + item.id}
                       className="bg-white dark:border-gray-700 dark:bg-gray-800"
                     >
@@ -315,7 +315,7 @@ function EditOrCreateUserModal(props) {
                   }
                   return departments.map((dept) => {
                     return (
-                      <option id={"dept--" + dept.id} value={dept.id}>
+                      <option key={"dept__"+dept.id} id={"dept--" + dept.id} value={dept.id}>
                         {dept.name}
                       </option>
                     );

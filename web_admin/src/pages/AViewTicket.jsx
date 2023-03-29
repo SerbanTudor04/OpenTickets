@@ -200,9 +200,9 @@ function AddComment(props) {
       <hr className="pb-3" />
       <form className="flex flex-col gap-4">
         <div>
-          <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-            <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-              <label for="comment" class="sr-only">
+          <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+            <div className="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
+              <label for="comment" className="sr-only">
                 Your comment
               </label>
               <textarea
@@ -215,12 +215,12 @@ function AddComment(props) {
                   
                 }}
                 rows="4"
-                class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+                className="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
                 placeholder="Write a comment..."
                 required
               ></textarea>
             </div>
-            <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
+            <div className="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
             <Button
               gradientMonochrome="info"
               pill={true}
@@ -230,7 +230,7 @@ function AddComment(props) {
             >
               {isLoading ? <Spinner /> : "Add message"}
             </Button>
-              <div class="flex pl-0 space-x-1 sm:pl-2">
+              <div className="flex pl-0 space-x-1 sm:pl-2">
                 <Dropdown
               pill={true}
               color="light"
@@ -254,6 +254,7 @@ function AddComment(props) {
                 return statuses.map((item) => {
                   return (
                     <Dropdown.Item
+                      key={"msgAction__"+item.label}
                       onClick={() => {
                         let currentData = { ...message };
                         currentData.ticket_raw_state = item.code;
@@ -331,9 +332,7 @@ function HandleMessage(props) {
           </div>
         </div>
       </>)
-      return message.map((item)=>{
-        return <MessageComponent message={item}/>
-      })
+      return message.map((item,index)=><MessageComponent key={"msg__"+item.id} id={"msg__"+index} message={item}/>)
     })()}
   </>;
 }
@@ -356,8 +355,8 @@ function MessageComponent(props){
         console.log(message.content)
         let msgs=String(message.content).split("\n")
         console.log(msgs)
-        return msgs.map((mes)=>{
-              return <p className="mb-2 font-light text-gray-500 dark:text-gray-400">{mes}</p> 
+        return msgs.map((mes,index)=>{
+              return <p key={"mess__"+index} className="mb-2 font-light text-gray-500 dark:text-gray-400">{mes}</p> 
         })
 
     })()}

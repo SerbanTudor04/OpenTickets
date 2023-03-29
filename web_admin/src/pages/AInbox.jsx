@@ -40,6 +40,7 @@ export default function AInbox() {
         {inbox.map((item, key) => {
           return (
             <Alert
+            key={key+"alert"+item.id}
               onDismiss={() => {
                 onDismiss(item.id, key);
               }}
@@ -62,8 +63,6 @@ export default function AInbox() {
 
 function getColorByState(state) {
   switch (state) {
-    case "INFO":
-      return "info";
     case "WARNING":
       return "warning";
     case "ERROR":

@@ -1,6 +1,6 @@
 import json
 import os
-
+import sys
 from structures import DbEnv, EmailConfig
 
 try:
@@ -9,7 +9,7 @@ try:
 except Exception as e:
     print("Error loading environment")
     print(str(e))
-    exit(1)
+    sys.exit(1)
 
 
 cfg = EmailConfig()

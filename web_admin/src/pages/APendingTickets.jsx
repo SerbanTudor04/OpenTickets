@@ -61,6 +61,7 @@ export default function APendingTickets(){
                 {tickets.map((item, key) => {
                   return (
                     <Table.Row
+                    key={key + "usersTR--" + item.id}
                       id={key + "usersTR--" + item.id}
                       className="bg-white dark:border-gray-700 dark:bg-gray-800"
                       

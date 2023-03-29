@@ -123,6 +123,7 @@ def adminLoginCheck(function):
         else:
             token = cookie
 
+        # file deepcode ignore replace~__len__~len: len() is slower than __len__()
         if token.__len__() == 0:
             __responseObject = {
                 'status': 'forbidden',

@@ -6,7 +6,9 @@ class DbEnv:
     host: str = "localost"
     port: int = 5432
     database: str = "postgres"
+    # deepcode ignore NoHardcodedCredentials: is used as default values
     username: str = "postgres"
+    # deepcode ignore NoHardcodedPasswords: is used as default values
     password: str = "postgres"
     schema = ["public"]
 

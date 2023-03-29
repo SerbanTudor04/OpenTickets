@@ -4,7 +4,7 @@ from env import cfg,envFile
 from flask import Flask
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
-
+import sys
 
 server = Flask(__name__)
 
@@ -52,4 +52,4 @@ if __name__ == '__main__':
         server.run(envFile["SERVER_HOST"], port=envFile["SERVER_PORT"])
     except Exception as e:
         print(e)
-        exit(1)
+        sys.exit(1)

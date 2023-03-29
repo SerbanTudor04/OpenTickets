@@ -110,7 +110,9 @@ export default function ACreateTicket() {
                     }
                     return departments.map((dept) => {
                       return (
-                        <option id={"dept--" + dept.id} value={dept.id}>
+                        <option 
+                        key={"dept--" + dept.id} 
+                        id={"dept--" + dept.id} value={dept.id}>
                           {dept.name}
                         </option>
                       );
