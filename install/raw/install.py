@@ -90,7 +90,7 @@ def interactive():
     \t Port: {db_port}
     \t Name: {db_name}
     \t Username: {db_username}
-    \t Password: {db_password}
+    \t Password: ************
     \t Schemas: {db_schemas}
     
     # Emails:
@@ -100,7 +100,7 @@ def interactive():
     \t\t Port: {smtp_port}
     \t\t SSL: {smtp_ssl}
     \t\t Username: {smtp_username}
-    \t\t Password: {smtp_password}
+    \t\t Password: ************
     \t\t Sender Name: {smtp_sender}
 
     \t # IMAP:
@@ -108,7 +108,7 @@ def interactive():
     \t\t Port: {imap_port}
     \t\t SSL: {imap_ssl}
     \t\t Username: {imap_username}
-    \t\t Password: {imap_password}
+    \t\t Password: ************
     
     """)
 
@@ -164,7 +164,7 @@ def silent():
     \t Port: {db_port}
     \t Name: {db_name}
     \t Username: {db_username}
-    \t Password: {db_password}
+    \t Password: ************
     \t Schemas: {db_schemas}
     
     # Emails:
@@ -174,7 +174,7 @@ def silent():
     \t\t Port: {smtp_port}
     \t\t SSL: {smtp_ssl}
     \t\t Username: {smtp_username}
-    \t\t Password: {smtp_password}
+    \t\t Password: ************
     \t\t Sender Name: {smtp_sender}
 
     \t # IMAP:
@@ -182,7 +182,7 @@ def silent():
     \t\t Port: {imap_port}
     \t\t SSL: {imap_ssl}
     \t\t Username: {imap_username}
-    \t\t Password: {imap_password}
+    \t\t Password: ************
     
     """)
 
