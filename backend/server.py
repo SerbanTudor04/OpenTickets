@@ -46,7 +46,7 @@ if __name__ == '__main__':
     import endpoints.backoffice
     import endpoints.tickets
 
-    if server.config.get('DEBUG'):
+    if server.config.get('DEBUG_ENDPOINTS'):
         import endpoints.test
     try:
         server.run(envFile["SERVER_HOST"], port=envFile["SERVER_PORT"])
