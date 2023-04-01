@@ -5,6 +5,7 @@ import random
 import string
 import json
 
+
 def askInputOfUser(question: str, default_value: any = "", is_empty: bool = True, validAnswers: list = []) -> str:
     while True:
         try:
@@ -24,13 +25,13 @@ def askInputOfUser(question: str, default_value: any = "", is_empty: bool = True
         break
     return answer
 
-def generateSecretKey(length:int=16):
+
+def generateSecretKey(length: int = 16):
     letters = string.ascii_lowercase
     return "OT_"+''.join(random.choice(letters) for _ in range(length))
 
 
 # END AUXILIAR FUNCTIONS
-
 
 
 def main():
@@ -226,21 +227,21 @@ def doInstall(cfg: dict):
         sys.exit(1)
 
     try:
-        sqlFile = open(os.path.join(os.getcwd(),"sql","tables.sql"),'r')
+        sqlFile = open(os.path.join(os.getcwd(), "sql", "tables.sql"), 'r')
 
     except Exception as e:
         print("ERROR -> Couldn't find sql files. (tables)")
         print(e)
         sys.exit(1)
 
-    sqlContent=sqlFile.read()
+    sqlContent = sqlFile.read()
     sqlFile.close()
-    crs=dbConn.cursor()
-    DB_QUERY_STRING="SET search_path TO "
+    crs = dbConn.cursor()
+    DB_QUERY_STRING = "SET search_path TO "
 
     for i in cfg["db_schemas"]:
-        DB_QUERY_STRING+=f"{i},"
-    DB_QUERY_STRING=DB_QUERY_STRING[:-1]
+        DB_QUERY_STRING += f"{i},"
+    DB_QUERY_STRING = DB_QUERY_STRING[:-1]
 
     # EXECUTE sql to activate requirements
     try:
@@ -257,7 +258,7 @@ def doInstall(cfg: dict):
     try:
         # print(sqlContent)
         print("Install application in database")
-        crs.execute(sqlContent,[])
+        crs.execute(sqlContent, [])
         dbConn.commit()
         print("Application tables has been created with success.")
     except Exception as e:
@@ -265,47 +266,46 @@ def doInstall(cfg: dict):
     crs.close()
 
     dbConn.close()
-    jsonOutput["database"]={
-        "host":cfg["db_host"],
-        "port":cfg["db_port"],
-        "name":cfg["db_name"],
-        "username":cfg["db_username"],
-        "password":cfg["db_password"],
-        "schema":cfg["db_schemas"],
+    jsonOutput["database"] = {
+        "host": cfg["db_host"],
+        "port": cfg["db_port"],
+        "name": cfg["db_name"],
+        "username": cfg["db_username"],
+        "password": cfg["db_password"],
+        "schema": cfg["db_schemas"],
     }
 
     # TODO to implement a validation for email
-    jsonOutput["email"]={
-        "imap":{
-            "host":cfg["imap_host"],
-            "port":cfg["imap_port"],
-            "username":cfg["imap_username"],
-            "password":cfg["imap_password"],
-            "ssl":cfg["imap_ssl"],
+    jsonOutput["email"] = {
+        "imap": {
+            "host": cfg["imap_host"],
+            "port": cfg["imap_port"],
+            "username": cfg["imap_username"],
+            "password": cfg["imap_password"],
+            "ssl": cfg["imap_ssl"],
         },
-        "smtp":{
-            "host":cfg["smtp_host"],
-            "port":cfg["smtp_port"],
-            "username":cfg["smtp_username"],
-            "password":cfg["smtp_password"],
-            "ssl":cfg["smtp_ssl"],
-            "sender_name":cfg["smtp_sender"],
+        "smtp": {
+            "host": cfg["smtp_host"],
+            "port": cfg["smtp_port"],
+            "username": cfg["smtp_username"],
+            "password": cfg["smtp_password"],
+            "ssl": cfg["smtp_ssl"],
+            "sender_name": cfg["smtp_sender"],
         }
     }
-    jsonOutput["SECRET_KEY"]=generateSecretKey()
-    jsonOutput["SERVER_HOST"]="0.0.0.0"
-    jsonOutput["SERVER_PORT"]=8080
-    jsonOutput["SERVER_DEBUG"]=False
-    jsonOutput["DEBUG_ENDPOINTS"]=False
+    jsonOutput["SECRET_KEY"] = generateSecretKey()
+    jsonOutput["SERVER_HOST"] = "0.0.0.0"
+    jsonOutput["SERVER_PORT"] = 8080
+    jsonOutput["SERVER_DEBUG"] = False
+    jsonOutput["DEBUG_ENDPOINTS"] = False
 
-    jsonStringOutput=json.dumps(jsonOutput)
+    jsonStringOutput = json.dumps(jsonOutput)
 
-    jsonFilePath=os.path.join(os.getcwd(),'output','env.json')
+    jsonFilePath = os.path.join(os.getcwd(), 'output', 'env.json')
 
-    jsonFile=open(jsonFilePath,'w')
+    jsonFile = open(jsonFilePath, 'w')
     jsonFile.write(jsonStringOutput)
     jsonFile.close()
-
 
     print(f"""
 Installation has been completed!
