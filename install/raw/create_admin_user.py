@@ -61,7 +61,7 @@ def main():
     Username: {config['user_username']}
     First name: {config['user_first_name']}
     Last name: {config['user_last_name']}
-    Password: {config['user_password']}
+    Password: ************
         """)
 
     doCreateUser(config)
