@@ -13,3 +13,7 @@ updates:
     directory: "/web_admin" # Location of package manifests
     schedule:
       interval: "weekly"
+  - package-ecosystem: "" # See documentation for possible values
+    directory: "/install/raw" # Location of package manifests
+    schedule:
+      interval: "weekly"
