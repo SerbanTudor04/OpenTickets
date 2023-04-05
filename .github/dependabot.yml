@@ -5,15 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: "" # See documentation for possible values
+  - package-ecosystem: "pip" # See documentation for possible values
     directory: "/backend" # Location of package manifests
     schedule:
       interval: "weekly"
-  - package-ecosystem: "" # See documentation for possible values
+  - package-ecosystem: "npm" # See documentation for possible values
     directory: "/web_admin" # Location of package manifests
     schedule:
       interval: "weekly"
-  - package-ecosystem: "" # See documentation for possible values
+  - package-ecosystem: "pip" # See documentation for possible values
     directory: "/install/raw" # Location of package manifests
     schedule:
       interval: "weekly"
