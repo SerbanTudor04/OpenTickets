@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dicebear/collection": "^5.3.4",
-    "@dicebear/core": "^5.3.4",
+    "@dicebear/collection": "^6.0.2",
+    "@dicebear/core": "^6.0.2",
     "@emotion/react": "^11.10.6",
     "@tinymce/tinymce-react": "^4.3.0",
     "dayjs": "^1.11.7",
