@@ -1,4 +1,5 @@
 from __main__ import server, db, logger
+from datetime import datetime
 import uuid
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -801,6 +802,336 @@ def updateAppConfig():
         'status': 'success',
         'message': 'OK',
         "data":{}
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/templates", methods=["GET"])
+@adminLoginCheck
+@superUserCheck
+def getTemplates():
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+    cursor.execute(
+        '''SELECT a.id, a."content", a.created_at, a.updated_at,
+        COALESCE((select upper(q.username) from admin_users q where q.id=a.created_by),'SYSTEM') created_by, 
+        COALESCE((select upper(q.username) from admin_users q where q.id=a.updated_by),'SYSTEM') updated_by, 
+        a."name", a.is_name_editable, a."label" FROM emails_templates a order by id''')
+
+    # map requests to column
+
+    data=[]
+
+    for i in cursor.fetchall():
+        insert_data={
+            "id":i[0],
+            "content":i[1],
+            "created_at":i[2], 
+            "updated_at":i[3], 
+            "created_by":i[4], 
+            "updated_by":i[5], 
+            "name":i[6], 
+            "is_name_editable":i[7],
+            "label":i[8]
+        }
+        data.append(insert_data)
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/templates/blocks", methods=["GET"])
+@adminLoginCheck
+@superUserCheck
+def getBlocks():
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+    cursor.execute(
+        '''SELECT id, "name", "content", created_at,  
+        COALESCE((select upper(q.username) from admin_users q where q.id=a.created_by),'SYSTEM') created_by, 
+        COALESCE((select upper(q.username) from admin_users q where q.id=a.updated_by),'SYSTEM') updated_by,  
+        updated_at
+FROM emails_blocks a order by id
+''')
+
+    # map requests to column
+
+    data=[]
+
+    for i in cursor.fetchall():
+        insert_data={
+            "id":i[0],
+            "name":i[1], 
+            "content":i[2],
+            "created_at":i[3], 
+            "created_by":i[4], 
+            "updated_by":i[5], 
+            "updated_at":i[6], 
+        }
+        data.append(insert_data)
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/templates/variables", methods=["GET"])
+@adminLoginCheck
+@superUserCheck
+def getVariables():
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+    cursor.execute(
+        '''SELECT id, "name", "content", created_at, 
+COALESCE((select upper(q.username) from admin_users q where q.id=a.created_by),'SYSTEM') created_by, 
+updated_at, 
+COALESCE((select upper(q.username) from admin_users q where q.id=a.updated_by),'SYSTEM') updated_by, 
+is_static
+FROM emails_variables a order by id
+''')
+
+    # map requests to column
+
+    data=[]
+
+    for i in cursor.fetchall():
+        insert_data={
+            "id":i[0],
+            "name":i[1], 
+            "content":i[2],
+            "created_at":i[3], 
+            "created_by":i[4], 
+            "updated_at":i[5], 
+            "updated_by":i[6], 
+            "is_staic":i[7]
+        }
+        data.append(insert_data)
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/templates/create", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def createTemplates():
+
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "name" not in jsonData or "label" not in jsonData or "content"  not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing name,label or content',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    CREATED_AT=datetime.now()
+    
+    try:
+        cursor.execute(
+            '''INSERT INTO emails_templates
+    ("content", created_at, updated_at, created_by, updated_by, "name", is_name_editable, "label")
+    VALUES(%s, %s, %s, %s, %s, %s, true, %s);
+    ''',(jsonData["content"],CREATED_AT,CREATED_AT,request.user.id,request.user.id,jsonData["name"],jsonData["label"]))
+
+    except Exception as err:
+        print(err)
+        conn.rollback()
+        cursor.close()
+        db.releaseConnection(conn)
+        __responseObject = {
+            'status': 'error',
+            'message': str(err),
+            "data":[]
+            
+        }
+        
+
+        return makeReturnResponse(__responseObject), 400 
+    conn.commit()
+
+    log.info(f"User {request.user.username} with id {request.user.id} has created template with name {jsonData['name']}")
+
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":[]
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/templates/update", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def updateTemplates():
+
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "id"not in jsonData or "name" not in jsonData or "label" not in jsonData or "content"  not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing id,name,label or content',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    
+    try:
+        cursor.execute("select is_name_editable from emails_templates where id=%s",[jsonData['id']])
+        r=cursor.fetchone()
+        if r is None:
+            raise ValueError("Invalid template name")
+        
+        IS_NAME_EDITABLE=r[0]
+
+        if IS_NAME_EDITABLE:
+            cursor.execute("""
+            UPDATE emails_templates
+            SET "content"=%s, updated_at=now(), updated_by=%s, "name"=%s, "label"=%s
+            WHERE id=%s;
+            """,[jsonData["content"],request.user.id,jsonData["name"],jsonData["label"],jsonData["id"]])
+        else:
+            cursor.execute("""
+            UPDATE emails_templates
+            SET "content"=%s, updated_at=now(), updated_by=%s, "label"=%s
+            WHERE id=%s;
+            """,[jsonData["content"],request.user.id,jsonData["label"],jsonData["id"]])
+
+    except Exception as err:
+        print(err)
+        conn.rollback()
+        cursor.close()
+        db.releaseConnection(conn)
+        __responseObject = {
+            'status': 'error',
+            'message': str(err),
+            "data":[]
+            
+        }
+
+        return makeReturnResponse(__responseObject), 400 
+    
+    conn.commit()
+
+    log.info(f"User {request.user.username} with id {request.user.id} has created template with name {jsonData['name']}")
+
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":[]
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+
+@server.route("/admin/templates/delete", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def deleteTemplates():
+
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing id,name,label or content',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    
+    try:
+        cursor.execute("select is_name_editable from emails_templates where id=%s",[jsonData['id']])
+        r=cursor.fetchone()
+        if r is None:
+            raise ValueError("Invalid template name")
+        
+        IS_NAME_EDITABLE=r[0]
+
+        if not IS_NAME_EDITABLE:
+            raise PermissionError("You cannot delete this template, becouse is critical!")
+        
+        cursor.execute("""
+            delete from emails_templates
+            WHERE id=%s;
+            """,[jsonData["id"]])
+
+    except Exception as err:
+        print(err)
+        conn.rollback()
+        cursor.close()
+        db.releaseConnection(conn)
+        __responseObject = {
+            'status': 'error',
+            'message': str(err),
+            "data":[]
+            
+        }
+
+        return makeReturnResponse(__responseObject), 400 
+    
+    conn.commit()
+
+    log.info(f"User {request.user.username} with id {request.user.id} has created template with name {jsonData['name']}")
+
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":[]
         
     }
 

@@ -12,7 +12,7 @@ class MailerProcessor:
     def processInboxMails(self):
         if not self.isProcessFinished:
             return
-        log.info("Start indexing inbox emails")
+        print("Start indexing inbox emails")
         self.isProcessFinished=False
         data=mailer.fetchInbox()
         conn = db.getConnection()
@@ -43,7 +43,7 @@ class MailerProcessor:
 
         db.releaseConnection(conn)
         self.isProcessFinished=True
-        log.info("Indexing of emails has been finished")
+        print("Indexing of emails has been finished")
 
     
     def __checkIfEmailIsAssignedToTicket(self, email,conn):

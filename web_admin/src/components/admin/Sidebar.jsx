@@ -1,8 +1,8 @@
 import { Sidebar } from "flowbite-react";
-import { HiChartPie,HiViewBoards,HiUser,HiInbox,HiOfficeBuilding, HiChatAlt2, HiBell, HiPlus, HiClock,  } from "react-icons/hi";
+import { HiViewBoards,HiUser,HiInbox,HiOfficeBuilding, HiChatAlt2, HiBell, HiPlus, HiClock,  } from "react-icons/hi";
 import { HiTableCells,  } from "react-icons/hi2";
 
-import { BiBuoy,BiStore } from "react-icons/bi";
+import { BiBuoy,BiDoughnutChart,BiExtension,BiStore } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { getUserInboxNumber } from "../../../../package/api/ausers";
 
@@ -33,7 +33,7 @@ export default  function ASideBar(props){
       <Sidebar.ItemGroup>
         <Sidebar.Item
           href="/"
-          icon={HiChartPie}
+          icon={BiDoughnutChart}
         >
           Dashboard
         </Sidebar.Item>
@@ -87,6 +87,12 @@ export default  function ASideBar(props){
           </Sidebar.Item>
           <Sidebar.Item icon={HiTableCells} href="/management/config">
             Config
+          </Sidebar.Item>
+        <Sidebar.Item
+           href="/management/templates"
+          icon={BiExtension}
+        >
+          Templates
           </Sidebar.Item>
         </Sidebar.Collapse>
         

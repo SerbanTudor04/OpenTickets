@@ -1,3 +1,10 @@
+# 0.8.0
+## Features:
+- Added a view in `managment` on admin panel to create/update/or delete email templates
+- Added APIs for crud of email templates.
+## Fixes:
+- Fix sidebar `dashboard` icon.
+- Fix `management/config` view, in which superuser validation doesn't exists.
 # 0.7.0
 - Added `web_install` in order to serve the frontend for the installation application 
 

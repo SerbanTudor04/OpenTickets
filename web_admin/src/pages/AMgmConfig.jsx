@@ -6,9 +6,16 @@ import { getAppConfig, updateAppConfig } from "../../../package/api/aAppData";
 export default function AMgmConfig(props){
     const [configs, setConfigs] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+    const [isSu,setIsSU] = useState(false);
 
     useEffect(()=>{
         async function callMeBaby() {
+            let su = await isSuperUser();
+            
+            setIsSU(su)
+            if(!su)
+              return
+
             let r = await getAppConfig();
       
             setConfigs(r);
@@ -18,7 +25,7 @@ export default function AMgmConfig(props){
           callMeBaby();
     },[])
 
-    if(isLoading===true && configs===null){
+    if(isLoading===true){
         return (
             <>
               <div className="  ">
@@ -29,6 +36,18 @@ export default function AMgmConfig(props){
             </>
           );
     }
+
+    if (!isSu) {
+      return (
+      <>
+          <div className="  ">
+          <div className="flex  flex-col  justify-center items-center">
+              <p>You don't have access to see this content.</p>
+          </div>
+          </div>
+      </>
+      );
+  }
 
     if(configs===null){
         return (

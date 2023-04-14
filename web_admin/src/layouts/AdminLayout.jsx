@@ -7,7 +7,7 @@ export default function AdminLayout(props){
 
         <div className="h-screen flex">
             <div className="flex-col w-fit">
-                <ASideBar/>
+                <ASideBar />
             </div>
             <div className="flex-col w-full">
                 <section id="navbar" className="mb-5">

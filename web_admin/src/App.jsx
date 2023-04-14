@@ -15,6 +15,7 @@ import AMyTickets from "./pages/AMyTickets";
 import APendingTickets from "./pages/APendingTickets";
 import AFreeTickets from "./pages/AFreeTickets";
 import AMgmConfig from "./pages/AMgmConfig";
+import AMgmTemplates from "./pages/AMgmTemplates";
 
 function App() {
   return (
@@ -67,6 +68,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AMgmConfig />
+              </ProtectedRoute>
+            }
+            />
+          <Route
+            path="/management/templates"
+            element={
+              <ProtectedRoute>
+                <AMgmTemplates />
               </ProtectedRoute>
             }
           />
