@@ -2,6 +2,8 @@ import { Button, Label, Modal, Spinner, Table, TextInput } from "flowbite-react"
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { getAppConfig, updateAppConfig } from "../../../package/api/aAppData";
+import { isSuperUser } from "../../../package/api/auth";
+
 
 export default function AMgmConfig(props){
     const [configs, setConfigs] = useState(null)
