@@ -263,6 +263,25 @@ def doInstall(cfg: dict):
         print("Application tables has been created with success.")
     except Exception as e:
         print(e)
+    try:
+        sqlDataFile = open(os.path.join(os.getcwd(), "sql", "data.sql"), 'r')
+    except Exception as e:
+        print("ERROR -> Couldn't find sql files. (data)")
+        print(e)
+        sys.exit(1)
+    sqlContent = sqlDataFile.read()
+    sqlDataFile.close()
+
+    try:
+        # print(sqlContent)
+        print("Install application in database")
+        crs.execute(sqlContent, [])
+        dbConn.commit()
+        print("Application default data has been created with success.")
+    except Exception as e:
+        print(e)
+
+
     crs.close()
 
     dbConn.close()

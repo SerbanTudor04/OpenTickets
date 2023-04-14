@@ -84,7 +84,6 @@ CREATE TABLE admin_users_inbox (
 	state varchar NULL DEFAULT 'INFO'::character varying,
 	CONSTRAINT admin_users_inbox_pk PRIMARY KEY (id)
 );
-
 CREATE INDEX admin_users_inbox_user_id_idx ON admin_users_inbox USING btree (user_id);
 
 
@@ -168,6 +167,7 @@ CREATE TABLE emails_templates (
 	"label" varchar NULL,
 	CONSTRAINT emails_templates_pk PRIMARY KEY (id)
 );
+CREATE UNIQUE INDEX emails_templates_name_idx ON emails_templates USING btree (name);
 
 
 -- emails_variables definition

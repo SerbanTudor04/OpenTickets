@@ -1,3 +1,8 @@
+# 0.8.1
+## Fixes:
+- Added missing default data on installation
+- Added update indexes of tables
+
 # 0.8.0
 ## Features:
 - Added a view in `managment` on admin panel to create/update/or delete email templates
