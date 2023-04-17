@@ -1,5 +1,5 @@
 APScheduler==3.10.1
-astroid==2.15.2
+astroid==2.15.3
 autopep8==2.0.2
 cachelib==0.10.2
 certifi==2022.12.7
