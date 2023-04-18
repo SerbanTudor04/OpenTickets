@@ -17,12 +17,15 @@ export default function ProtectedRoute  ({
     const [authenticated,setAuthenticated] =  useState(false)
     const [loading,setLoading] =  useState(true)
     
-    const [appTitle,setAppTitle]= useState(Cookies.get("__open-tickets-app-title__cache"))
+    const [appTitle,setAppTitle]= useState(Cookies.get("__open-tickets-app-title__cache")   )
     
   
     useEffect(()=>{
       async function callMeBaby(){
-        if(!appTitle){
+        console.debug("checking authentication")
+        console.log(appTitle)
+        if(appTitle===undefined || appTitle === "undefined"){
+          console.log("app title is undefined")
           let title=(await getAdminPageTitle()).title
           Cookies.set("__open-tickets-app-title__cache",title)
           setAppTitle(title)
