@@ -1,6 +1,6 @@
 altgraph==0.17.3
 cx-Logging==3.1.0
-lief==0.12.3
+lief==0.13.0
 pefile==2023.2.7
 psycopg2==2.9.6
 pyinstaller==5.9.0
