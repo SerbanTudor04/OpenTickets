@@ -1055,7 +1055,7 @@ def updateTemplates():
     
     conn.commit()
 
-    log.info(f"User {request.user.username} with id {request.user.id} has created template with name {jsonData['name']}")
+    log.info(f"User {request.user.username} with id {request.user.id} has updated template with name {jsonData['name']}")
 
     cursor.close()
     db.releaseConnection(conn)
@@ -1123,7 +1123,188 @@ def deleteTemplates():
     
     conn.commit()
 
-    log.info(f"User {request.user.username} with id {request.user.id} has created template with name {jsonData['name']}")
+    log.info(f"User {request.user.username} with id {request.user.id} has deleted template with name {jsonData['id']}")
+
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":[]
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+
+@server.route("/admin/templates/blocks/update", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def updateBlocks():
+
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "id"not in jsonData or "name" not in jsonData  or "content"  not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing id,name or content',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    
+    try:
+
+
+        cursor.execute("""
+        UPDATE emails_blocks
+        SET "content"=%s, updated_at=now(), updated_by=%s, "name"=%s
+        WHERE id=%s;
+        """,[jsonData["content"],request.user.id,jsonData["name"],jsonData["id"]])
+    
+
+    except Exception as err:
+        print(err)
+        conn.rollback()
+        cursor.close()
+        db.releaseConnection(conn)
+        __responseObject = {
+            'status': 'error',
+            'message': str(err),
+            "data":[]
+            
+        }
+
+        return makeReturnResponse(__responseObject), 400 
+    
+    conn.commit()
+
+    log.info(f"User {request.user.username} with id {request.user.id} has updated block with name {jsonData['name']}")
+
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":[]
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/templates/blocks/create", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def createBlock():
+
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "name" not in jsonData  or "content"  not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing name or content',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    CREATED_AT=datetime.now()
+    
+    try:
+        cursor.execute(
+            '''INSERT INTO emails_blocks
+            ("content", created_at, updated_at, created_by, updated_by, "name" )
+            VALUES(%s, %s, %s, %s, %s, %s);
+            ''',(jsonData["content"],CREATED_AT,CREATED_AT,request.user.id,request.user.id,jsonData["name"]))
+
+    except Exception as err:
+        print(err)
+        conn.rollback()
+        cursor.close()
+        db.releaseConnection(conn)
+        __responseObject = {
+            'status': 'error',
+            'message': str(err),
+            "data":[]
+            
+        }
+        
+
+        # return makeReturnResponse(__responseObject), 400 
+    conn.commit()
+
+    log.info(f"User {request.user.username} with id {request.user.id} has created block with name {jsonData['name']}")
+
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":[]
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+
+@server.route("/admin/templates/blocks/delete", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def deleteBlock():
+
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing id',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    
+    try:
+      
+        
+        cursor.execute("""
+            delete from emails_blocks
+            WHERE id=%s;
+            """,[jsonData["id"]])
+
+    except Exception as err:
+        print(err)
+        conn.rollback()
+        cursor.close()
+        db.releaseConnection(conn)
+        __responseObject = {
+            'status': 'error',
+            'message': str(err),
+            "data":[]
+            
+        }
+
+        return makeReturnResponse(__responseObject), 400 
+    
+    conn.commit()
+
+    log.info(f"User {request.user.username} with id {request.user.id} has deleted block with id {jsonData['id']}")
 
     cursor.close()
     db.releaseConnection(conn)
