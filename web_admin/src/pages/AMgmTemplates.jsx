@@ -219,10 +219,11 @@ function TemplatesUpdateOrCreate(props) {
   const navigate = useNavigate();
 
   const [data, setData] = useState({
-    id: template?.id ?? null,
-    name: template?.name ?? null,
-    label: template?.label ?? null,
-    content: template?.content ?? null,
+    id: template?.id ?? "",
+    name: template?.name ?? "",
+    label: template?.label ?? "",
+    content: template?.content ?? "",
+    is_name_editable: template?.is_name_editable ?? true
   });
 
   const [alert, setAlert] = useState({
@@ -290,7 +291,8 @@ function TemplatesUpdateOrCreate(props) {
 
   return (
     <>
-      <Fragment>
+     <main>
+     <Fragment>
         {template === null ? (
           <Button
             gradientMonochrome="info"
@@ -345,10 +347,10 @@ function TemplatesUpdateOrCreate(props) {
                 <div className="mb-2 block">
                   <Label htmlFor="name" value="Name" />
                 </div>
-                <TextInput
+                <TextInput key={null}
                   id="name"
                   placeholder=""
-                  disabled={!template?.is_name_editable ?? false}
+                  disabled={data?.is_name_editable===true   ?  false : true}
                   required={true}
                   onChange={(e) => {
                     let cData = { ...data };
@@ -428,6 +430,7 @@ function TemplatesUpdateOrCreate(props) {
           </Modal.Footer>
         </Modal>
       </Fragment>
+      </main>
     </>
   );
 }
@@ -439,10 +442,10 @@ function DeleteTemplate(props) {
   const navigate = useNavigate();
 
   const [data, _] = useState({
-    id: template?.id ?? null,
-    name: template?.name ?? null,
-    label: template?.label ?? null,
-    content: template?.content ?? null,
+    id: template?.id ?? "",
+    name: template?.name ?? "",
+    label: template?.label ?? "",
+    content: template?.content ?? "",
   });
 
   const [alert, setAlert] = useState({
@@ -704,9 +707,9 @@ function BlocksUpdateOrCreate(props) {
   const navigate = useNavigate();
 
   const [data, setData] = useState({
-    id: block?.id ?? null,
-    name: block?.name ?? null,
-    content: block?.content ?? null,
+    id: block?.id ?? "",
+    name: block?.name ?? "",
+    content: block?.content ??"",
   });
 
   const [alert, setAlert] = useState({
