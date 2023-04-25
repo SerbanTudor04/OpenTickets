@@ -9,7 +9,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
         <Flowbite>
-          <App /> 
+          <App className="" /> 
         </Flowbite>
      </BrowserRouter>
   </React.StrictMode>,

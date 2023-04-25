@@ -1317,3 +1317,55 @@ def deleteBlock():
     }
 
     return makeReturnResponse(__responseObject), 200
+
+# dashboard reports
+
+
+@server.route("/admin/dashboard/reports/users", methods=["GET"])
+@adminLoginCheck
+def usersReports():
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    data={}
+
+    cursor.execute("""
+    select count(*) from tickets a where 
+        a.id in (select q.ticket_id from tickets_users_assigned q where q.user_id =%s ) 
+        and a.created_by != %s 
+        and a.status not in ('OPEN','RELEASED')
+    --group by created_at
+    """,[request.user.id,request.user.id])
+
+    # tickets assgined
+    data["assigned"]=(cursor.fetchone())[0]
+
+    cursor.execute("""
+        select count(*) from tickets a where 
+            a.created_by = %s 
+            and a.status not in ('OPEN','RELEASED')
+            
+    """,[request.user.id])
+    # tickets created
+    data["created"]=(cursor.fetchone())[0]
+
+    # deparment
+
+    cursor.execute("""
+            select ad."name" from admin_departments ad where id = (select q.id from admin_departments_members q where q.user_id=%s) 
+    """,[request.user.id])
+
+    data["department"]=(cursor.fetchone())[0]
+
+    cursor.close()
+    db.releaseConnection(conn)
+    
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200

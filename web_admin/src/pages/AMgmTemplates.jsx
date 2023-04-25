@@ -73,9 +73,7 @@ export default function AMgmTemplates(props) {
       <section className="flex flex-col  justify-center items-center pt-3">
         <BlocksSections />
       </section>
-      <section className="flex flex-col  justify-center items-center pt-3">
-        <VariablesSection />
-      </section>
+
     </>
   );
 }
@@ -197,8 +195,7 @@ function TemplatesSection(props) {
                           <DeleteTemplate template={item} />
                         </div>
 
-                        {/* <Assign2MeModal item={item}/> */}
-                        {/* <UpdateConfig item={item}/> */}
+
                       </Table.Cell>
                     </Table.Row>
                   );
@@ -1013,126 +1010,3 @@ function DeleteBlock(props) {
   );
 }
 
-
-function VariablesSection(props) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [vars, setVars] = useState(null);
-  useEffect(() => {
-    async function callMeBaby() {
-      let d = await getVariables();
-      setVars(d);
-      setIsLoading(false);
-    }
-    callMeBaby();
-  }, []);
-  if (isLoading === true && vars === null) {
-    return (
-      <>
-        <div className="  ">
-          <div className="flex  flex-col  justify-center items-center">
-            <Spinner />
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  if (vars === null) {
-    return (
-      <>
-        <div className="  ">
-          <div className="flex  flex-col  justify-center items-center">
-            <p>
-              There aren't any variables showed, please contact the
-              administrator.
-            </p>
-          </div>
-        </div>
-      </>
-    );
-  }
-  return (
-    <>
-      <div className="w-3/4 grid grid-cols-1  ">
-        <div className="">
-          <h5 className="text-2xl">Variables</h5>
-          <Table hoverable={true} className="">
-            <Table.Head>
-              <Table.HeadCell>ID</Table.HeadCell>
-              <Table.HeadCell>Name</Table.HeadCell>
-              <Table.HeadCell>Created at</Table.HeadCell>
-              <Table.HeadCell>Created by</Table.HeadCell>
-              <Table.HeadCell>Updated at</Table.HeadCell>
-              <Table.HeadCell>Updated by</Table.HeadCell>
-              <Table.HeadCell>Is static</Table.HeadCell>
-              <Table.HeadCell>
-                <span className="sr-only">Edit</span>
-              </Table.HeadCell>
-            </Table.Head>
-
-            <Table.Body className="divide-y">
-              {(() => {
-                if (vars === null || vars.length === 0) {
-                  return (
-                    <>
-                      <Table.Row
-                        key={"varsTR--null"}
-                        id={"varsTR--null"}
-                        className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                      >
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          There aren't variables created yet.
-                        </Table.Cell>
-                        <Table.Cell></Table.Cell>
-                        <Table.Cell></Table.Cell>
-                        <Table.Cell></Table.Cell>
-                        <Table.Cell></Table.Cell>
-                        <Table.Cell></Table.Cell>
-                        <Table.Cell></Table.Cell>
-
-                        <Table.Cell>
-                          {/* <Assign2MeModal item={item}/> */}
-                          {/* <UpdateConfig item={item}/> */}
-                        </Table.Cell>
-                      </Table.Row>
-                    </>
-                  );
-                }
-                return vars.map((item, key) => {
-                  return (
-                    <Table.Row
-                      key={key + "varsTR--" + item.id}
-                      id={key + "varsTR--" + item.id}
-                      className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    >
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        {item.id}
-                      </Table.Cell>
-                      <Table.Cell>{item.name}</Table.Cell>
-                      <Table.Cell>{item.created_at}</Table.Cell>
-                      <Table.Cell>{item.created_by}</Table.Cell>
-                      <Table.Cell>{item.updated_at}</Table.Cell>
-                      <Table.Cell>{item.updated_by}</Table.Cell>
-                      <Table.Cell>
-                        {item.is_static ? (
-                          <span className="text-blue-900">Yes</span>
-                        ) : (
-                          <span className="text-red-400">No </span>
-                        )}
-                      </Table.Cell>
-
-                      <Table.Cell>
-                        {/* <Assign2MeModal item={item}/> */}
-                        {/* <UpdateConfig item={item}/> */}
-                      </Table.Cell>
-                    </Table.Row>
-                  );
-                });
-              })()}
-            </Table.Body>
-          </Table>
-        </div>
-      </div>
-    </>
-  );
-}

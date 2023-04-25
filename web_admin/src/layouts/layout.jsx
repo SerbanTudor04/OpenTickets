@@ -3,7 +3,7 @@ export default function Layout(props){
     return (
         <>
           <section>
-          <div className="">
+          <div className=" ">
             {props.children}
             </div>
 
