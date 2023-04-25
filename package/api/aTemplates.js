@@ -130,3 +130,64 @@ export async function  deleteTemplates(send_data){
         return null;
     }
 }
+
+
+export async function  createBlock(send_data){
+    
+    try{
+        let r= await fetch(`${API_ADDRESS}/admin/templates/blocks/create`,{
+            credentials: 'include',
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(send_data)
+        })
+        let data=   await r.json()
+        return data;
+    }catch(e){
+        console.debug(e)
+        return null;
+    }
+}
+
+export async function  updateBlock(send_data){
+    
+    try{
+        let r= await fetch(`${API_ADDRESS}/admin/templates/blocks/update`,{
+            credentials: 'include',
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(send_data)
+        })
+        let data=   await r.json()
+        return data;
+    }catch(e){
+        console.debug(e)
+        return null;
+    }
+}
+
+export async function  deleteBLock(send_data){
+    
+    try{
+        let r= await fetch(`${API_ADDRESS}/admin/templates/blocks/delete`,{
+            credentials: 'include',
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(send_data)
+        })
+        let data=   await r.json()
+        return data;
+    }catch(e){
+        console.debug(e)
+        return null;
+    }
+}

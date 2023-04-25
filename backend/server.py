@@ -45,6 +45,7 @@ atexit.register(lambda: scheduler.shutdown())
 if __name__ == '__main__':
     import endpoints.backoffice
     import endpoints.tickets
+    import endpoints.frontoffice
 
     if server.config.get('DEBUG_ENDPOINTS'):
         import endpoints.test
