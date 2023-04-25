@@ -72,7 +72,6 @@ export default function AMgmUsers() {
                 <Table.HeadCell>Created at</Table.HeadCell>
                 <Table.HeadCell>Superuser</Table.HeadCell>
                 <Table.HeadCell>Department</Table.HeadCell>
-                <Table.HeadCell></Table.HeadCell>
                 <Table.HeadCell>
                   <span className="sr-only">Edit</span>
                 </Table.HeadCell>
