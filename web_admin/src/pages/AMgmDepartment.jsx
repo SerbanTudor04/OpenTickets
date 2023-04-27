@@ -196,7 +196,7 @@ function EditOrCreateDeptModal(props) {
           <Modal.Body>
             <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                {props.dept ? "Edit" : "Create"} User
+                {props.dept ? "Edit" : "Create"} Department
               </h3>
               <div className="flex w-full">
                 {(props?.user)?<div className="flex-col w-full mr-1">
