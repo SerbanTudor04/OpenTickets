@@ -73,7 +73,6 @@ export default function ADepartment(){
                     <Table.HeadCell>Description</Table.HeadCell>
                     <Table.HeadCell>Created at</Table.HeadCell>
                     <Table.HeadCell>Updated at</Table.HeadCell>
-                    <Table.HeadCell></Table.HeadCell>
                     <Table.HeadCell>
                       <span className="sr-only">Edit</span>
                     </Table.HeadCell>
