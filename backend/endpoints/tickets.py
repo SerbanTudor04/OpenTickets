@@ -1,4 +1,4 @@
-from __main__ import server, db, logger
+from __main__ import server, db, logger,mailer
 import uuid
 from flask import request, jsonify
 from libs import makeReturnResponse, adminLoginCheck, superUserCheck, genTicketCode, addInboxMessageForDepartment
@@ -457,6 +457,42 @@ def addMessage2TicketsOrMessage():
         insert into ticket_messages (id, content, created_by, id_master, ticket_id, created_at)
         values (%s,%s,%s,%s,%s,%s); 
         """, (str(uuid.uuid4()), jsonData["content"], request.user.id, messageMasterID, ticketID, datetime.datetime.now()))
+    
+    cursor.execute("select content from tickets where id=%s ",[jsonData["ticket_id"]])
+    r=cursor.fetchone()
+    QUESTION=r[0]
+
+    __msg=f"""{request.user.username} has added a new message on ticket {jsonData["ticket_id"]}
+        QUESTION:
+        {QUESTION}
+        ANSWER:  
+        {jsonData['content']}  
+    """
+
+
+    cursor.execute("""
+        select from_address from tickets_emails where ticket_id=%s
+    """,[jsonData['ticket_id']])
+    r=cursor.fetchone()
+    if r is not None:
+        SEND_ADDR=r[0]
+        print("trimitere email")
+        # TODO implement ability to change a template of the message and also to make a question answer template
+        mailer.send([SEND_ADDR],f"{request.user.username} has added a new message on ticket {jsonData['ticket_id']}",__msg,__msg)  
+        
+    else:
+        cursor.execute("""
+            select created_by from tickets where id=%s
+        """,[jsonData['ticket_id']])
+        r=cursor.fetchone()
+        CREATED_BY=r[0]
+        
+        cursor.execute("""
+        INSERT INTO tickets.admin_users_inbox
+            (user_id, message, created_at, viewed, state)
+            VALUES(%s, %s, now(), false, 'INFO')
+        """,(CREATED_BY,__msg))
+        # TODO notify every user that has any right on this ticket
 
     conn.commit()
     cursor.close()

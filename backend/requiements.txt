@@ -44,4 +44,3 @@ tzlocal==4.3
 urllib3==1.26.15
 Werkzeug==2.2.3
 wrapt==1.15.0
-setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability

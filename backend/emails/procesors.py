@@ -15,6 +15,7 @@ class MailerProcessor:
         print("Start indexing inbox emails")
         self.isProcessFinished=False
         data=mailer.fetchInbox()
+        print("Inbox recived",data)
         conn = db.getConnection()
 
         cursor= conn.cursor()
