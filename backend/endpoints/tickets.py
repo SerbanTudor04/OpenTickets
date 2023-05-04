@@ -492,7 +492,6 @@ def addMessage2TicketsOrMessage():
             (user_id, message, created_at, viewed, state)
             VALUES(%s, %s, now(), false, 'INFO')
         """,(CREATED_BY,__msg))
-        # TODO 
 
         cursor.execute("""
         select a.user_id tickets_users_assigned a where a.ticket_id=%s and a.user_id!=%s
