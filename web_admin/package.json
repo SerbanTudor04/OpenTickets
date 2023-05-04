@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@dicebear/collection": "^6.0.2",
-    "@dicebear/core": "^6.0.2",
+    "@dicebear/core": "^6.0.3",
     "@emotion/react": "^11.10.8",
     "@tinymce/tinymce-react": "^4.3.0",
     "dayjs": "^1.11.7",
