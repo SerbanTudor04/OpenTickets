@@ -129,20 +129,20 @@
     "@dicebear/shapes" "6.0.2"
     "@dicebear/thumbs" "6.0.2"
 
-"@dicebear/converter@6.0.2":
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/@dicebear/converter/-/converter-6.0.2.tgz#a23ae17f57734fa51ef54d64e11fe1a22b075451"
-  integrity sha512-oylyWwLyeB7euFNsnrCbTm2GNXGELCBcO8uRWEpx09g5aK534H9zLggxqmyL1lcRzAJEaZXl3pZWNStXReLGYA==
+"@dicebear/converter@6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@dicebear/converter/-/converter-6.0.3.tgz#fbe90a9958bb27a5ca366f2b583135310d24f2fc"
+  integrity sha512-/xy8fYWskEdrAkfDCXhsJ22pkh/GVxVcYQ6AyDIJIG53NgzEsClCZ8FodP7FjPpPHra83x2AZoXIhV/yDPPrkw==
   dependencies:
     "@types/json-schema" "^7.0.11"
     tmp-promise "^3.0.3"
 
-"@dicebear/core@^6.0.2":
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/@dicebear/core/-/core-6.0.2.tgz#9794193bd4a5f84ad13300753ae5347d49c7653d"
-  integrity sha512-Ce0m4Lc0qq23+m9Jysdxvj8nEUz8XSbABrtzLFZCxFEWJgLRaH6hahAouKrMmxkd1YuP/iIC4/4mD0Ulon80wA==
+"@dicebear/core@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@dicebear/core/-/core-6.0.3.tgz#9e9de6fc123a228a10a89a69e7b36627acba2a3f"
+  integrity sha512-h+SG+RLaMNG6PR4if+uX8+GuO1r9Q/wKAoogpTrkOg0JkUBaaZv+CaUHSg3Ppd7zDZC0H7SuAEsCJuvJELa8iA==
   dependencies:
-    "@dicebear/converter" "6.0.2"
+    "@dicebear/converter" "6.0.3"
     "@types/json-schema" "^7.0.11"
 
 "@dicebear/croodles-neutral@6.0.2":
