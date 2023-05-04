@@ -492,8 +492,19 @@ def addMessage2TicketsOrMessage():
             (user_id, message, created_at, viewed, state)
             VALUES(%s, %s, now(), false, 'INFO')
         """,(CREATED_BY,__msg))
-        # TODO notify every user that has any right on this ticket
+        # TODO 
 
+        cursor.execute("""
+        select a.user_id tickets_users_assigned a where a.ticket_id=%s and a.user_id!=%s
+        """,[jsonData['ticket_id'],request.user.id])
+
+        for i in cursor.fethchall():
+            cursor.execute("""
+            INSERT INTO tickets.admin_users_inbox
+                (user_id, message, created_at, viewed, state)
+                VALUES(%s, %s, now(), false, 'INFO')
+            """,(i[0],__msg))
+            conn.commit()
     conn.commit()
     cursor.close()
     db.releaseConnection(conn)
