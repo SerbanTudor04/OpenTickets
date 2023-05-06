@@ -9,3 +9,28 @@ from env import DB_QUERY_STRING
 
 
 log = logger
+
+
+@server.route("/public/getTicket", methods=["POST"])
+@adminLoginCheck
+def getTicket():
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    data={
+        
+    }
+
+    
+    cursor.close()
+    db.releaseConnection(conn)
+    
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200

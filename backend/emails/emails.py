@@ -55,7 +55,7 @@ class Mailer:
 
     def test_connection(self,send_emails:list[str]):
         print("Sending test emails...")
-        subject = "TGS Support"
+        subject = "OT Support"
         message="This is a test message automatically generated from the application."
         html="""
             <html>
@@ -63,7 +63,7 @@ class Mailer:
             <body>
                 <p>This is a test email</p>
                 <p>With respect,</p>
-                <p>TGS Software Team</p>
+                <p>Open Tickets Team</p>
                 
             </body>
             </html>

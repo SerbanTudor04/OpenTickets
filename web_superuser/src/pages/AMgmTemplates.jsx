@@ -8,7 +8,7 @@ import {
   TextInput,
   Textarea,
 } from "flowbite-react";
-import { Fragment, useEffect, useReducer, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   createBlock,
@@ -17,53 +17,15 @@ import {
   deleteTemplates,
   getBlocks,
   getTemplates,
-  getVariables,
   updateBlock,
   updateTemplates,
 } from "../../../package/api/aTemplates";
-import { isSuperUser } from "../../../package/api/auth";
 import {
-  HiDeviceTablet,
-  HiDocumentRemove,
   HiInformationCircle,
   HiOutlineExclamationCircle,
 } from "react-icons/hi";
 
 export default function AMgmTemplates(props) {
-  const [isSu, setIsSU] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function callMeBaby() {
-      let r = await isSuperUser();
-      setIsSU(r);
-      setIsLoading(false);
-    }
-    callMeBaby();
-  }, []);
-
-  if (isLoading === true) {
-    return (
-      <>
-        <div className="  ">
-          <div className="flex  flex-col  justify-center items-center">
-            <Spinner />
-          </div>
-        </div>
-      </>
-    );
-  }
-  if (!isSu) {
-    return (
-      <>
-        <div className="  ">
-          <div className="flex  flex-col  justify-center items-center">
-            <p>You don't have access to see this content.</p>
-          </div>
-        </div>
-      </>
-    );
-  }
 
   return (
     <>

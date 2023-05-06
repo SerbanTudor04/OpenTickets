@@ -1,7 +1,8 @@
 import { Sidebar } from "flowbite-react";
-import { HiViewBoards,HiUser,HiInbox,HiChatAlt2, HiBell, HiPlus, HiClock,  } from "react-icons/hi";
+import { HiViewBoards,HiUser,HiInbox,HiOfficeBuilding, HiChatAlt2, HiBell, HiPlus, HiClock,  } from "react-icons/hi";
+import { HiTableCells,  } from "react-icons/hi2";
 
-import { BiBuoy,BiDoughnutChart } from "react-icons/bi";
+import { BiBuoy,BiDoughnutChart,BiExtension,BiStore } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { getUserInboxNumber } from "../../../../package/api/ausers";
 
@@ -55,41 +56,26 @@ export default  function ASideBar(props){
         </Sidebar.Item>
           
         })()}
-        <Sidebar.Collapse
-          
-          icon={HiChatAlt2}
-          label="Tickets"
+        
+
+          <Sidebar.Item icon={HiUser} href="/management/users">
+            Users 
+          </Sidebar.Item>
+          <Sidebar.Item icon={HiOfficeBuilding} href="/management/departments">
+            Departments
+          </Sidebar.Item>
+          <Sidebar.Item icon={HiTableCells} href="/management/config">
+            Config
+          </Sidebar.Item>
+        <Sidebar.Item
+           href="/management/templates"
+          icon={BiExtension}
         >
-          <Sidebar.Item icon={HiPlus} href="/tickets/create">
-            Create Ticket
-          </Sidebar.Item>          
-          <Sidebar.Item icon={HiUser} href="/tickets/mytickets">
-            Your Tickets
+          Templates
           </Sidebar.Item>
-          <Sidebar.Item icon={HiClock} href="/tickets/pending-tickets">
-            In Pending Tickets
-          </Sidebar.Item>
-          <Sidebar.Item icon={HiBell} href="/tickets/free-tickets">
-            Free Tickets
-          </Sidebar.Item>
-        </Sidebar.Collapse>
-       
         
       </Sidebar.ItemGroup>
-       <Sidebar.ItemGroup className="">
-        <Sidebar.Item
-          href="#"
-          icon={HiViewBoards}
-        >
-          Documentation
-        </Sidebar.Item>
-        <Sidebar.Item
-          href="#"
-          icon={BiBuoy}
-        >
-          Help
-        </Sidebar.Item>
-      </Sidebar.ItemGroup>
+      
     </Sidebar.Items>
   </Sidebar>
     </div>

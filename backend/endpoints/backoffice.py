@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from libs import encode_auth_token, makeReturnResponse, adminLoginCheck, superUserCheck
 import psycopg2.errors as dbErrors
 from env import DB_QUERY_STRING
-
+from functions import scoreManagement as scMGM
 
 log = logger
 
@@ -84,6 +84,9 @@ def create_user():
         return makeReturnResponse(responseObject), 400
 
     cursor.close()
+
+    
+    scMGM.createUserBalance(log,conn,userData["id"])
     db.releaseConnection(conn)
 
     log.info(

@@ -144,7 +144,13 @@ def doCreateUser(userdata):
     (id, username, "password", email, first_name, last_name, created_at, updated_at, is_su)
     VALUES(%s, %s, %s, %s, %s, %s, now(), now(), %s)
     """, (userData["id"], userData["username"], userData["password"], userData["email"], userData["first_name"], userData["last_name"], userData["is_su"]))
+    # creates balance
+    crs.execute("""
+    INSERT INTO reports_users_balances
+    (user_id, score)
+    VALUES(%s, 0);
 
+""",(userData["id"]))
 
     dbConn.commit()
     crs.close()

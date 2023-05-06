@@ -2,15 +2,14 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./layouts/layout";
 import ProtectedRoute from "./layouts/ProtectedRoute";
+
 import Authenticate from "./pages/Authenticate";
 import ADashboard from "./pages/ADashboard";
 import AInbox from "./pages/AInbox";
-import ADepartmentsTickets from "./pages/ADepartmentsTickets";
-import ACreateTicket from "./pages/ACreateTicket";
-import AViewTicket from "./pages/AViewTicket";
-import AMyTickets from "./pages/AMyTickets";
-import APendingTickets from "./pages/APendingTickets";
-import AFreeTickets from "./pages/AFreeTickets";
+import AMgmUsers from "./pages/AMgmUsers";
+import ADepartment from "./pages/AMgmDepartment";
+import AMgmConfig from "./pages/AMgmConfig";
+import AMgmTemplates from "./pages/AMgmTemplates";
 
 function App() {
   return (
@@ -42,55 +41,39 @@ function App() {
                 </ProtectedRoute>
               }
             />
-    
             <Route
-              path="/tickets/mydepartments"
+              path="/management/users"
               element={
                 <ProtectedRoute>
-                  <ADepartmentsTickets />
+                  <AMgmUsers />
                 </ProtectedRoute>
               }
-            />            
+            /> 
             <Route
-            path="/tickets/create"
+            path="/management/departments"
             element={
               <ProtectedRoute>
-                <ACreateTicket />
+                <ADepartment />
               </ProtectedRoute>
             }
           />
-           <Route
-            path="/tickets/view/:id"
+            <Route
+            path="/management/config"
             element={
               <ProtectedRoute>
-                <AViewTicket />
+                <AMgmConfig />
               </ProtectedRoute>
             }
-          />
+            />
           <Route
-            path="/tickets/mytickets"
+            path="/management/templates"
             element={
               <ProtectedRoute>
-                <AMyTickets />
+                <AMgmTemplates />
               </ProtectedRoute>
             }
           />
-            <Route
-            path="/tickets/pending-tickets"
-            element={
-              <ProtectedRoute>
-                <APendingTickets />
-              </ProtectedRoute>
-            }
-          />
-           <Route
-            path="/tickets/free-tickets"
-            element={
-              <ProtectedRoute>
-                <AFreeTickets />
-              </ProtectedRoute>
-            }
-          />
+           
                    
         </Routes>
 

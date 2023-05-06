@@ -12,7 +12,8 @@ server.config.update(
     DEBUG=envFile["SERVER_DEBUG"],
     SECRET_KEY=envFile["SECRET_KEY"],
     CACHE_TYPE="SimpleCache",  # Flask-Caching related configs
-    CACHE_DEFAULT_TIMEOUT=300
+    CACHE_DEFAULT_TIMEOUT=300,
+    DEBUG_ENDPOINTS=envFile["DEBUG_ENDPOINTS"]
 )
 
 

@@ -10,7 +10,13 @@ import {
 } from "flowbite-react";
 import { useEffect, useState, Fragment } from "react";
 import { isSuperUser } from "../../../package/api/auth";
-import { createUser, deleteUser, getDepartments, getUsers, updateUser } from "../../../package/api/ausers";
+import {
+  createUser,
+  deleteUser,
+  getDepartments,
+  getUsers,
+  updateUser,
+} from "../../../package/api/ausers";
 import { HiCheck, HiOutlineExclamationCircle, HiX } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 export default function AMgmUsers() {
@@ -56,14 +62,20 @@ export default function AMgmUsers() {
     );
   }
 
-
   return (
     <>
       <section className="flex flex-col  justify-center items-center">
         <div className="w-3/4 grid grid-cols-1  ">
-          <div className="mb-3">
-            <EditOrCreateUserModal user={null} />
+          <div className="grid grid-cols-6 pb-3">
+            <div className="col-start-1 col-end-3">
+              <h5 className="text-2xl">Users</h5>
+            </div>
+            <div className="col-start-7">
+              {/* <TemplatesUpdateOrCreate template={null} /> */}
+              <EditOrCreateUserModal user={null} />
+            </div>
           </div>
+          <div className="mb-3"></div>
           <div className="">
             <Table className="">
               <Table.Head>
@@ -80,7 +92,8 @@ export default function AMgmUsers() {
               <Table.Body className="divide-y">
                 {users.map((item, key) => {
                   return (
-                    <Table.Row key={"tbr__"+item.email}
+                    <Table.Row
+                      key={"tbr__" + item.email}
                       id={key + "usersTR--" + item.id}
                       className="bg-white dark:border-gray-700 dark:bg-gray-800"
                     >
@@ -95,14 +108,15 @@ export default function AMgmUsers() {
                         <div className="flex">
                           <div className="flex-col pr-1">
                             <EditOrCreateUserModal
-                          id={"modalView--" + item.id}
-                          user={item}
-                        />
-                       
+                              id={"modalView--" + item.id}
+                              user={item}
+                            />
                           </div>
                           <div className="flex-col">
-                          <DeleteUser    id={"deletemodalView--" + item.id}
-                          user={item}/>
+                            <DeleteUser
+                              id={"deletemodalView--" + item.id}
+                              user={item}
+                            />
                           </div>
                         </div>
                       </Table.Cell>
@@ -139,13 +153,12 @@ function EditOrCreateUserModal(props) {
     password: null,
     department_id: null,
     is_su: null,
-    ...props?.user
+    ...props?.user,
   });
 
   const [isSavingUser, setIsSavingUser] = useState(false);
 
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function callMeBaby() {
@@ -156,29 +169,26 @@ function EditOrCreateUserModal(props) {
     if (isOpenModal && departments === null) callMeBaby();
   }, [isOpenModal]);
 
-
-  async function update(){
-    setIsSavingUser(true)
-    let submitData={...props.user,...curentData}
-    let r= await updateUser(submitData)
-    endCreateOrUpdate(r)
-
-
+  async function update() {
+    setIsSavingUser(true);
+    let submitData = { ...props.user, ...curentData };
+    let r = await updateUser(submitData);
+    endCreateOrUpdate(r);
   }
-  async function create(){
-    setIsSavingUser(true)
-    let cData= {...curentData}
-    cData.id=props?.user?.id
-    let r= await createUser(cData)
-    endCreateOrUpdate(r)
+  async function create() {
+    setIsSavingUser(true);
+    let cData = { ...curentData };
+    cData.id = props?.user?.id;
+    let r = await createUser(cData);
+    endCreateOrUpdate(r);
   }
-  function endCreateOrUpdate(r){
-    if(!r){
-      setIsSavingUser(false)
-      return ;
+  function endCreateOrUpdate(r) {
+    if (!r) {
+      setIsSavingUser(false);
+      return;
     }
 
-    setIsSavingUser(false)
+    setIsSavingUser(false);
     setisOpenModal(false);
     setCurrentData({
       email: null,
@@ -188,21 +198,34 @@ function EditOrCreateUserModal(props) {
       username: null,
     });
 
-    navigate(0)
+    navigate(0);
   }
 
   return (
     <Fragment>
-      <Button
-        onClick={() => {
-          setisOpenModal(true);
-        }}
-        pill={true}
-        gradientMonochrome="info"
-        outline={true}
-      >
-        {props.user ? "Edit" : "Create"}
-      </Button>
+      {props.user ? (
+        <Button
+          onClick={() => {
+            setisOpenModal(true);
+          }}
+          pill={true}
+          gradientMonochrome="info"
+          outline={true}
+        >
+          Edit
+        </Button>
+      ) : (
+        <Button
+          onClick={() => {
+            setisOpenModal(true);
+          }}
+          pill={true}
+          gradientMonochrome="info"
+          outline={false}
+        >
+          Create
+        </Button>
+      )}
 
       <Modal
         show={isOpenModal}
@@ -225,19 +248,21 @@ function EditOrCreateUserModal(props) {
               {props.user ? "Edit" : "Create"} User
             </h3>
             <div className="flex w-full">
-              {(props?.user)?<div className="flex-col w-full mr-1">
-                <div className="mb-2 block">
-                  <Label htmlFor="id" value="ID" />
+              {props?.user ? (
+                <div className="flex-col w-full mr-1">
+                  <div className="mb-2 block">
+                    <Label htmlFor="id" value="ID" />
+                  </div>
+                  <TextInput
+                    id="id"
+                    type="text"
+                    required={true}
+                    value={props?.user?.id}
+                    readOnly={true}
+                    disabled={true}
+                  />
                 </div>
-                <TextInput
-                  id="id"
-                  type="text"
-                  required={true}
-                  value={ props?.user?.id}
-                  readOnly={true}
-                  disabled={true}
-                />
-              </div>:null}
+              ) : null}
               <div className="flex-col w-full mr-1">
                 <div className="mb-2 block">
                   <Label htmlFor="username" value="Username" />
@@ -314,7 +339,11 @@ function EditOrCreateUserModal(props) {
                   }
                   return departments.map((dept) => {
                     return (
-                      <option key={"dept__"+dept.id} id={"dept--" + dept.id} value={dept.id}>
+                      <option
+                        key={"dept__" + dept.id}
+                        id={"dept--" + dept.id}
+                        value={dept.id}
+                      >
                         {dept.name}
                       </option>
                     );
@@ -325,11 +354,11 @@ function EditOrCreateUserModal(props) {
             <div className="flex justify-between">
               <div className="flex items-center gap-2">
                 <ToggleSwitch
-                  checked={curentData?.is_su??props?.user?.is_su}
+                  checked={curentData?.is_su ?? props?.user?.is_su}
                   label="Super User"
                   onChange={(e) => {
                     let cData = { ...curentData };
-                    console.debug("current super user event: " + e)
+                    console.debug("current super user event: " + e);
                     cData.is_su = e;
                     setCurrentData(cData);
                   }}
@@ -338,9 +367,26 @@ function EditOrCreateUserModal(props) {
             </div>
             <div className="w-full">
               {props.user ? (
-                <Button onClick={update}>{(isSavingUser)?<Spinner/>: "Save changes"}</Button>
+                <Button
+                  className="w-full"
+                  gradientMonochrome="info"
+                  pill={true}
+                  outline={false}
+                  onClick={update}
+                >
+                  {isSavingUser ? <Spinner /> : "Save changes"}
+                </Button>
               ) : (
-                <Button onClick={create}> {(isSavingUser)?<Spinner/>: "Create user"}</Button>
+                <Button
+                  className="w-full"
+                  gradientMonochrome="info"
+                  pill={true}
+                  outline={false}
+                  onClick={create}
+                >
+                  {" "}
+                  {isSavingUser ? <Spinner /> : "Create user"}
+                </Button>
               )}
             </div>
           </div>
@@ -350,72 +396,75 @@ function EditOrCreateUserModal(props) {
   );
 }
 
-function DeleteUser(props){
+function DeleteUser(props) {
   const [isOpenModal, setisOpenModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  async function doDelete(){
+  async function doDelete() {
     setIsDeleting(true);
 
-    let r = await deleteUser(props?.user?.id)
+    let r = await deleteUser(props?.user?.id);
     setIsDeleting(false);
-    if(r){
-      navigate(0)
-      return
+    if (r) {
+      navigate(0);
+      return;
     }
-
   }
 
-  function cancel(){
-    setisOpenModal(false)
+  function cancel() {
+    setisOpenModal(false);
   }
-  
 
-  return (<>
-    <Fragment>
-  <Button pill={true}    gradientMonochrome="failure"
-        outline={true} onClick={()=>{
-    setisOpenModal(true)
-  }}>
-    Delete
-  </Button>
-  <Modal
-    show={isOpenModal}
-    size="md"
-    popup={true}
-    onClose={cancel}
-  >
-    <Modal.Header />
-    <Modal.Body>
-      <div className="text-center">
-        {(isDeleting)?<Spinner  className="mx-auto mb-4 h-14 w-14"/> : <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />}
-        
+  return (
+    <>
+      <Fragment>
+        <Button
+          pill={true}
+          gradientMonochrome="failure"
+          outline={true}
+          onClick={() => {
+            setisOpenModal(true);
+          }}
+        >
+          Delete
+        </Button>
+        <Modal show={isOpenModal} size="md" popup={true} onClose={cancel}>
+          <Modal.Header />
+          <Modal.Body>
+            <div className="text-center">
+              {isDeleting ? (
+                <Spinner className="mx-auto mb-4 h-14 w-14" />
+              ) : (
+                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+              )}
 
-        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-          Are you sure you want to delete user <strong>{props?.user?.username}</strong>?
-        </h3>
-        <div className="flex justify-center gap-4">
-          <Button
-            gradientMonochrome="failure"
-            pill={true} 
-            outline={true}
-            onClick={doDelete}
-          >
-            Yes, I'm sure
-          </Button>
-          <Button
-            gradientMonochrome="info"
-            pill={true} 
-            outline={true}
-            onClick={cancel}
-          >
-            No, cancel
-          </Button>
-        </div>
-      </div>
-    </Modal.Body>
-  </Modal>
-</Fragment>
-  </>)
+              <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                Are you sure you want to delete user{" "}
+                <strong>{props?.user?.username}</strong>?
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button
+                  gradientMonochrome="failure"
+                  pill={true}
+                  outline={true}
+                  onClick={doDelete}
+                >
+                  Yes, I'm sure
+                </Button>
+                <Button
+                  gradientMonochrome="info"
+                  pill={true}
+                  outline={true}
+                  onClick={cancel}
+                >
+                  No, cancel
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      </Fragment>
+    </>
+  );
 }

@@ -57,9 +57,21 @@ export default function ADashboard() {
             </Card>
           </section>
         </div>
+        <div className="grid grid-cols-1 gap-0 w-3/4 m-auto pt-3">
+          <section>
+            <Card>
+              <h5 class="text-blueGray-400 uppercase font-bold text-xs">
+                  Your scores
+              </h5>
+
+            </Card>
+          </section>
+        </div>
       </section>
       <section className="bg-white w-full  z-2">
-        <div></div>
+        <div>
+          
+        </div>
       </section>
     </>
   );
