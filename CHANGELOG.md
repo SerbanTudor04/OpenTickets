@@ -1,3 +1,17 @@
+# 0.9.0
+## Features:
+- Migrate from `jsx` to `tsx`
+- Add Documentation page with complete features.
+- Implement partially reports users balance
+- Migrate management part from the web_admin to a hole new application web_superuser
+- Remove todo comment
+- Add when a message is sent, notify every user that has any right on this ticket
+- Added ability to send email to the creator of the ticket or to add message to inbox of the creator.
+# Fixes:
+- Fix typo
+- Fix AMgmDeparment table view error
+- Fix tickets on message send when a message is send
+- Fix bug in server.py in for test endpoints
 # 0.8.1
 ## Fixes:
 - Added missing default data on installation
