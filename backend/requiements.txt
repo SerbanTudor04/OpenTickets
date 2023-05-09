@@ -41,7 +41,7 @@ tomlkit==0.11.7
 typing_extensions==4.5.0
 tzdata==2023.3
 tzlocal==4.3
-urllib3==1.26.15
+urllib3==2.0.2
 Werkzeug==2.3.2
 wrapt==1.15.0
 setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
