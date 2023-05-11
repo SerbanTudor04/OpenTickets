@@ -432,7 +432,7 @@ def addMessage2TicketsOrMessage():
 
     messageMasterID = None
     if "master_message_id" in jsonData:
-        messageMasterID = str(jsonData["master_message_id"])
+        messageMasterID = jsonData["master_message_id"]
 
     if "ticket_status" in jsonData and jsonData["ticket_status"] is not None:
         cursor.execute("""
@@ -494,10 +494,10 @@ def addMessage2TicketsOrMessage():
         """,(CREATED_BY,__msg))
 
     cursor.execute("""
-    select a.user_id tickets_users_assigned a where a.ticket_id=%s and a.user_id!=%s
+    select a.user_id from tickets_users_assigned a  where ticket_id=%s and user_id!=%s
     """,[jsonData['ticket_id'],request.user.id])
 
-    for i in cursor.fethchall():
+    for i in cursor.fetchall():
         cursor.execute("""
         INSERT INTO tickets.admin_users_inbox
             (user_id, message, created_at, viewed, state)
