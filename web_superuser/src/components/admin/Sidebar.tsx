@@ -1,7 +1,7 @@
 import { Sidebar } from "flowbite-react";
 import { HiUser,HiInbox,HiOfficeBuilding, HiMenu,  } from "react-icons/hi";
 import { HiTableCells,  } from "react-icons/hi2";
-
+import { BsFillPeopleFill } from "react-icons/bs";
 import { BiDoughnutChart,BiExtension } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { getUserInboxNumber } from "../../../../package/api/ausers";
@@ -75,7 +75,12 @@ export default  function ASideBar(props){
         >
           Templates
           </Sidebar.Item>
-        
+          <Sidebar.Item
+           href="/management/clients"
+          icon={BsFillPeopleFill}
+        >
+          Clients
+          </Sidebar.Item>
       </Sidebar.ItemGroup>
       
     </Sidebar.Items>

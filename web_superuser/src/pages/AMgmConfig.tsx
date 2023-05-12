@@ -52,20 +52,6 @@ export default function AMgmConfig(props){
       );
   }
 
-    // if(configs===null){
-    //     return (
-    //         <>
-    //           <div className="  ">
-    //             <div className="flex  flex-col  justify-center items-center">
-    //               <p>
-    //                 There aren't any config showed, please contact the administrator.
-    //               </p>
-    //             </div>
-    //           </div>
-    //         </>
-    //       );
-    // }
-
     return (<>
     <section className="flex flex-col  justify-center items-center">
         <div className="w-3/4 grid grid-cols-1  ">

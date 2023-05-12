@@ -15,7 +15,7 @@ import {
   getDepartments,
   updateDepartment,
 } from "../../../package/api/ausers";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { HiOutlineExclamationCircle, HiOutlinePencil, HiOutlinePlus, HiOutlineTrash } from "react-icons/hi";
 import React from "react";
 
 export default function ADepartment() {
@@ -164,7 +164,7 @@ function EditOrCreateDeptModal(props) {
         pill={true}
         outline={true}
       >
-        Edit
+       <HiOutlinePencil/>{" "} Edit
       </Button>
  :       <Button
  onClick={() => {
@@ -174,7 +174,7 @@ function EditOrCreateDeptModal(props) {
  pill={true}
  outline={false}
 >
- Create
+ Create{" "}<HiOutlinePlus className="h-5 w-5"/>
 </Button>
 }
 
@@ -303,7 +303,7 @@ function DeleteDept(props) {
             setisOpenModal(true);
           }}
         >
-          Delete
+         <HiOutlineTrash/> {" "}Delete
         </Button>
         <Modal show={isOpenModal} size="md" popup={true} onClose={cancel}>
           <Modal.Header />

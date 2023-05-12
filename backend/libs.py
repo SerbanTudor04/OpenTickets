@@ -214,3 +214,17 @@ def addInboxMessageForUser(conn, subject, user_id):
     """, (user_id, subject, currDate))
 
     conn.commit()
+
+
+
+def validateRequestsFields(jsonData, fields):
+    for field in fields:
+        if field not in jsonData:
+            return False
+    return True
+
+def assignQueryToFields(cursorQuery, fields) -> dict:
+    r={}
+    for key,field in enumerate(fields):
+        r[field]=cursorQuery[key]
+    return r

@@ -3,7 +3,7 @@ from datetime import datetime
 import uuid
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from libs import encode_auth_token, makeReturnResponse, adminLoginCheck, superUserCheck
+from libs import encode_auth_token, makeReturnResponse, adminLoginCheck, superUserCheck,validateRequestsFields,assignQueryToFields
 import psycopg2.errors as dbErrors
 from env import DB_QUERY_STRING
 from functions import scoreManagement as scMGM
@@ -1372,3 +1372,443 @@ def usersReports():
     }
 
     return makeReturnResponse(__responseObject), 200
+
+
+@server.route("/admin/superuser/clients/create", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def createClient():
+    
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "type" not in jsonData or str(jsonData["type"]).lower() not in ["business","person"]:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid type ',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+    client_type=str(jsonData["type"]).lower()
+
+    if client_type=="person":
+        fields=["email","phone","address","city","country_id","zipcode","region","first_name","last_name","middle_name","unique_id"]
+        message='Missing "email" or"phone" or"address" or"city" or"country_id" or"zipcode" or"region" or"first_name" or"last_name" or"middle_name" or "unique_id"'
+    else:
+        fields=["email","phone","address","city","country_id","zipcode","region","full_name","registration_code","code"]
+        message='Missing "name" or"email" or"phone" or"address" or"city" or"country_id" or"zipcode" or"region" or"first_name" or"last_name" or"middle_name"'
+    
+    if not validateRequestsFields(jsonData,fields):
+        __responseObject = {
+            'status': 'invalid',
+            'message': message,
+        }
+        return makeReturnResponse(__responseObject), 400
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":{}
+        
+        }
+
+
+    if  client_type=="person":
+        full_name=f'{jsonData["first_name"]} {jsonData["middle_name"]} {jsonData["last_name"]}'
+        
+        cursor.execute("""
+            INSERT INTO admin_clients
+            (full_name, first_name, middle_name, last_name, address, country_id, city, region, unique_id, email, phone, zipcode,created_by,updated_by)
+            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s);
+        """,[full_name,jsonData["first_name"],jsonData["middle_name"],jsonData["last_name"],jsonData["address"],jsonData["country_id"],jsonData["city"],jsonData["region"],jsonData["unique_id"],
+                        jsonData["email"],jsonData["phone"],jsonData["zipcode"],request.user.id,request.user.id])
+
+        conn.commit()
+        
+        log.info(f"User {request.user.username} with id {request.user.id} has created person client named {full_name}")
+
+        cursor.close()
+        db.releaseConnection(conn)
+        return makeReturnResponse(__responseObject), 200
+
+    cursor.execute("""
+    INSERT INTO admin_clients_as_bussiness
+    (full_name, address, email, registration_code, code, country_id, city, region, phone, zipcode,created_by,updated_by)
+    VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s);
+    """,(jsonData["full_name"],jsonData["address"],jsonData["email"],jsonData["registration_code"],jsonData["code"],
+         jsonData["country_id"],jsonData["city"],jsonData["region"],jsonData["phone"],jsonData["zipcode"],request.user.id,request.user.id))
+    
+
+    conn.commit()
+    log.info(f'User {request.user.username} with id {request.user.id} has created person client named {jsonData["full_name"]}')
+
+    cursor.close()
+    db.releaseConnection(conn)
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/superuser/clients", methods=["GET"])
+@adminLoginCheck
+@superUserCheck
+def getAllClients():
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+        select 	
+            a.full_name, a.address,
+            (select q.name from nomenclators_countries q where q.id=a.country_id) as country,
+            a.region, unique_id as code ,
+            a.email,a.phone, false as is_business,uid from admin_clients a
+        union all
+        select 	
+            a.full_name, a.address,
+            (select q.name from nomenclators_countries q where q.id=a.country_id) as country,
+            a.region, a.registration_code || ' ' || a.code as code ,
+            a.email,a.phone, true as is_business,uid from admin_clients_as_bussiness a
+    """)
+
+    data=[]
+
+    fields=["full_name","address","country","region","code","email","phone","is_business","uid",]
+    for i in cursor.fetchall():
+        data.append(assignQueryToFields(i,fields))
+
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+        }
+
+    return makeReturnResponse(__responseObject), 200
+
+
+@server.route("/admin/superuser/clients/getCountries", methods=["GET"])
+@adminLoginCheck
+@superUserCheck
+def getCountries():
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+        select id, name || ' - ' || code as name from nomenclators_countries
+    """)
+
+    data=[]
+
+    for i in cursor.fetchall():
+        data.append({
+            "id":i[0],
+            "name":i[1]
+        })
+    # print(data)
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+        }
+
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/superuser/clients/getClient", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def getClient():
+    data = jsonify(request.json)
+    jsonData = data.json
+    if "client_uid" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+    try:
+        cursor.execute("""
+            select 	
+                false is_business from admin_clients a where a.uid=%s
+            union all
+            select 	
+                true is_business from admin_clients_as_bussiness a where a.uid=%s
+        """,[jsonData["client_uid"],jsonData["client_uid"]])
+    except Exception as e:
+        __responseObject = {
+        'status': 'success',
+        'message': 'The client_uid is invalid',
+        "data":{}
+        
+        }
+
+        return makeReturnResponse(__responseObject), 400
+    
+    is_business=cursor.fetchone()[0]
+    print("is_business",is_business)
+    if  is_business == False:
+        cursor.execute("""
+            SELECT first_name, middle_name, last_name, address, country_id, 
+            city, region, unique_id, id, email, phone, zipcode, created_at, 
+            updated_at, created_by, updated_by, uid
+            FROM admin_clients where uid=%s;
+        """,[jsonData["client_uid"]])
+        fields=["first_name","middle_name","last_name","address","country_id","city","region","unique_id","id","email","phone","zipcode","created_at","updated_at","created_by","updated_by","uid"]
+        
+    else:
+        cursor.execute("""
+        SELECT id, full_name, address, email, registration_code, code, country_id, city, region, phone, zipcode, created_by, updated_by, created_at, updated_at, uid
+        FROM admin_clients_as_bussiness where uid=%s;
+        """,[jsonData["client_uid"]])
+        fields=["id","full_name","address","email","registration_code","code","country_id","city","region","phone","zipcode","created_by","updated_by","created_at","updated_at","uid"]
+    
+    r=cursor.fetchone()
+    if r is None:
+        __responseObject = {
+        'status': 'success',
+        'message': 'The client_uid is invalid',
+        "data":{}
+        
+        }
+
+        return makeReturnResponse(__responseObject), 400
+    data=assignQueryToFields(r,fields)
+
+    data["is_business"]=is_business
+
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+        }
+
+    return makeReturnResponse(__responseObject), 200
+
+
+@server.route("/admin/superuser/clients/notes/create", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def createNotes():
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "client_uid" not in jsonData or "note_content" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid or note_content',
+        }
+        return makeReturnResponse(__responseObject), 400
+    
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    try:
+        cursor.execute("""
+            select 	
+                id from admin_clients a where a.uid=%s
+            union all
+            select 	
+                id from admin_clients_as_bussiness a where a.uid=%s
+        """,[jsonData["client_uid"],jsonData["client_uid"]])
+
+        r=cursor.fetchone()[0]
+        if r is None:
+            raise Exception("No uid")
+    except Exception as e:
+        __responseObject = {
+        'status': 'success',
+        'message': 'The client_uid is invalid',
+        "data":{}
+        
+        }
+
+        return makeReturnResponse(__responseObject), 400
+
+    cursor.execute("""
+        INSERT INTO admin_clients_notes
+        (note, created_at, client_uid)
+        VALUES(%s, now(), %s);
+    """,(jsonData["note_content"],jsonData["client_uid"]))
+
+    log.info(f"User {request.user.username} with id {request.user.id} created note for client with uid {jsonData['client_uid']}")
+
+    conn.commit()
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":{}
+        
+        }
+
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/superuser/clients/edit", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def editClient():
+    data = jsonify(request.json)
+    jsonData = data.json
+    if "client_uid" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid',
+        }
+        return makeReturnResponse(__responseObject), 400
+    
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    try:
+        cursor.execute("""
+            select 	
+                false is_business from admin_clients a where a.uid=%s
+            union all
+            select 	
+                true is_business from admin_clients_as_bussiness a where a.uid=%s
+        """,[jsonData["client_uid"],jsonData["client_uid"]])
+        r= cursor.fetchone()
+        if r is None:
+            raise Exception("No uid")
+    except Exception as e:
+        __responseObject = {
+        'status': 'error',
+        'message': 'The client_uid is invalid',
+        "data":{}
+        
+        }
+
+        return makeReturnResponse(__responseObject), 400
+    is_business=r[0]
+
+    if is_business == False:
+        fields=["email","phone","address","city","country_id","zipcode","region","first_name","last_name","middle_name","unique_id"]
+        message='Missing "email" or"phone" or"address" or"city" or"country_id" or"zipcode" or"region" or"first_name" or"last_name" or"middle_name" or "unique_id"'
+    else:
+        fields=["email","phone","address","city","country_id","zipcode","region","full_name","registration_code","code"]
+        message='Missing "name" or"email" or"phone" or"address" or"city" or"country_id" or"zipcode" or"region" or"first_name" or"last_name" or"middle_name"'
+    # TODO finish this function
+
+    if not validateRequestsFields(jsonData,fields):
+        __responseObject = {
+            'status': 'invalid',
+            'message': message,
+        }
+        return makeReturnResponse(__responseObject), 400
+    
+    __responseObject = {
+                'status': 'success',
+                'message': 'OK',
+                "data":{}
+                
+                }
+    __responseCode=200
+    try:
+        if is_business == False:
+            cursor.execute("""
+                UPDATE admin_clients SET
+                email=%s, phone=%s, address=%s, city=%s, country_id=%s, zipcode=%s, region=%s, first_name=%s, last_name=%s, middle_name=%s, unique_id=%s, updated_by=%s, updated_at=now(),full_name=%s
+                WHERE uid=%s;
+            """,(jsonData["email"],jsonData["phone"],jsonData["address"],jsonData["city"],jsonData["country_id"],jsonData["zipcode"],jsonData["region"],jsonData["first_name"],jsonData["last_name"],jsonData["middle_name"],jsonData["unique_id"],request.user.id,f"{jsonData['first_name']} {jsonData['middle_name']} {jsonData['last_name']}",jsonData["client_uid"]))
+        else:
+            cursor.execute("""
+                    UPDATE admin_clients_as_bussiness SET
+                    email=%s, phone=%s, address=%s, city=%s, country_id=%s, zipcode=%s, region=%s, full_name=%s, registration_code=%s, code=%s, updated_by=%s, updated_at=now()
+                    where uid=%s
+            """,(jsonData["email"],jsonData["phone"],jsonData["address"],jsonData["city"],jsonData["country_id"],jsonData["zipcode"],jsonData["region"],jsonData["full_name"],jsonData["registration_code"],jsonData["code"],request.user.id,jsonData["client_uid"]))
+
+        conn.commit()
+
+    except Exception as e:
+        conn.rollback()
+        log.error(f"User {request.user.username} with id {request.user.id} failed to edit client with uid {jsonData['client_uid']} with error: {str(e)}")
+        __responseObject = {
+        'status': 'error',
+        'message': str(e),
+        "data":{}
+        
+        }
+        __responseCode=500
+
+        
+    cursor.close()
+    db.releaseConnection(conn)
+
+    return makeReturnResponse(__responseObject), __responseCode
+
+@server.route("/admin/superuser/clients/delete", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def deleteClient():
+    data = jsonify(request.json)
+    jsonData = data.json
+    if "client_uid" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid',
+        }
+        return makeReturnResponse(__responseObject), 400
+    
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    try:
+        cursor.execute("""
+            select 	
+                false is_business from admin_clients a where a.uid=%s
+            union all
+            select 	
+                true is_business from admin_clients_as_bussiness a where a.uid=%s
+        """,[jsonData["client_uid"],jsonData["client_uid"]])
+        r= cursor.fetchone()
+        if r is None:
+            raise Exception("No uid")
+    except Exception as e:
+        __responseObject = {
+        'status': 'error',
+        'message': 'The client_uid is invalid',
+        "data":{}
+        
+        }
+
+        return makeReturnResponse(__responseObject), 400
+    is_business=r[0]
+
+    if is_business == False:
+        cursor.execute("""
+            DELETE FROM admin_clients WHERE uid=%s;
+        """,[jsonData["client_uid"]])
+    else:
+        cursor.execute("""
+            DELETE FROM admin_clients_as_bussiness WHERE uid=%s;
+        """,[jsonData["client_uid"]])
+    conn.commit()
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+                'status': 'success',
+                'message': 'OK',
+                "data":{}
+                
+                }
+    return makeReturnResponse(__responseObject), 200
+

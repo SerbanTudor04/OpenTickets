@@ -11,6 +11,7 @@ import ADepartment from "./pages/AMgmDepartment";
 import AMgmConfig from "./pages/AMgmConfig";
 import AMgmTemplates from "./pages/AMgmTemplates";
 import React from "react";
+import ClientsPage, { CreateClient, CreateNote, EditClient } from "./pages/Clients";
 
 function App() {
   return (
@@ -74,8 +75,38 @@ function App() {
               </ProtectedRoute>
             }
           />
-           
-                   
+           <Route
+            path="/management/clients"
+            element={
+              <ProtectedRoute>
+                <ClientsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management/clients/create"
+            element={
+              <ProtectedRoute>
+                <CreateClient />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management/clients/:uid"
+            element={
+              <ProtectedRoute>
+                <EditClient />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/management/clients/:uid/notes/create"
+            element={
+              <ProtectedRoute>
+                <CreateNote />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
 
       </Layout>
