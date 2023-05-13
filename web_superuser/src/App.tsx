@@ -9,7 +9,7 @@ import AInbox from "./pages/AInbox";
 import AMgmUsers from "./pages/AMgmUsers";
 import ADepartment from "./pages/AMgmDepartment";
 import AMgmConfig from "./pages/AMgmConfig";
-import AMgmTemplates, { EditTemplate, TemplatesCreate } from "./pages/AMgmTemplates";
+import AMgmTemplates, { BlocksCreate, EditBlocks, EditTemplate, TemplatesCreate } from "./pages/AMgmTemplates";
 import React from "react";
 import ClientsPage, { CreateClient, CreateNote, EditClient } from "./pages/Clients";
 
@@ -88,6 +88,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <EditTemplate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management/templates/blocks/create"
+            element={
+              <ProtectedRoute>
+                <BlocksCreate />
+              </ProtectedRoute>
+            }
+          />
+                    <Route
+            path="/management/templates/blocks/:id"
+            element={
+              <ProtectedRoute>
+                <EditBlocks />
               </ProtectedRoute>
             }
           />

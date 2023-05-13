@@ -1040,7 +1040,45 @@ def getTemplate():
 
     return makeReturnResponse(__responseObject), 200
 
+@server.route("/admin/templates/blocks/block", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def getBlock():
+    data = jsonify(request.json)
+    jsonData = data.json
 
+    if "block_id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid block_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+
+    cursor.execute("""
+        SELECT id, "name", "content", created_at, created_by, updated_at, updated_by
+        FROM emails_blocks where id =%s;
+
+ 
+    """,[jsonData["block_id"]])
+    data=assignQueryToFields( cursor.fetchone(),["id","name","content","created_at","created_by","updated_at","updated_by"] )
+
+
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
 
 @server.route("/admin/templates/update", methods=["POST"])
 @adminLoginCheck

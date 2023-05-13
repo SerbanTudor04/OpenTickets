@@ -17,6 +17,7 @@ import {
   createTemplate,
   deleteBLock,
   deleteTemplates,
+  getBlock,
   getBlocks,
   getTemplate,
   getTemplates,
@@ -464,7 +465,7 @@ export function TemplatesCreate() {
   return (
     <>
       <main>
-        <section className="flex flex-col items-center justify-center w-full h-full px-6 py-4 mx-auto space-y-4">
+        <section className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <Card>
             <div>
               <div className="flex flex-row gap-4 pt-3">
@@ -726,6 +727,7 @@ function makeAlertBody(content) {
 function BlocksSections(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [blocks, setBlocks] = useState([]);
+  const navigator = useNavigate();
   useEffect(() => {
     async function callMeBaby() {
       let d = await getBlocks();
@@ -746,19 +748,6 @@ function BlocksSections(props) {
     );
   }
 
-  // if (blocks === null) {
-  //   return (
-  //     <>
-  //       <div className="  ">
-  //         <div className="flex  flex-col  justify-center items-center">
-  //           <p>
-  //             There aren't any blocks showed, please contact the administrator.
-  //           </p>
-  //         </div>
-  //       </div>
-  //     </>
-  //   );
-  // }
   return (
     <>
       <div className="w-3/4 grid grid-cols-1  ">
@@ -768,7 +757,16 @@ function BlocksSections(props) {
               <h5 className="text-2xl">Blocks</h5>
             </div>
             <div className="col-start-7">
-              <BlocksUpdateOrCreate block={null} />
+              <Button
+                gradientMonochrome="info"
+                pill={true}
+                outline={false}
+                onClick={() => {
+                  navigator("/management/templates/blocks/create");
+                }}
+              >
+                Create +
+              </Button>
             </div>
           </div>
           <Table hoverable={true} className="">
@@ -830,11 +828,18 @@ function BlocksSections(props) {
 
                       <Table.Cell>
                         <div className="flex">
-                          <BlocksUpdateOrCreate block={item} />
+                          <Button
+                            gradientMonochrome="info"
+                            pill={true}
+                            outline={true}
+                            onClick={() => {
+                              navigator("/management/templates/blocks/"+item.id);
+                            }}
+                          >
+                            <HiPencil/>Edit
+                          </Button>
                           <DeleteBlock block={item} />
                         </div>
-                        {/* <Assign2MeModal item={item}/> */}
-                        {/* <UpdateConfig item={item}/> */}
                       </Table.Cell>
                     </Table.Row>
                   );
@@ -848,26 +853,27 @@ function BlocksSections(props) {
   );
 }
 
-function BlocksUpdateOrCreate(props) {
-  const { block } = props;
-  const [isOpen, setIsOpen] = useState(false);
+export function EditBlocks() {
+  const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const [data, setData] = useState({
-    id: block?.id ?? "",
-    name: block?.name ?? "",
-    content: block?.content ?? "",
-  });
+  const [data, setData] = useState<any>({});
 
   const [alert, setAlert] = useState({
     title: null,
     content: null,
   });
 
-  function onClose() {
-    setIsOpen(false);
-  }
+  useEffect(() => {
+    setIsLoading(true)
+    async function callMeBaby() {
+      let d = await getBlock(id);
+      setData(d);
+      setIsLoading(false);
+    }
+    callMeBaby();
+  },[]);
 
   function addAlert(title, content) {
     setAlert({
@@ -899,12 +905,7 @@ function BlocksUpdateOrCreate(props) {
       return;
     }
 
-    let r;
-    if (block) {
-      r = await updateBlock(data);
-    } else {
-      r = await createBlock(data);
-    }
+    let r = await updateBlock(data);
 
     if (r.status === "error" || r.status === "invalid") {
       addAlert("An error occured.", r.message);
@@ -919,35 +920,30 @@ function BlocksUpdateOrCreate(props) {
 
   return (
     <>
-      <Fragment>
-        {block === null ? (
-          <Button
-            gradientMonochrome="info"
-            pill={true}
-            outline={false}
-            onClick={() => {
-              setIsOpen(true);
-            }}
-          >
-            Create +
-          </Button>
-        ) : (
-          <Button
-            gradientMonochrome="info"
-            pill={true}
-            outline={true}
-            onClick={() => {
-              setIsOpen(true);
-            }}
-          >
-            Edit
-          </Button>
-        )}
-        <Modal show={isOpen} onClose={onClose}>
-          <Modal.Header>
-            {block === null ? "Create template" : "Edit template"}
-          </Modal.Header>
-          <Modal.Body>
+      <div  className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <Card>
+          <div>
+            <div className="flex flex-row gap-4 pt-3">
+              <div>
+                <Tooltip content="Go back" placement="right">
+                  <Button
+                    color="light"
+                    pill={true}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                    outline={false}
+                  >
+                    <HiOutlineArrowLeft className="h-6 w-6" />
+                  </Button>
+                </Tooltip>
+              </div>
+              <div className="pt-1">
+                <h4 className="text-2xl">Edit block</h4>
+              </div>
+            </div>
+          </div>
+          <div>
             <div className="space-y-6">
               {/* alert  */}
 
@@ -1008,24 +1004,187 @@ function BlocksUpdateOrCreate(props) {
                 />
               </div>
             </div>
-          </Modal.Body>
-          <Modal.Footer>
+          </div>
+          <div>
             <Button
               gradientMonochrome="info"
               pill={true}
-              outline={true}
+              outline={false}
               className="w-full"
               onClick={createOrUpdate}
             >
-              {isLoading ? <Spinner /> : block === null ? "Create +" : "Update"}
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <>
+                  Edit <HiPencil />
+                </>
+              )}
             </Button>
-          </Modal.Footer>
-        </Modal>
-      </Fragment>
+          </div>
+        </Card>
+      </div>
     </>
   );
 }
 
+export function BlocksCreate() {
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const [data, setData] = useState<any>({});
+
+  const [alert, setAlert] = useState({
+    title: null,
+    content: null,
+  });
+
+  function addAlert(title, content) {
+    setAlert({
+      title: title,
+      content: content,
+    });
+  }
+  function clearAlert() {
+    setAlert({
+      title: null,
+      content: null,
+    });
+  }
+
+  async function create() {
+    setIsLoading(true);
+    clearAlert();
+
+    if (!data.name) {
+      addAlert("All fields are required.", "Name is required.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!data.content) {
+      addAlert("All fields are required.", "Content is required.");
+      setIsLoading(false);
+
+      return;
+    }
+
+    let r = await createBlock(data);
+
+    if (r.status === "error" || r.status === "invalid") {
+      addAlert("An error occured.", r.message);
+      setIsLoading(false);
+
+      return;
+    }
+    setIsLoading(false);
+
+    navigate(0);
+  }
+
+  return (
+    <>
+      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <Card>
+          <div>
+            <div className="flex flex-row gap-4 pt-3">
+              <div>
+                <Tooltip content="Go back" placement="right">
+                  <Button
+                    color="light"
+                    pill={true}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                    outline={false}
+                  >
+                    <HiOutlineArrowLeft className="h-6 w-6" />
+                  </Button>
+                </Tooltip>
+              </div>
+              <div className="pt-1">
+                <h4 className="text-2xl">Create block</h4>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="space-y-6">
+              {/* alert  */}
+
+              {alert.title ? (
+                <Alert
+                  color="failure"
+                  icon={HiInformationCircle}
+                  rounded={true}
+                  additionalContent={makeAlertBody(alert.content)}
+                  onDismiss={clearAlert}
+                >
+                  <h3 className="text-lg font-medium text-red-700 dark:text-red-800">
+                    {alert.title}
+                  </h3>
+                </Alert>
+              ) : null}
+
+              {/* content */}
+
+              <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                Coming soon a better editor
+              </p>
+              <div id="textarea">
+                <div className="mb-2 block">
+                  <Label htmlFor="name" value="Name" />
+                </div>
+                <TextInput
+                  id="name"
+                  placeholder=""
+                  required={true}
+                  onChange={(e) => {
+                    let cData = { ...data };
+                    cData.name = e.target.value;
+                    setData(cData);
+                  }}
+                  value={data.name}
+                />
+                <small className="text-4sm text-gray-500">
+                  * Name of the block, which can be referenced in another
+                  template.
+                </small>
+              </div>
+              <div id="textarea">
+                <div className="mb-2 block">
+                  <Label htmlFor="content" value="Content(HTML)" />
+                </div>
+                <Textarea
+                  id="content"
+                  placeholder="<html>...</html>"
+                  required={true}
+                  rows={4}
+                  onChange={(e) => {
+                    let cData = { ...data };
+                    cData.content = e.target.value;
+                    setData(cData);
+                  }}
+                  value={data.content}
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <Button
+              gradientMonochrome="info"
+              pill={true}
+              outline={false}
+              className="w-full"
+              onClick={create}
+            >
+              {isLoading ? <Spinner /> : "Create +"}
+            </Button>
+          </div>
+        </Card>
+      </div>
+    </>
+  );
+}
 function DeleteBlock(props) {
   const { block } = props;
   const [isOpen, setIsOpen] = useState(false);
@@ -1088,7 +1247,7 @@ function DeleteBlock(props) {
             setIsOpen(true);
           }}
         >
-          Delete
+          <HiTrash/>Delete
         </Button>
 
         <Modal show={isOpen} onClose={onClose}>
