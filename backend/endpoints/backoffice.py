@@ -1941,3 +1941,47 @@ def deleteClient():
                 }
     return makeReturnResponse(__responseObject), 200
 
+
+@server.route("/admin/superuser/reports/dashboard", methods=["GET"])
+@adminLoginCheck
+@superUserCheck
+def getSuperUserDashboard():
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    data={
+        "ticket_created":None,
+        "ticket_active":None,
+        "users_created":None,
+        "departments_created":None,
+        "clients_created":None,
+    }
+
+    cursor.execute("""
+        select count(*) from tickets;
+    """)
+    data["ticket_created"]=cursor.fetchone()[0]
+    cursor.execute("""
+        select count(*) from tickets where status not in ('CLOSED','TEMP_CLOSED');
+    """)
+    data["ticket_active"]=cursor.fetchone()[0]
+    cursor.execute("""
+        select count(*) from admin_users;
+        """)
+    data["users_created"]=cursor.fetchone()[0]
+
+    cursor.execute("""
+        select count(*) from admin_departments;
+    """)
+    data["departments_created"]=cursor.fetchone()[0]
+
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+                'status': 'success',
+                'message': 'OK',
+                "data":data
+                
+                }
+    return makeReturnResponse(__responseObject), 200

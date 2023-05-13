@@ -66,8 +66,8 @@ export default function ClientsPage() {
 
   return (
     <>
-      <section className="flex flex-col  justify-center items-center">
-        <div className="w-3/4 grid grid-cols-1  ">
+      <section className="flex flex-col  justify-center items-center w-auto">
+        <div className="grid grid-cols-1  ">
           <div className="grid grid-cols-6 pb-3">
             <div className="col-start-1 col-end-3">
               <h5 className="text-2xl">Clients</h5>
