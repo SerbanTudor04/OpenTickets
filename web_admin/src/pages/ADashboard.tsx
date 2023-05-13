@@ -11,7 +11,7 @@ export default function ADashboard() {
     department: null,
   });
   useEffect(() => {
-    getUsersTicketsReports().then((res) => {
+    getUsersTicketsReports().then((res:any) => {
       console.log(res);
       setTicketsReports(res);
     });
@@ -23,11 +23,11 @@ export default function ADashboard() {
         <div className="grid grid-cols-3 gap-4 w-3/4 m-auto ">
           <section>
             <Card className="">
-              <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
-                <h5 class="text-blueGray-400 uppercase font-bold text-xs">
+              <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                <h5 className="text-blueGray-400 uppercase font-bold text-xs">
                   Tickets assigned to you
                 </h5>
-                <span class="font-bold text-xl text-blue-600">
+                <span className="font-bold text-xl text-blue-600">
                   {ticketsReports.assigned}
                 </span>
               </div>
@@ -35,11 +35,11 @@ export default function ADashboard() {
           </section>
           <section>
             <Card className="">
-              <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
-                <h5 class="text-blueGray-400 uppercase font-bold text-xs">
+              <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                <h5 className="text-blueGray-400 uppercase font-bold text-xs">
                   Tickets created by you
                 </h5>
-                <span class="font-bold text-xl text-blue-600">
+                <span className="font-bold text-xl text-blue-600">
                   {ticketsReports.created}
                 </span>
               </div>
@@ -47,11 +47,11 @@ export default function ADashboard() {
           </section>
           <section>
             <Card className="">
-              <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
-                <h5 class="text-blueGray-400 uppercase font-bold text-xs">
+              <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                <h5 className="text-blueGray-400 uppercase font-bold text-xs">
                   Your department
                 </h5>
-                <span class="font-bold text-xl text-blue-600">
+                <span className="font-bold text-xl text-blue-600">
                   {ticketsReports.department}
                 </span>
               </div>

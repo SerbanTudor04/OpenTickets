@@ -6,7 +6,7 @@ import ProtectedRoute from "./layouts/ProtectedRoute";
 import Authenticate from "./pages/Authenticate";
 import ADashboard from "./pages/ADashboard";
 import AInbox from "./pages/AInbox";
-import AMgmUsers from "./pages/AMgmUsers";
+import AMgmUsers, { CreateUser, EditUser } from "./pages/AMgmUsers";
 import ADepartment from "./pages/AMgmDepartment";
 import AMgmConfig from "./pages/AMgmConfig";
 import AMgmTemplates, { BlocksCreate, EditBlocks, EditTemplate, TemplatesCreate } from "./pages/AMgmTemplates";
@@ -48,6 +48,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AMgmUsers />
+                </ProtectedRoute>
+              }
+            /> 
+            <Route
+              path="/management/users/create"
+              element={
+                <ProtectedRoute>
+                  <CreateUser />
+                </ProtectedRoute>
+              }
+            /> 
+            <Route
+            path="/management/users/:id"
+              element={
+                <ProtectedRoute>
+                  <EditUser />
                 </ProtectedRoute>
               }
             /> 

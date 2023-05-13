@@ -162,6 +162,35 @@ def updateUser():
 
     return makeReturnResponse({"status": "success", "message": "User created successfully!"}), 200
 
+@server.route("/admin/superuser/users/user", methods=['POST'])
+@adminLoginCheck
+@superUserCheck
+def getUser():
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "user_id" not in jsonData :
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid user_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+    conn = db.getConnection()
+    cursor = conn.cursor()
+
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("select a.id,a.username, a.email,a.first_name ,a.last_name,a.is_su, (select q.department_id from admin_departments_members q where q.user_id=a.id) as department_id from admin_users a where id =  %s", [
+                   jsonData["user_id"]])
+
+    r= cursor.fetchone()
+
+    data=assignQueryToFields(r,["id","username","email","first_name","last_name","is_su","department_id"])
+
+    cursor.close()
+    db.releaseConnection(conn)
+    return makeReturnResponse({"status": "success", "message": "User created successfully!","data":data}), 200
+
 
 @server.route("/admin/deleteUser", methods=['POST'])
 @adminLoginCheck
@@ -328,6 +357,8 @@ def create_department():
         f"User {request.user.id} has created department {jsonData['name']}!")
 
     return makeReturnResponse({"status": "success", "message": f"Department {jsonData['name']} created successfully!"}), 200
+
+
 
 
 @server.route("/admin/check_auth", methods=["POST", "GET"])
@@ -1975,6 +2006,11 @@ def getSuperUserDashboard():
         select count(*) from admin_departments;
     """)
     data["departments_created"]=cursor.fetchone()[0]
+
+    cursor.execute("""
+        select (select count(*) from admin_clients) + (select count(*) from admin_clients_as_bussiness)
+    """)
+    data["clients_created"]=cursor.fetchone()[0]
 
     cursor.close()
     db.releaseConnection(conn)
