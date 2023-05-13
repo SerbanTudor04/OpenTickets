@@ -9,6 +9,7 @@ import {
   Table,
   TextInput,
   Textarea,
+  Timeline,
   Tooltip,
 } from "flowbite-react";
 import React, { Fragment, useEffect, useState } from "react";
@@ -20,9 +21,11 @@ import {
   getClients,
   getCountries,
   createNote,
+  getNotes,
 } from "../../../package/api/aClients";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  HiArrowNarrowRight,
   HiInformationCircle,
   HiOutlineArrowLeft,
   HiOutlineDocumentReport,
@@ -1276,13 +1279,40 @@ export function EditClient() {
 
 function ViewNotes(props) {
   const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [notes, setNotes] = useState<any[]>([]);
   const { client } = props;
 
+  async function fetchData() {
+    setIsLoading(true);
+    if (notes.length > 0) {
+      setIsLoading(false);
+      return;
+    }
+
+    let r = await getNotes(client.uid);
+    console.log(r);
+
+    if (r === null) {
+      setIsLoading(false);
+      return;
+    }
+    setNotes(r.data);
+    setIsLoading(false);
+  }
   return (
     <>
       <Tooltip content="View notes">
         {/* TODO add redirect to notes add */}
-        <Button onClick={()=>setShow(true)} pill={true} outline={true} color="light">
+        <Button
+          onClick={() => {
+            setShow(true);
+            fetchData();
+          }}
+          pill={true}
+          outline={true}
+          color="light"
+        >
           <IoAlbums />
         </Button>
       </Tooltip>
@@ -1292,27 +1322,53 @@ function ViewNotes(props) {
           setShow(false);
         }}
       >
-        <Modal.Header>Client <strong>{client.first_name} {client.middle_name} {client.last_name}</strong> Notes</Modal.Header>
-        
+        <Modal.Header>
+          Client{" "}
+          <strong>
+            {client.first_name} {client.middle_name} {client.last_name}
+          </strong>{" "}
+          Notes
+        </Modal.Header>
+
         <Modal.Body>
-          <div className="space-y-6">
-            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              With less than a month to go before the European Union enacts new
-              consumer privacy laws for its citizens, companies around the world
-              are updating their terms of service agreements to comply.
-            </p>
-            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              The European Union’s General Data Protection Regulation (G.D.P.R.)
-              goes into effect on May 25 and is meant to ensure a common set of
-              data rights in the European Union. It requires organizations to
-              notify users as soon as possible of high-risk data breaches that
-              could personally affect them.
-            </p>
-          </div>
+          {isLoading ? (
+            <div className="flex flex-row gap-4 pt-3">
+              <div className="flex-col">
+                <Spinner />{" "}
+              </div>
+            </div>
+          ) : (
+            <div>
+              {notes.length === 0 ? (
+                <div className="flex flex-row gap-4 pt-3">
+                  <div className="flex-col">
+                    <p className="text-xl text-gray-400">No notes</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-row gap-4 pt-3">
+                  <Timeline>
+                    {notes.map((note, index) => (
+                      <Timeline.Item>
+                        <Timeline.Point />
+                        <Timeline.Content>
+                          <Timeline.Time>{note.created_at}</Timeline.Time>
+                          <Timeline.Title>
+                            Note by {note.created_by}
+                          </Timeline.Title>
+                          <Timeline.Body>{note.note}</Timeline.Body>
+                        </Timeline.Content>
+                      </Timeline.Item>
+                    ))}
+                  </Timeline>
+                </div>
+              )}
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <p className="text-sm text-gray-400">Client UID: {client.uid}</p>
-          </Modal.Footer>
+        </Modal.Footer>
       </Modal>
     </>
   );

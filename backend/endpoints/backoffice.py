@@ -103,7 +103,7 @@ def updateUser():
     data = jsonify(request.json)
 
     jsonData = data.json
-    print(jsonData)
+    # print(jsonData)
 
     if "id" not in jsonData or "username" not in jsonData or "password" not in jsonData or "email" not in jsonData:
         __responseObject = {
@@ -171,7 +171,7 @@ def deleteUser():
     data = jsonify(request.json)
 
     jsonData = data.json
-    print(jsonData)
+    # print(jsonData)
 
     if "id" not in jsonData:
         __responseObject = {
@@ -1557,7 +1557,7 @@ def getClient():
         return makeReturnResponse(__responseObject), 400
     
     is_business=cursor.fetchone()[0]
-    print("is_business",is_business)
+    # print("is_business",is_business)
     if  is_business == False:
         cursor.execute("""
             SELECT first_name, middle_name, last_name, address, country_id, 
@@ -1642,9 +1642,9 @@ def createNotes():
 
     cursor.execute("""
         INSERT INTO admin_clients_notes
-        (note, created_at, client_uid)
+        (note, created_at, client_uid,created_by)
         VALUES(%s, now(), %s);
-    """,(jsonData["note_content"],jsonData["client_uid"]))
+    """,(jsonData["note_content"],jsonData["client_uid"],request.user.id))
 
     log.info(f"User {request.user.username} with id {request.user.id} created note for client with uid {jsonData['client_uid']}")
 
@@ -1659,6 +1659,55 @@ def createNotes():
         }
 
     return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/superuser/clients/notes", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def getClientNotes():
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "client_uid" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid',
+        }
+        return makeReturnResponse(__responseObject), 400
+    
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+        SELECT id, note,
+        (select q.username from admin_users q where q.id=created_by) as created_by,created_at
+        FROM admin_clients_notes where client_uid=%s;
+    """,[jsonData["client_uid"]])
+
+    r=cursor.fetchall()
+    
+    if r is None:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid',
+        }
+        return makeReturnResponse(__responseObject), 400 
+
+    data=[]
+    for i in r:
+        data.append({"id":i[0],"note":i[1],"created_by":i[2],"created_at":i[3]})
+
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+        }
+
+    return makeReturnResponse(__responseObject), 200
+
 
 @server.route("/admin/superuser/clients/edit", methods=["POST"])
 @adminLoginCheck
