@@ -23,6 +23,31 @@ export async function  getTemplates(){
     
 
 }
+export async function  getTemplate(id){
+    
+    try{
+        let r= await fetch(`${API_ADDRESS}/admin/templates/template`,{
+            credentials: 'include',
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({template_id:id})
+        
+        })
+        if (!r.ok){
+            return null;
+        }
+        let data=   await r.json()
+        return data.data;
+    }catch(e){
+        console.debug(e)
+        return null;
+    }
+    
+
+}
 
 
 export async function  getBlocks(){

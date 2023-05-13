@@ -9,7 +9,7 @@ import AInbox from "./pages/AInbox";
 import AMgmUsers from "./pages/AMgmUsers";
 import ADepartment from "./pages/AMgmDepartment";
 import AMgmConfig from "./pages/AMgmConfig";
-import AMgmTemplates from "./pages/AMgmTemplates";
+import AMgmTemplates, { EditTemplate, TemplatesCreate } from "./pages/AMgmTemplates";
 import React from "react";
 import ClientsPage, { CreateClient, CreateNote, EditClient } from "./pages/Clients";
 
@@ -72,6 +72,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <AMgmTemplates />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management/templates/create"
+            element={
+              <ProtectedRoute>
+                <TemplatesCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management/templates/:id"
+            element={
+              <ProtectedRoute>
+                <EditTemplate />
               </ProtectedRoute>
             }
           />

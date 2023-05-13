@@ -1000,6 +1000,48 @@ def createTemplates():
 
     return makeReturnResponse(__responseObject), 200
 
+
+@server.route("/admin/templates/template", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def getTemplate():
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "template_id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid template_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+
+    cursor.execute("""
+        SELECT id, "content", created_at, updated_at, created_by, updated_by, "name", is_name_editable, "label"
+        FROM emails_templates where id=%s;
+ 
+    """,[jsonData["template_id"]])
+    data=assignQueryToFields( cursor.fetchone(),["id","content","created_at","updated_at","created_by","updated_by","name","is_name_editable","label"] )  
+
+
+    cursor.close()
+    db.releaseConnection(conn)
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data":data
+        
+    }
+
+    return makeReturnResponse(__responseObject), 200
+
+
+
 @server.route("/admin/templates/update", methods=["POST"])
 @adminLoginCheck
 @superUserCheck
