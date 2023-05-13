@@ -7,7 +7,7 @@ import Authenticate from "./pages/Authenticate";
 import ADashboard from "./pages/ADashboard";
 import AInbox from "./pages/AInbox";
 import AMgmUsers, { CreateUser, EditUser } from "./pages/AMgmUsers";
-import ADepartment from "./pages/AMgmDepartment";
+import ADepartment, { CreateDepartment, EditDepartment } from "./pages/AMgmDepartment";
 import AMgmConfig from "./pages/AMgmConfig";
 import AMgmTemplates, { BlocksCreate, EditBlocks, EditTemplate, TemplatesCreate } from "./pages/AMgmTemplates";
 import React from "react";
@@ -72,6 +72,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <ADepartment />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/management/departments/create"
+            element={
+              <ProtectedRoute>
+                <CreateDepartment />
+              </ProtectedRoute>
+            }
+          />
+                      <Route
+            path="/management/departments/:id"
+            element={
+              <ProtectedRoute>
+                <EditDepartment />
               </ProtectedRoute>
             }
           />

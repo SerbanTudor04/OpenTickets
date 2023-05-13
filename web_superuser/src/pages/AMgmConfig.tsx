@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getAppConfig, updateAppConfig } from "../../../package/api/aAppData";
 import { isSuperUser } from "../../../package/api/auth";
 import React from "react";
+import { HiPencil } from "react-icons/hi";
 
 
 export default function AMgmConfig(props){
@@ -131,7 +132,7 @@ function UpdateConfig(props){
               setisOpenModal(true);
             }}
           >
-            Update
+            <HiPencil/>Edit
           </Button>
           <Modal show={isOpenModal} size="md" popup={true} onClose={cancel}>
             <Modal.Header />
@@ -163,11 +164,11 @@ function UpdateConfig(props){
                   <Button
                     gradientMonochrome="info"
                     pill={true}
-                    outline={true}
+                    outline={false}
                     onClick={updateItem}
                     className="w-full"
                   >
-                    {isUpdating?<Spinner/> : "Update"}
+                    {isUpdating?<Spinner/> : <>Edit<HiPencil/></>}
                   </Button>
 
                 </div>

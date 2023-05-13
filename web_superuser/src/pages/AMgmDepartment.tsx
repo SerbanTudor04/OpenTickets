@@ -1,27 +1,37 @@
 import {
   Button,
+  Card,
   Label,
   Modal,
   Spinner,
   Table,
   Textarea,
   TextInput,
+  Tooltip,
 } from "flowbite-react";
 import { Fragment, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   createDepartment,
   deleteDepartment,
+  getDepartment,
   getDepartments,
   updateDepartment,
 } from "../../../package/api/ausers";
-import { HiOutlineExclamationCircle, HiOutlinePencil, HiOutlinePlus, HiOutlineTrash } from "react-icons/hi";
+import {
+  HiOutlineArrowLeft,
+  HiOutlineExclamationCircle,
+  HiOutlinePencil,
+  HiOutlinePlus,
+  HiOutlineTrash,
+  HiPencil,
+} from "react-icons/hi";
 import React from "react";
 
 export default function ADepartment() {
   const [dept, setDept] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     async function callMeBaby() {
       let r = await getDepartments();
@@ -54,7 +64,16 @@ export default function ADepartment() {
             </div>
             <div className="col-start-7">
               {/* <TemplatesUpdateOrCreate template={null} /> */}
-              <EditOrCreateDeptModal user={null} />
+              <Button
+                onClick={() => {
+                  navigate("/management/departments/create");
+                }}
+                gradientMonochrome="info"
+                pill={true}
+                outline={false}
+              >
+                Create +
+              </Button>
             </div>
           </div>
           <div className="">
@@ -71,7 +90,7 @@ export default function ADepartment() {
               </Table.Head>
 
               <Table.Body className="divide-y">
-                {dept.map((item:any, key) => {
+                {dept.map((item: any, key) => {
                   return (
                     <Table.Row
                       key={key + "usersTR--" + item.id}
@@ -88,10 +107,17 @@ export default function ADepartment() {
                       <Table.Cell>
                         <div className="flex">
                           <div className="flex-col pr-1">
-                            <EditOrCreateDeptModal
-                              id={"modalView--" + item.id}
-                              dept={item}
-                            />
+                            <Button
+                              onClick={() => {
+                                navigate("/management/departments/" + item.id);
+                              }}
+                              gradientMonochrome="info"
+                              pill={true}
+                              outline={true}
+                            >
+                              <HiPencil />
+                              Edit
+                            </Button>
                           </div>
                           <div className="flex-col">
                             <DeleteDept
@@ -113,29 +139,31 @@ export default function ADepartment() {
   );
 }
 
-function EditOrCreateDeptModal(props) {
-  const [isOpenModal, setisOpenModal] = useState(false);
-  const [curentData, setCurrentData] = useState({
-    name: null,
-    description: null,
-    ...props?.dept,
-  });
+export function EditDepartment() {
+  const { id } = useParams();
+
+  const [curentData, setCurrentData] = useState<any>({});
 
   const [isSaving, setIsSaving] = useState(false);
 
   const navigate = useNavigate();
 
+  useEffect(()=>{
+    fetchData()
+  },[])
+
+  async function fetchData(){
+    setIsSaving(true)
+    let r = await getDepartment(id);
+    setCurrentData(r)
+    setIsSaving(false)
+  }
+
+
   async function update() {
     setIsSaving(true);
     let submitData = { ...curentData };
     let r = await updateDepartment(submitData);
-    endCreateOrUpdate(r);
-  }
-  async function create() {
-    setIsSaving(true);
-    let cData = { ...curentData };
-    //   cData.id=props?.user?.id
-    let r = await createDepartment(cData);
     endCreateOrUpdate(r);
   }
   function endCreateOrUpdate(r) {
@@ -145,74 +173,55 @@ function EditOrCreateDeptModal(props) {
     }
 
     setIsSaving(false);
-    setisOpenModal(false);
     setCurrentData({
       name: null,
       description: null,
     });
 
-    navigate(0);
+    navigate(-1);
   }
 
   return (
-    <Fragment>
-      {props.dept ?       <Button
-        onClick={() => {
-          setisOpenModal(true);
-        }}
-        gradientMonochrome="info"
-        pill={true}
-        outline={true}
-      >
-       <HiOutlinePencil/>{" "} Edit
-      </Button>
- :       <Button
- onClick={() => {
-   setisOpenModal(true);
- }}
- gradientMonochrome="info"
- pill={true}
- outline={false}
->
- Create{" "}<HiOutlinePlus className="h-5 w-5"/>
-</Button>
-}
-
-      <Modal
-        show={isOpenModal}
-        size="5xl"
-        popup={true}
-        onClose={() => {
-          setisOpenModal(false);
-          setCurrentData({
-            id: null,
-            name: null,
-            department: null,
-          });
-        }}
-      >
-        <Modal.Header />
-        <Modal.Body>
+    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <Card>
+        <div>
           <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
-            <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-              {props.dept ? "Edit" : "Create"} Department
-            </h3>
-            <div className="flex w-full">
-              {props?.user ? (
-                <div className="flex-col w-full mr-1">
-                  <div className="mb-2 block">
-                    <Label htmlFor="id" value="ID" />
-                  </div>
-                  <TextInput
-                    id="id"
-                    type="text"
-                    required={true}
-                    value={props?.dept?.id}
-                    readOnly={true}
-                    disabled={true}
-                  />
+            <div>
+              <div className="flex flex-row gap-4 pt-3">
+                <div>
+                  <Tooltip content="Go back" placement="right">
+                    <Button
+                      color="light"
+                      pill={true}
+                      onClick={() => {
+                        navigate(-1);
+                      }}
+                      outline={false}
+                    >
+                      <HiOutlineArrowLeft className="h-6 w-6" />
+                    </Button>
+                  </Tooltip>
                 </div>
-              ) : null}
+                <div className="pt-1">
+                  <h4 className="text-2xl">Edit Department</h4>
+                </div>
+              </div>
+            </div>
+            <div className="flex w-full">
+              <div className="flex-col w-full mr-1">
+                <div className="mb-2 block">
+                  <Label htmlFor="id" value="ID" />
+                </div>
+                <TextInput
+                  id="id"
+                  type="text"
+                  required={true}
+                  value={id}
+                  readOnly={true}
+                  disabled={true}
+                />
+              </div>
+
               <div className="flex-col w-full mr-1">
                 <div className="mb-2 block">
                   <Label htmlFor="username" value="Name" />
@@ -222,7 +231,7 @@ function EditOrCreateDeptModal(props) {
                   type="text"
                   placeholder="example"
                   required={true}
-                  value={curentData?.name ?? props?.dept?.name}
+                  value={curentData?.name}
                   onChange={(e) => {
                     let cData = { ...curentData };
                     cData.name = e.target.value;
@@ -240,7 +249,7 @@ function EditOrCreateDeptModal(props) {
                 placeholder="Beautiful "
                 // type={"text"}
                 required={true}
-                value={curentData?.description ?? props?.dept?.description}
+                value={curentData?.description}
                 onChange={(e) => {
                   let cData = { ...curentData };
                   cData.description = e.target.value;
@@ -250,25 +259,138 @@ function EditOrCreateDeptModal(props) {
             </div>
 
             <div className="w-full">
-              {props.dept ? (
-                <Button   className="w-full"      gradientMonochrome="info"
+              <Button
+                className="w-full"
+                gradientMonochrome="info"
                 pill={true}
-                outline={false} onClick={update}>
-                  {isSaving ? <Spinner /> : "Save changes"}
-                </Button>
-              ) : (
-                <Button     className="w-full"       gradientMonochrome="info"
-                pill={true}
-                outline={false} onClick={create}>
-                  {" "}
-                  {isSaving ? <Spinner /> : "Create department"}
-                </Button>
-              )}
+                outline={false}
+                onClick={update}
+              >
+                {isSaving ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    Edit <HiPencil />
+                  </>
+                )}
+              </Button>
             </div>
           </div>
-        </Modal.Body>
-      </Modal>
-    </Fragment>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+export function CreateDepartment() {
+  const [curentData, setCurrentData] = useState<any>();
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const navigate = useNavigate();
+
+  async function create() {
+    setIsSaving(true);
+    let cData = { ...curentData };
+    //   cData.id=props?.user?.id
+    let r = await createDepartment(cData);
+    endCreateOrUpdate(r);
+  }
+  function endCreateOrUpdate(r) {
+    if (!r) {
+      setIsSaving(false);
+      return;
+    }
+
+    setIsSaving(false);
+
+    setCurrentData({
+      name: null,
+      description: null,
+    });
+
+    navigate(-1);
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <Card>
+        <div>
+          <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
+            <div>
+              <div className="flex flex-row gap-4 pt-3">
+                <div>
+                  <Tooltip content="Go back" placement="right">
+                    <Button
+                      color="light"
+                      pill={true}
+                      onClick={() => {
+                        navigate(-1);
+                      }}
+                      outline={false}
+                    >
+                      <HiOutlineArrowLeft className="h-6 w-6" />
+                    </Button>
+                  </Tooltip>
+                </div>
+                <div className="pt-1">
+                  <h4 className="text-2xl">Create Department</h4>
+                </div>
+              </div>
+            </div>
+            <div className="flex w-full">
+              <div className="flex-col w-full mr-1">
+                <div className="mb-2 block">
+                  <Label htmlFor="username" value="Name" />
+                </div>
+                <TextInput
+                  id="name"
+                  type="text"
+                  placeholder=""
+                  required={true}
+                  value={curentData?.name}
+                  onChange={(e) => {
+                    let cData = { ...curentData };
+                    cData.name = e.target.value;
+                    setCurrentData(cData);
+                  }}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="description" value="Description" />
+              </div>
+              <Textarea
+                id="description"
+                placeholder=""
+                // type={"text"}
+                required={true}
+                value={curentData?.description}
+                onChange={(e) => {
+                  let cData = { ...curentData };
+                  cData.description = e.target.value;
+                  setCurrentData(cData);
+                }}
+              />
+            </div>
+
+            <div className="w-full">
+              <Button
+                className="w-full"
+                gradientMonochrome="info"
+                pill={true}
+                outline={false}
+                onClick={create}
+              >
+                {" "}
+                {isSaving ? <Spinner /> : "Create +"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
   );
 }
 
@@ -303,7 +425,7 @@ function DeleteDept(props) {
             setisOpenModal(true);
           }}
         >
-         <HiOutlineTrash/> {" "}Delete
+          <HiOutlineTrash /> Delete
         </Button>
         <Modal show={isOpenModal} size="md" popup={true} onClose={cancel}>
           <Modal.Header />

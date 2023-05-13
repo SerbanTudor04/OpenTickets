@@ -603,6 +603,43 @@ def getDepartments():
 
     return makeReturnResponse(__responseObject), 200
 
+@server.route("/admin/superuser/departments/department", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def getDepartment():
+    data = jsonify(request.json)
+    jsonData = data.json
+
+    if "department_id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing department_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+        select id,name,description from admin_departments where id=%s;
+    """,[jsonData["department_id"]])
+
+    rawData = cursor.fetchone()
+    data=assignQueryToFields(rawData,["id","name","description"])
+
+    __responseObject = {
+        'status': 'success',
+        'message': 'OK',
+        "data": data
+    }
+
+    cursor.close()
+    db.releaseConnection(conn)
+
+    return makeReturnResponse(__responseObject), 200
+
 
 # deleteDepartment
 @server.route("/admin/deleteDepartment", methods=["POST"])

@@ -130,13 +130,14 @@ export default function AMgmUsers() {
                           <div className="flex-col pr-1">
                             <Button
                               onClick={() => {
-                                navigator("/management/users/"+item.id);
+                                navigator("/management/users/" + item.id);
                               }}
                               pill={true}
                               gradientMonochrome="info"
                               outline={true}
                             >
-                              <HiPencil/>Edit
+                              <HiPencil />
+                              Edit
                             </Button>
                           </div>
                           <div className="flex-col">
@@ -184,14 +185,13 @@ export function EditUser() {
 
   useEffect(() => {
     async function callMeBaby() {
-      setIsSavingUser(true)
+      setIsSavingUser(true);
       let u = await getUser(id);
       setCurrentData(u);
       let r = await getDepartments();
       console.log(r);
       setDepartemnts(r);
       setIsSavingUser(false);
-
     }
     callMeBaby();
   }, []);
@@ -222,13 +222,10 @@ export function EditUser() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      
-
-
       <Card>
         <div>
           <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
-          <div>
+            <div>
               <div className="flex flex-row gap-4 pt-3">
                 <div>
                   <Tooltip content="Go back" placement="right">
@@ -250,7 +247,6 @@ export function EditUser() {
               </div>
             </div>
             <div className="flex w-full">
-              
               <div className="flex-col w-full mr-1">
                 <div className="mb-2 block">
                   <Label htmlFor="id" value="ID" />
@@ -264,7 +260,7 @@ export function EditUser() {
                   disabled={true}
                 />
               </div>
-         
+
               <div className="flex-col w-full mr-1">
                 <div className="mb-2 block">
                   <Label htmlFor="username" value="Username" />
@@ -274,7 +270,7 @@ export function EditUser() {
                   type="text"
                   placeholder="example"
                   required={true}
-                  value={curentData?.username }
+                  value={curentData?.username}
                   onChange={(e) => {
                     let cData = { ...curentData };
                     cData.username = e.target.value;
@@ -308,9 +304,7 @@ export function EditUser() {
                 placeholder="***********"
                 type="password"
                 required={true}
-                value={
-                 "***********"
-                }
+                value={"***********"}
                 onChange={(e) => {
                   let cData = { ...curentData };
                   cData.password = e.target.value;
@@ -325,9 +319,7 @@ export function EditUser() {
               <select
                 id="countries"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                value={
-                  curentData?.department_id 
-                }
+                value={curentData?.department_id}
                 onChange={(e) => {
                   let cData = { ...curentData };
                   cData.department_id = e.target.value;
@@ -356,7 +348,7 @@ export function EditUser() {
             <div className="flex justify-between">
               <div className="flex items-center gap-2">
                 <ToggleSwitch
-                  checked={curentData?.is_su }
+                  checked={curentData?.is_su}
                   label="Super User"
                   onChange={(e) => {
                     let cData = { ...curentData };
@@ -368,15 +360,22 @@ export function EditUser() {
               </div>
             </div>
             <div className="w-full">
-                <Button
-                  className="w-full"
-                  gradientMonochrome="info"
-                  pill={true}
-                  outline={false}
-                  onClick={update}
-                >
-                  {isSavingUser ? <Spinner /> : <>Edit<HiPencil/></>}
-                </Button>
+              <Button
+                className="w-full"
+                gradientMonochrome="info"
+                pill={true}
+                outline={false}
+                onClick={update}
+              >
+                {isSavingUser ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    Edit
+                    <HiPencil />
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </div>
@@ -602,7 +601,8 @@ function DeleteUser(props) {
             setisOpenModal(true);
           }}
         >
-          <HiTrash/>Delete
+          <HiTrash />
+          Delete
         </Button>
         <Modal show={isOpenModal} size="md" popup={true} onClose={cancel}>
           <Modal.Header />
