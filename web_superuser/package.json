@@ -14,7 +14,7 @@
     "@emotion/react": "^11.10.6",
     "@tinymce/tinymce-react": "^4.3.0",
     "@types/jest": "^29.5.1",
-    "@types/node": "^20.1.0",
+    "@types/node": "^20.1.4",
     "dayjs": "^1.11.7",
     "flowbite": "^1.6.5",
     "flowbite-react": "^0.4.3",
