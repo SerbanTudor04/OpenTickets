@@ -146,7 +146,7 @@ INSERT INTO admin_departments ("name",created_at,updated_at,description) VALUES
 	 ('Software Development','2023-02-20','2023-02-20','SD department');
 
 -- IMPORT COUNTRIES
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Andorra','AD','42.546245','1.601554'),
 	 ('United Arab Emirates','AE','23.424076','53.847818'),
 	 ('Afghanistan','AF','33.93911','67.709953'),
@@ -157,7 +157,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Netherlands Antilles','AN','12.226079','-69.060087'),
 	 ('Angola','AO','-11.202692','17.873887'),
 	 ('Antarctica','AQ','-75.250973','-0.071389');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Argentina','AR','-38.416097','-63.616672'),
 	 ('American Samoa','AS','-14.270972','-170.132217'),
 	 ('Austria','AT','47.516231','14.550072'),
@@ -168,7 +168,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Barbados','BB','13.193887','-59.543198'),
 	 ('Bangladesh','BD','23.684994','90.356331'),
 	 ('Belgium','BE','50.503887','4.469936');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Burkina Faso','BF','12.238333','-1.561593'),
 	 ('Bulgaria','BG','42.733883','25.48583'),
 	 ('Bahrain','BH','25.930414','50.637772'),
@@ -179,7 +179,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Bolivia','BO','-16.290154','-63.588653'),
 	 ('Brazil','BR','-14.235004','-51.92528'),
 	 ('Bahamas','BS','25.03428','-77.39628');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Bhutan','BT','27.514162','90.433601'),
 	 ('Bouvet Island','BV','-54.423199','3.413194'),
 	 ('Botswana','BW','-22.328474','24.684866'),
@@ -190,7 +190,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Congo [DRC]','CD','-4.038333','21.758664'),
 	 ('Central African Republic','CF','6.611111','20.939444'),
 	 ('Congo [Republic]','CG','-0.228021','15.827659');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Switzerland','CH','46.818188','8.227512'),
 	 ('Côte d''Ivoire','CI','7.539989','-5.54708'),
 	 ('Cook Islands','CK','-21.236736','-159.777671'),
@@ -201,7 +201,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Costa Rica','CR','9.748917','-83.753428'),
 	 ('Cuba','CU','21.521757','-77.781167'),
 	 ('Cape Verde','CV','16.002082','-24.013197');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Christmas Island','CX','-10.447525','105.690449'),
 	 ('Cyprus','CY','35.126413','33.429859'),
 	 ('Czech Republic','CZ','49.817492','15.472962'),
@@ -212,7 +212,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Dominican Republic','DO','18.735693','-70.162651'),
 	 ('Algeria','DZ','28.033886','1.659626'),
 	 ('Ecuador','EC','-1.831239','-78.183406');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Estonia','EE','58.595272','25.013607'),
 	 ('Egypt','EG','26.820553','30.802498'),
 	 ('Western Sahara','EH','24.215527','-12.885834'),
@@ -223,7 +223,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Fiji','FJ','-16.578193','179.414413'),
 	 ('Falkland Islands [Islas Malvinas]','FK','-51.796253','-59.523613'),
 	 ('Micronesia','FM','7.425554','150.550812');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Faroe Islands','FO','61.892635','-6.911806'),
 	 ('France','FR','46.227638','2.213749'),
 	 ('Gabon','GA','-0.803689','11.609444'),
@@ -234,7 +234,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Guernsey','GG','49.465691','-2.585278'),
 	 ('Ghana','GH','7.946527','-1.023194'),
 	 ('Gibraltar','GI','36.137741','-5.345374');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Greenland','GL','71.706936','-42.604303'),
 	 ('Gambia','GM','13.443182','-15.310139'),
 	 ('Guinea','GN','9.945587','-9.696645'),
@@ -245,7 +245,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Guatemala','GT','15.783471','-90.230759'),
 	 ('Guam','GU','13.444304','144.793731'),
 	 ('Guinea-Bissau','GW','11.803749','-15.180413');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Guyana','GY','4.860416','-58.93018'),
 	 ('Gaza Strip','GZ','31.354676','34.308825'),
 	 ('Hong Kong','HK','22.396428','114.109497'),
@@ -256,7 +256,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Hungary','HU','47.162494','19.503304'),
 	 ('Indonesia','ID','-0.789275','113.921327'),
 	 ('Ireland','IE','53.41291','-8.24389');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Israel','IL','31.046051','34.851612'),
 	 ('Isle of Man','IM','54.236107','-4.548056'),
 	 ('India','IN','20.593684','78.96288'),
@@ -267,7 +267,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Italy','IT','41.87194','12.56738'),
 	 ('Jersey','JE','49.214439','-2.13125'),
 	 ('Jamaica','JM','18.109581','-77.297508');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Jordan','JO','30.585164','36.238414'),
 	 ('Japan','JP','36.204824','138.252924'),
 	 ('Kenya','KE','-0.023559','37.906193'),
@@ -278,7 +278,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Saint Kitts and Nevis','KN','17.357822','-62.782998'),
 	 ('North Korea','KP','40.339852','127.510093'),
 	 ('South Korea','KR','35.907757','127.766922');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Kuwait','KW','29.31166','47.481766'),
 	 ('Cayman Islands','KY','19.513469','-80.566956'),
 	 ('Kazakhstan','KZ','48.019573','66.923684'),
@@ -289,7 +289,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Sri Lanka','LK','7.873054','80.771797'),
 	 ('Liberia','LR','6.428055','-9.429499'),
 	 ('Lesotho','LS','-29.609988','28.233608');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Lithuania','LT','55.169438','23.881275'),
 	 ('Luxembourg','LU','49.815273','6.129583'),
 	 ('Latvia','LV','56.879635','24.603189'),
@@ -300,7 +300,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Montenegro','ME','42.708678','19.37439'),
 	 ('Madagascar','MG','-18.766947','46.869107'),
 	 ('Marshall Islands','MH','7.131474','171.184478');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Macedonia [FYROM]','MK','41.608635','21.745275'),
 	 ('Mali','ML','17.570692','-3.996166'),
 	 ('Myanmar [Burma]','MM','21.913965','95.956223'),
@@ -311,7 +311,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Mauritania','MR','21.00789','-10.940835'),
 	 ('Montserrat','MS','16.742498','-62.187366'),
 	 ('Malta','MT','35.937496','14.375416');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Mauritius','MU','-20.348404','57.552152'),
 	 ('Maldives','MV','3.202778','73.22068'),
 	 ('Malawi','MW','-13.254308','34.301525'),
@@ -322,7 +322,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('New Caledonia','NC','-20.904305','165.618042'),
 	 ('Niger','NE','17.607789','8.081666'),
 	 ('Norfolk Island','NF','-29.040835','167.954712');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Nigeria','NG','9.081999','8.675277'),
 	 ('Nicaragua','NI','12.865416','-85.207229'),
 	 ('Netherlands','NL','52.132633','5.291266'),
@@ -333,7 +333,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('New Zealand','NZ','-40.900557','174.885971'),
 	 ('Oman','OM','21.512583','55.923255'),
 	 ('Panama','PA','8.537981','-80.782127');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Peru','PE','-9.189967','-75.015152'),
 	 ('French Polynesia','PF','-17.679742','-149.406843'),
 	 ('Papua New Guinea','PG','-6.314993','143.95555'),
@@ -344,7 +344,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Pitcairn Islands','PN','-24.703615','-127.439308'),
 	 ('Puerto Rico','PR','18.220833','-66.590149'),
 	 ('Palestinian Territories','PS','31.952162','35.233154');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Portugal','PT','39.399872','-8.224454'),
 	 ('Palau','PW','7.51498','134.58252'),
 	 ('Paraguay','PY','-23.442503','-58.443832'),
@@ -355,7 +355,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Russia','RU','61.52401','105.318756'),
 	 ('Rwanda','RW','-1.940278','29.873888'),
 	 ('Saudi Arabia','SA','23.885942','45.079162');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Solomon Islands','SB','-9.64571','160.156194'),
 	 ('Seychelles','SC','-4.679574','55.491977'),
 	 ('Sudan','SD','12.862807','30.217636'),
@@ -366,7 +366,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Svalbard and Jan Mayen','SJ','77.553604','23.670272'),
 	 ('Slovakia','SK','48.669026','19.699024'),
 	 ('Sierra Leone','SL','8.460555','-11.779889');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('San Marino','SM','43.94236','12.457777'),
 	 ('Senegal','SN','14.497401','-14.452362'),
 	 ('Somalia','SO','5.152149','46.199616'),
@@ -377,7 +377,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Swaziland','SZ','-26.522503','31.465866'),
 	 ('Turks and Caicos Islands','TC','21.694025','-71.797928'),
 	 ('Chad','TD','15.454166','18.732207');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('French Southern Territories','TF','-49.280366','69.348557'),
 	 ('Togo','TG','8.619543','0.824782'),
 	 ('Thailand','TH','15.870032','100.992541'),
@@ -388,7 +388,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Tunisia','TN','33.886917','9.537499'),
 	 ('Tonga','TO','-21.178986','-175.198242'),
 	 ('Turkey','TR','38.963745','35.243322');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Trinidad and Tobago','TT','10.691803','-61.222503'),
 	 ('Tuvalu','TV','-7.109535','177.64933'),
 	 ('Taiwan','TW','23.69781','120.960515'),
@@ -399,7 +399,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('United States','US','37.09024','-95.712891'),
 	 ('Uruguay','UY','-32.522779','-55.765835'),
 	 ('Uzbekistan','UZ','41.377491','64.585262');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Vatican City','VA','41.902916','12.453389'),
 	 ('Saint Vincent and the Grenadines','VC','12.984305','-61.287228'),
 	 ('Venezuela','VE','6.42375','-66.58973'),
@@ -410,7 +410,7 @@ INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALU
 	 ('Wallis and Futuna','WF','-13.768752','-177.156097'),
 	 ('Samoa','WS','-13.759029','-172.104629'),
 	 ('Kosovo','XK','42.602636','20.902977');
-INSERT INTO tickets.nomenclators_countries ("name",code,latitude,longitude) VALUES
+INSERT INTO nomenclators_countries ("name",code,latitude,longitude) VALUES
 	 ('Yemen','YE','15.552727','48.516388'),
 	 ('Mayotte','YT','-12.8275','45.166244'),
 	 ('South Africa','ZA','-30.559482','22.937506'),
