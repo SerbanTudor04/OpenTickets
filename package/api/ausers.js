@@ -69,6 +69,26 @@ export async function  getUsers(){
     let data=   await r.json()
     return data.data;
 }
+
+
+export async function  getUser(id){
+    let r= await fetch(`${API_ADDRESS}/admin/superuser/users/user`,{
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({user_id:id})
+    
+    })
+    if (!r.ok){
+        return [];
+    }
+    let data=   await r.json()
+    return data.data;
+}
+
 export async function  getDepartments(){
     let r= await fetch(`${API_ADDRESS}/admin/getDepartments`,{
         credentials: 'include',
@@ -86,6 +106,23 @@ export async function  getDepartments(){
     return data.data;
 }
 
+export async function  getDepartment(id){
+    let r= await fetch(`${API_ADDRESS}/admin/superuser/departments/department`,{
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({department_id:id})
+    
+    })
+    if (!r.ok){
+        return {};
+    }
+    let data=   await r.json()
+    return data.data;
+}
 export async function  createUser(usr_data){
     let r= await fetch(`${API_ADDRESS}/admin/create_user`,{
         credentials: 'include',

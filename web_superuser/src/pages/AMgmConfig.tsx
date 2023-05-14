@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getAppConfig, updateAppConfig } from "../../../package/api/aAppData";
 import { isSuperUser } from "../../../package/api/auth";
 import React from "react";
+import { HiPencil } from "react-icons/hi";
 
 
 export default function AMgmConfig(props){
@@ -51,20 +52,6 @@ export default function AMgmConfig(props){
       </>
       );
   }
-
-    // if(configs===null){
-    //     return (
-    //         <>
-    //           <div className="  ">
-    //             <div className="flex  flex-col  justify-center items-center">
-    //               <p>
-    //                 There aren't any config showed, please contact the administrator.
-    //               </p>
-    //             </div>
-    //           </div>
-    //         </>
-    //       );
-    // }
 
     return (<>
     <section className="flex flex-col  justify-center items-center">
@@ -145,7 +132,7 @@ function UpdateConfig(props){
               setisOpenModal(true);
             }}
           >
-            Update
+            <HiPencil/>Edit
           </Button>
           <Modal show={isOpenModal} size="md" popup={true} onClose={cancel}>
             <Modal.Header />
@@ -177,11 +164,11 @@ function UpdateConfig(props){
                   <Button
                     gradientMonochrome="info"
                     pill={true}
-                    outline={true}
+                    outline={false}
                     onClick={updateItem}
                     className="w-full"
                   >
-                    {isUpdating?<Spinner/> : "Update"}
+                    {isUpdating?<Spinner/> : <>Edit<HiPencil/></>}
                   </Button>
 
                 </div>

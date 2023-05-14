@@ -4,11 +4,12 @@ import { HiViewBoards,HiUser,HiInbox,HiChatAlt2, HiBell, HiPlus, HiClock,  } fro
 import { BiBuoy,BiDoughnutChart } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { getUserInboxNumber } from "../../../../package/api/ausers";
+import { useNavigate } from "react-router-dom";
 
 
 export default  function ASideBar(props:any){
   const [inboxNumber,setInboxNumber] = useState<any>(null)
-
+  const navigate = useNavigate()
   useEffect(()=>{
     async function callMeBaby(){
         let r = await  getUserInboxNumber()
@@ -31,7 +32,8 @@ export default  function ASideBar(props:any){
     <Sidebar.Items>
       <Sidebar.ItemGroup>
         <Sidebar.Item
-          href="/"
+          
+          onClick={()=>{navigate('/')}}
           icon={BiDoughnutChart}
         >
           Dashboard
@@ -39,7 +41,9 @@ export default  function ASideBar(props:any){
         {(()=>{
           if (inboxNumber>0){
             return  <Sidebar.Item
-            href="/inbox"
+            
+          onClick={()=>{navigate('/inbox')}}
+
             icon={HiInbox}
             label={inboxNumber}
           >
@@ -47,7 +51,7 @@ export default  function ASideBar(props:any){
           </Sidebar.Item>
           }
           return <Sidebar.Item
-          href="/inbox"
+          onClick={()=>{navigate('/inbox')}}
           icon={HiInbox}
           
         >
@@ -60,16 +64,18 @@ export default  function ASideBar(props:any){
           icon={HiChatAlt2}
           label="Tickets"
         >
-          <Sidebar.Item icon={HiPlus} href="/tickets/create">
+          <Sidebar.Item icon={HiPlus}
+          onClick={()=>{navigate('/tickets/create')}}
+          >
             Create Ticket
           </Sidebar.Item>          
-          <Sidebar.Item icon={HiUser} href="/tickets/mytickets">
+          <Sidebar.Item icon={HiUser} onClick={()=>{navigate('/tickets/mytickets')}}>
             My Tickets
           </Sidebar.Item>
-          <Sidebar.Item icon={HiClock} href="/tickets/pending-tickets">
-            In Pending Tickets
+          <Sidebar.Item icon={HiClock} onClick={()=>{navigate('/tickets/pending-tickets')}}>
+          Tickets In Pending 
           </Sidebar.Item>
-          <Sidebar.Item icon={HiBell} href="/tickets/free-tickets">
+          <Sidebar.Item icon={HiBell} onClick={()=>{navigate('/tickets/free-tickets')}}>
             Free Tickets
           </Sidebar.Item>
         </Sidebar.Collapse>
@@ -78,13 +84,15 @@ export default  function ASideBar(props:any){
       </Sidebar.ItemGroup>
        <Sidebar.ItemGroup className="">
         <Sidebar.Item
-          href="/documentation"
+        onClick={()=>{navigate('/documentation')}}
+          
           icon={HiViewBoards}
         >
           Documentation
         </Sidebar.Item>
         <Sidebar.Item
-          href="/help"
+        onClick={()=>{navigate('/help')}}
+          
           icon={BiBuoy}
         >
           Help
