@@ -240,7 +240,7 @@ def doInstall(cfg: dict):
     DB_QUERY_STRING = "SET search_path TO "
 
     for i in cfg["db_schemas"]:
-        DB_QUERY_STRING += f"{i},"
+        DB_QUERY_STRING += f'"{i}",'
     DB_QUERY_STRING = DB_QUERY_STRING[:-1]
 
     # EXECUTE sql to activate requirements
