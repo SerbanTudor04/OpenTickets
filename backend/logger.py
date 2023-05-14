@@ -1,6 +1,6 @@
 import datetime
 from __main__ import db
-
+from .env import DB_QUERY_STRING
 
 class Logger:
     def __init__(self):
@@ -21,7 +21,7 @@ class Logger:
 
     def __doLog(self, message: str, status: str):
         self.cursor = self.connection.cursor()
-        self.cursor.execute("SET search_path TO tickets")
+        self.cursor.execute(DB_QUERY_STRING)
         insertDateTime = datetime.datetime.now()
         self.cursor.execute("""
          INSERT INTO logs (message, status, created_at) VALUES(%s, %s, %s);
