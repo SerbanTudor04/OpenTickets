@@ -332,7 +332,7 @@ def create_department():
 
     try:
         cursor.execute("""
-            INSERT INTO tickets.admin_departments
+            INSERT INTO admin_departments
         ("name", created_at, updated_at, description)
         VALUES(%s, now(), now(), %s)
         """, (jsonData["name"], jsonData["description"]))
@@ -576,7 +576,7 @@ def getDepartments():
     cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""
-        select id,name,description,created_at,updated_at from tickets.admin_departments;
+        select id,name,description,created_at,updated_at from admin_departments;
     """)
 
     rawData = cursor.fetchall()
@@ -1504,11 +1504,13 @@ def usersReports():
     # deparment
 
     cursor.execute("""
-            select ad."name" from admin_departments ad where id = (select q.id from admin_departments_members q where q.user_id=%s) 
+            select ad."name" from admin_departments ad where id = (select q.department_id from admin_departments_members q where q.user_id=%s) 
     """,[request.user.id])
-
-    data["department"]=(cursor.fetchone())[0]
-
+    r=cursor.fetchone()
+    if r is not  None:
+        data["department"]=(r)[0]
+    else:
+        data["department"]="None"
     cursor.close()
     db.releaseConnection(conn)
     
@@ -1791,7 +1793,7 @@ def createNotes():
     cursor.execute("""
         INSERT INTO admin_clients_notes
         (note, created_at, client_uid,created_by)
-        VALUES(%s, now(), %s);
+        VALUES(%s, now(), %s,%s);
     """,(jsonData["note_content"],jsonData["client_uid"],request.user.id))
 
     log.info(f"User {request.user.username} with id {request.user.id} created note for client with uid {jsonData['client_uid']}")

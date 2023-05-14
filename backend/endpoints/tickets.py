@@ -40,7 +40,7 @@ def createTicket():
         ticketDateTime = str(datetime.datetime.now())
         try:
             cursor.execute("""
-            insert into tickets.tickets (id,code, subject, description, department_id, content, created_at, status,created_by)
+            insert into tickets (id,code, subject, description, department_id, content, created_at, status,created_by)
             values (%s,%s,%s,%s,%s,%s,%s,'OPEN',%s);
                         """, (ticketID, ticketCode, jsonData["subject"], jsonData["description"], jsonData["department_id"], jsonData["content"], ticketDateTime, request.user.id))
 
@@ -488,7 +488,7 @@ def addMessage2TicketsOrMessage():
         CREATED_BY=r[0]
         
         cursor.execute("""
-        INSERT INTO tickets.admin_users_inbox
+        INSERT INTO admin_users_inbox
             (user_id, message, created_at, viewed, state)
             VALUES(%s, %s, now(), false, 'INFO')
         """,(CREATED_BY,__msg))
@@ -499,7 +499,7 @@ def addMessage2TicketsOrMessage():
 
     for i in cursor.fetchall():
         cursor.execute("""
-        INSERT INTO tickets.admin_users_inbox
+        INSERT INTO admin_users_inbox
             (user_id, message, created_at, viewed, state)
             VALUES(%s, %s, now(), false, 'INFO')
         """,(i[0],__msg))
