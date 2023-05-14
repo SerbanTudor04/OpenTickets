@@ -73,7 +73,7 @@ export default  function ASideBar(props:any){
             My Tickets
           </Sidebar.Item>
           <Sidebar.Item icon={HiClock} onClick={()=>{navigate('/tickets/pending-tickets')}}>
-            In Pending Tickets
+          Tickets In Pending 
           </Sidebar.Item>
           <Sidebar.Item icon={HiBell} onClick={()=>{navigate('/tickets/free-tickets')}}>
             Free Tickets

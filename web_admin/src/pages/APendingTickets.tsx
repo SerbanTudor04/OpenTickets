@@ -2,10 +2,12 @@ import { Spinner, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { getMyPendingRequests } from "../../../package/api/atickets";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function APendingTickets(){
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function callMeBaby() {
@@ -68,7 +70,7 @@ export default function APendingTickets(){
                       
                     >
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        <a href={"/tickets/view/"+item.id} className="text-blue-600">#{item.code}</a>
+                        <button onClick={() => navigate("/tickets/view/"+item.id)} className="text-blue-600">#{item.code}</button>
                       </Table.Cell>
                       <Table.Cell>{item.subject}</Table.Cell>
                       <Table.Cell>{item.status}</Table.Cell>
