@@ -1,6 +1,6 @@
 import datetime
 from __main__ import db
-from .env import DB_QUERY_STRING
+from env import DB_QUERY_STRING
 
 class Logger:
     def __init__(self):
