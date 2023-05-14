@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dicebear/collection": "^6.0.2",
+    "@dicebear/collection": "^6.0.3",
     "@dicebear/core": "^6.0.3",
     "@emotion/react": "^11.11.0",
     "@tinymce/tinymce-react": "^4.3.0",
