@@ -1,3 +1,16 @@
+# 0.10.0
+## Features
+- Added clients in superuser page (CRUD)
+- Optimize page loading and number of requests to backend, aswell as database 
+- Update certain pages to the latest page template, in superuser.
+- Ability to add notes to a client
+## Fixes
+- Fix typos
+## Coming features:
+- Corelation between clients send emails and mailboxes defined in superuser interface.
+- Ability to add internal notes to a ticket.
+- Update admin pages to the latest template
+
 # 0.9.0
 ## Features:
 - Migrate from `jsx` to `tsx`
