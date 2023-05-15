@@ -145,13 +145,27 @@ def doCreateUser(userdata):
     VALUES(%s, %s, %s, %s, %s, %s, now(), now(), %s)
     """, (userData["id"], userData["username"], userData["password"], userData["email"], userData["first_name"], userData["last_name"], userData["is_su"]))
 
+    # insert user into deparment_members
+    # print(userData["id"])
+    crs.execute("""
+    INSERT INTO admin_departments_members (department_id, user_id, created_at) 
+        VALUES(4,%s, now())
+    """, [userData["id"]])
+
+
     
     # creates balance
-#     crs.execute("""
-#     INSERT INTO reports_users_balances
-#     (user_id, score)
-#     VALUES(%s, 0);
-# """,(userData["id"]))
+    crs.execute("""
+        INSERT INTO reports_users_balances
+        (user_id, balance)
+        VALUES(%s, 0);
+    """,[userData["id"]])
+
+    # insert a welcome message
+
+    crs.execute("""
+    INSERT INTO admin_users_inbox (user_id, message, created_at, viewed, state) VALUES(%s, 'Welcome to OpenTickets!', now(), false, 'INFO'::character varying);
+    """,[userData["id"]])
 
     dbConn.commit()
     crs.close()
