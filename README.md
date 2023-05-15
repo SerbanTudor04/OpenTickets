@@ -2,6 +2,9 @@
 A free support software for any little bussiness.
 Please keep in mind, that this application is under development, and every pre-release could be unstable or certain function wont work.
 
+## Issues
+For any issue of bug you find, please consider open an issue [here](https://github.com/SerbanTudor04/OpenTickets/issues)
+
 ## Installation requirements
 There are the requirements:
 - PostgresSQL 13 or higher.
