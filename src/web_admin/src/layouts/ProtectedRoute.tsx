@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState,useMemo } from "react";
 import { Navigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 import { checkAuthentication } from "../../../package/api/auth";
@@ -20,10 +20,10 @@ export default function ProtectedRoute  ({
     const [appTitle,setAppTitle]= useState(Cookies.get("__open-tickets-app-title__cache")   )
     
   
-    useEffect(()=>{
+    useMemo(()=>{
       async function callMeBaby(){
-        console.debug("checking authentication")
-        console.log(appTitle)
+        // console.debug("checking authentication")
+        // console.debug(appTitle)
         if(appTitle===undefined || appTitle === "undefined"){
           console.log("app title is undefined")
           let title=(await getAdminPageTitle()).title
@@ -31,7 +31,7 @@ export default function ProtectedRoute  ({
           setAppTitle(title)
         
         }
-        let r= await checkAuthentication(authToken)
+        let r= await checkAuthentication()
 
 
 

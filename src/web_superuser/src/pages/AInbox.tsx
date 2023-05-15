@@ -7,7 +7,7 @@ import {
 } from "../../../package/api/ausers";
 import React from "react";
 
-export default function AInbox() {
+export default function InboxComponent() {
   const [inbox, setInbox] = useState([]);
   const [_, forceUpdate] = useReducer((x) => x + 1, 0);
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function AInbox() {
     }
     callMeBaby();
   }, []);
-  async function onDismiss(id, key) {
+  async function onDismiss(id:any, key:any) {
     await markMessageAsViewed(id);
 
     let copyOfInbox = inbox;
@@ -62,7 +62,7 @@ export default function AInbox() {
   );
 }
 
-function getColorByState(state) {
+function getColorByState(state:String) {
   switch (state) {
     case "WARNING":
       return "warning";
@@ -72,6 +72,7 @@ function getColorByState(state) {
       return "info";
   }
 }
-function capitalize(str) {
+function capitalize(str:String) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+

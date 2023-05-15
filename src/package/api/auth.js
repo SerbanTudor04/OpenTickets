@@ -2,8 +2,8 @@ import { API_ADDRESS } from "./env";
 
 
 
-export async function  checkAuthentication(token){
-    console.debug("Checking authentication with token: " + token);
+export async function  checkAuthentication(){
+    
     let r= await fetch(`${API_ADDRESS}/admin/check_auth`,{
         credentials: 'include',
         method: 'GET',

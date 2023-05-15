@@ -35,14 +35,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/inbox"
-              element={
-                <ProtectedRoute>
-                  <AInbox />
-                </ProtectedRoute>
-              }
-            />
+
             <Route
               path="/management/users"
               element={

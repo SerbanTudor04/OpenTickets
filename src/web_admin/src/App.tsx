@@ -4,7 +4,6 @@ import Layout from "./layouts/layout";
 import ProtectedRoute from "./layouts/ProtectedRoute";
 import Authenticate from "./pages/Authenticate";
 import ADashboard from "./pages/ADashboard";
-import AInbox from "./pages/AInbox";
 import ADepartmentsTickets from "./pages/ADepartmentsTickets";
 import ACreateTicket from "./pages/ACreateTicket";
 import AViewTicket from "./pages/AViewTicket";
@@ -52,14 +51,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/inbox"
               element={
                 <ProtectedRoute>
                   <AInbox />
                 </ProtectedRoute>
               }
-            />
+            /> */}
     
             <Route
               path="/tickets/mydepartments"

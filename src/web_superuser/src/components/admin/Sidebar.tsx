@@ -3,24 +3,13 @@ import { HiUser,HiInbox,HiOfficeBuilding, HiMenu,  } from "react-icons/hi";
 import { HiTableCells,  } from "react-icons/hi2";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { BiDoughnutChart,BiExtension } from "react-icons/bi";
-import { useEffect, useState } from "react";
-import { getUserInboxNumber } from "../../../../package/api/ausers";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 
 export default  function ASideBar(props){
-  const [inboxNumber,setInboxNumber] = useState(0)
   const navigate = useNavigate()
-  useEffect(()=>{
-    async function callMeBaby(){
-        let r = await  getUserInboxNumber()
-        
-        setInboxNumber(r.inbox_counter)
 
-    }
-    callMeBaby()
-},[])
 
 
     return (<>
@@ -40,26 +29,7 @@ export default  function ASideBar(props){
         >
           Dashboard
         </Sidebar.Item>
-        {(()=>{
-          if (inboxNumber>0){
-            return  <Sidebar.Item
-            onClick={()=>{navigate("/inbox")}}
-            icon={HiInbox}
-            label={inboxNumber}
-          >
-            Inbox
-          </Sidebar.Item>
-          }
-          return <Sidebar.Item
-          onClick={()=>{navigate("/inbox")}}
-
-          icon={HiInbox}
-          
-        >
-          Inbox
-        </Sidebar.Item>
-          
-        })()}
+        
         
 
           <Sidebar.Item icon={HiUser} 
