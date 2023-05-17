@@ -58,6 +58,10 @@ cp ./output/env.json ../../backend
 # after this a help message will popup with all the configurations
 ```
 
+## How to run the program
+Currently there isn't a standard running form, we recommand using the python as a Daemon service.
+Also you can serve the statics of the application using `Httpd` or `Nginx`.
+
 ## Contributing
 Any contribution is welcomed. Please feel free tom open any issue or pull request with your features or any kind of ideea.
 
