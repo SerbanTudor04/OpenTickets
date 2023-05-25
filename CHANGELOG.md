@@ -1,7 +1,10 @@
-# 0.10.1
+# 0.10.2
 ## Features
 - Added ability to setup to a client mailboxes and domains, which are expected from to create tickets
 
+# 0.10.1
+## Fixes:
+- Fix tables in install
 # 0.10.0
 ## Features
 - Added clients in superuser page (CRUD)
