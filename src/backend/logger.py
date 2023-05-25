@@ -30,6 +30,3 @@ class Logger:
         db.releaseConnection(self.connection)
         print(f"{insertDateTime} :: {status.upper()} - {message} ")
 
-    def __del__(self):
-        db.releaseConnection(self.connection)
-        # self.cursor.close()

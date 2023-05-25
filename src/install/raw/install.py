@@ -317,6 +317,9 @@ def doInstall(cfg: dict):
     jsonOutput["SERVER_PORT"] = 8080
     jsonOutput["SERVER_DEBUG"] = False
     jsonOutput["DEBUG_ENDPOINTS"] = False
+    jsonOutput["JOBS_TIMEOUTS"]={
+         "EMAILS:":60
+    }
 
     jsonStringOutput = json.dumps(jsonOutput)
 

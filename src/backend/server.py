@@ -28,9 +28,6 @@ logger = Logger()
 from emails.emails import Mailer
 mailer = Mailer(cfg)
 
-from emails.procesors import MailerProcessor
-
-mailerProcessor=MailerProcessor()
 
 
 if __name__ == '__main__':
