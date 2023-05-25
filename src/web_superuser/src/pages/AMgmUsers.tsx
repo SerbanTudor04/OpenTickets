@@ -33,24 +33,19 @@ import React from "react";
 export default function AMgmUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [hasRights, setHasRights] = useState(null);
   const navigator = useNavigate();
   useEffect(() => {
     async function callMeBaby() {
-      let isSu = await isSuperUser();
 
-      if (isSu) {
-        let r = await getUsers();
-        setUsers(r);
-      }
+      let r = await getUsers();
+      setUsers(r);
 
-      setHasRights(isSu);
       setLoading(false);
     }
     callMeBaby();
   }, []);
 
-  if (loading && hasRights === null) {
+  if (loading) {
     return (
       <>
         <div className="  ">
@@ -62,17 +57,7 @@ export default function AMgmUsers() {
     );
   }
 
-  if (!hasRights) {
-    return (
-      <>
-        <div className="  ">
-          <div className="flex  flex-col  justify-center items-center">
-            <p>You don't have access to see this content.</p>
-          </div>
-        </div>
-      </>
-    );
-  }
+
 
   return (
     <>

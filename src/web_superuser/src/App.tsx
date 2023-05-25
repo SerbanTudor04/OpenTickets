@@ -11,7 +11,7 @@ import ADepartment, { CreateDepartment, EditDepartment } from "./pages/AMgmDepar
 import AMgmConfig from "./pages/AMgmConfig";
 import AMgmTemplates, { BlocksCreate, EditBlocks, EditTemplate, TemplatesCreate } from "./pages/AMgmTemplates";
 import React from "react";
-import ClientsPage, { CreateClient, CreateNote, EditClient } from "./pages/Clients";
+import ClientsPage, { CreateClient, CreateMailboxDomains as CreateMailboxDomains, CreateMailboxEmails, CreateNote, EditClient } from "./pages/Clients";
 
 function App() {
   return (
@@ -164,7 +164,25 @@ function App() {
               </ProtectedRoute>
             }
           />
+        <Route
+            path="/management/clients/:uid/mailboxes/domains/create"
+            element={
+              <ProtectedRoute>
+                <CreateMailboxDomains />
+              </ProtectedRoute>
+            }
+          />
+        <Route
+            path="/management/clients/:uid/mailboxes/emails/create"
+            element={
+              <ProtectedRoute>
+                <CreateMailboxEmails />
+              </ProtectedRoute>
+            }
+          />
+
         </Routes>
+        
 
       </Layout>
     </>

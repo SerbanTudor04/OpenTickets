@@ -12,7 +12,7 @@ import {
   Timeline,
   Tooltip,
 } from "flowbite-react";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import {
   createClient,
   editClient,
@@ -22,23 +22,30 @@ import {
   getCountries,
   createNote,
   getNotes,
+  createMailboxDomainApi,
+  createMailboxEmailsApi,
+  getMailboxEmailsApi,
+  getMailboxDomainsApi,
 } from "../../../package/api/aClients";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   HiArrowNarrowRight,
   HiInformationCircle,
+  HiMailOpen,
   HiOutlineArrowLeft,
   HiOutlineDocumentReport,
   HiOutlineExclamationCircle,
   HiOutlinePencil,
   HiOutlinePlus,
   HiOutlineTrash,
+  HiUsers,
 } from "react-icons/hi";
 
 import { IoAlbums } from "react-icons/io5";
 
 export default function ClientsPage() {
   const [clients, setClients] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const navigator = useNavigate();
   useEffect(() => {
@@ -699,6 +706,8 @@ export function CreateClient() {
 export function EditClient() {
   const [clientType, setClientType] = useState<String>("business");
   const [countries, setCountries] = useState<any[]>([]);
+  const [mail_domains, setMail_Domains] = useState([]);
+  const [mail_emails, setMail_Emails] = useState([]);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [alert, setAlert] = useState<any>({ status: "", message: "" });
   const navigator = useNavigate();
@@ -717,17 +726,28 @@ export function EditClient() {
     type: "business",
   });
 
-  useEffect(() => {
+  useMemo(() => {
     setIsLoading(true);
 
     async function callMeBaby() {
+      setIsLoading(true);
       var r = await getClient(uid);
       setClient(r);
       if (r.is_business === false) setClientType("person");
 
       setIsLoading(false);
-      r = await getCountries();
-      setCountries(r);
+      getCountries().then((r) => {
+        setCountries(r);
+      });
+
+      getMailboxEmailsApi(uid).then((r) => {
+        setMail_Emails(r.data);
+      })
+      getMailboxDomainsApi(uid).then((r) => {
+        setMail_Domains(r.data)
+        console.log(r);
+      })
+
     }
     callMeBaby();
   }, []);
@@ -768,7 +788,7 @@ export function EditClient() {
 
   return (
     <>
-      <section className="flex flex-col  justify-center items-center">
+      <section className="flex flex-col  justify-center items-center mx-auto">
         {alert.message !== "" ? (
           <Alert color="failure" icon={HiInformationCircle} rounded={true}>
             `{" "}
@@ -780,8 +800,8 @@ export function EditClient() {
           </Alert>
         ) : null}
       </section>
-      <section className="flex flex-col  justify-center items-center">
-        <div className="flex flex-row gap-2">
+      <section className="flex flex-col   justify-center items-center">
+        <div className="flex flex-row gap-2 md:w-3/4">
           <div className="flex-col w-11/12">
             <Card>
               <div>
@@ -1256,7 +1276,11 @@ export function EditClient() {
                   <Tooltip content="Add note">
                     {/* TODO add redirect to notes add */}
                     <Button
-                      href={"/management/clients/" + uid + "/notes/create"}
+                      onClick={() => {
+                        navigator(
+                          "/management/clients/" + uid + "/notes/create"
+                        );
+                      }}
                       pill={true}
                       outline={true}
                       color="light"
@@ -1268,9 +1292,163 @@ export function EditClient() {
                 <div className="flex flex-row pt-2">
                   <ViewNotes client={client} />
                 </div>
+                <div className="flex flex-row pt-2">
+                  <Tooltip content="Add email domain">
+                    <Button
+                      onClick={() => {
+                        navigator(
+                          "/management/clients/" +
+                            uid +
+                            "/mailboxes/domains/create"
+                        );
+                      }}
+                      pill={true}
+                      outline={true}
+                      color="light"
+                    >
+                      <HiMailOpen />
+                    </Button>
+                  </Tooltip>
+                </div>
+                <div className="flex flex-row pt-2">
+                  <Tooltip content="Add emails">
+                    <Button
+                      onClick={() => {
+                        navigator(
+                          "/management/clients/" +
+                            uid +
+                            "/mailboxes/emails/create"
+                        );
+                      }}
+                      pill={true}
+                      outline={true}
+                      color="light"
+                    >
+                      <HiUsers />
+                    </Button>
+                  </Tooltip>
+                </div>
               </div>
             </Card>
           </div>
+        </div>
+      </section>
+      <section className="flex flex-col justify-center items-center pt-5">
+        <div className=" md:w-3/4">
+          <div className="flex flex-row gap-4 pt-3 pb-2" >
+            <div className="pt-1">
+              <h4 className="text-2xl">Client Email Domains </h4>
+            </div>
+          </div>
+          <Table hoverable={true} className="">
+            <Table.Head>
+              <Table.HeadCell>ID</Table.HeadCell>
+              <Table.HeadCell>Domain</Table.HeadCell>
+              <Table.HeadCell>Created at</Table.HeadCell>
+              <Table.HeadCell>Created by</Table.HeadCell>
+              <Table.HeadCell>Updated at</Table.HeadCell>
+              <Table.HeadCell>Updated by</Table.HeadCell>
+              <Table.HeadCell>
+                <span className="sr-only">Edit</span>
+              </Table.HeadCell>
+            </Table.Head>
+
+            <Table.Body className="divide-y">
+              {mail_domains.map((item: any, key) => {
+                return (
+                  <Table.Row
+                    key={key + "clientsTRDomain--" + item.id}
+                    id={key + "clientsTRDomain--" + item.id}
+                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                  >
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      {item.id}
+                    </Table.Cell>
+                    <Table.Cell>{item.domain}</Table.Cell>
+                    <Table.Cell>{item.created_at}</Table.Cell>
+                    <Table.Cell>{item.created_by}</Table.Cell>
+                    <Table.Cell>{item.updated_at}</Table.Cell>
+                    <Table.Cell>{item.updated_by}</Table.Cell>
+
+                    <Table.Cell>
+                      {/* <Button
+                        gradientMonochrome="info"
+                        pill={true}
+                        outline={true}
+                        onClick={() => {
+                          navigator("/management/clients/" + item.uid);
+                        }}
+                      >
+                        <HiOutlinePencil color="info" />
+                        Edit
+                      </Button>
+                      <DeleteClientComponent client={item} /> */}
+
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
+        </div>
+      </section>
+      <section className="flex flex-col justify-center items-center pt-5 pb-10">
+        <div className=" md:w-3/4">
+          <div className="flex flex-row gap-4 pt-3 pb-2" >
+            <div className="pt-1">
+              <h4 className="text-2xl">Client Emails  </h4>
+            </div>
+          </div>
+          <Table hoverable={true} className="">
+            <Table.Head>
+              <Table.HeadCell>ID</Table.HeadCell>
+              <Table.HeadCell>Domain</Table.HeadCell>
+              <Table.HeadCell>Created at</Table.HeadCell>
+              <Table.HeadCell>Created by</Table.HeadCell>
+              <Table.HeadCell>Updated at</Table.HeadCell>
+              <Table.HeadCell>Updated by</Table.HeadCell>
+              <Table.HeadCell>
+                <span className="sr-only">Edit</span>
+              </Table.HeadCell>
+            </Table.Head>
+
+            <Table.Body className="divide-y">
+              {mail_emails.map((item: any, key) => {
+                return (
+                  <Table.Row
+                    key={key + "clientsTREmails--" + item.id}
+                    id={key + "clientsTREmails--" + item.id}
+                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                  >
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      {item.id}
+                    </Table.Cell>
+                    <Table.Cell>{item.email}</Table.Cell>
+                    <Table.Cell>{item.created_at}</Table.Cell>
+                    <Table.Cell>{item.created_by}</Table.Cell>
+                    <Table.Cell>{item.updated_at}</Table.Cell>
+                    <Table.Cell>{item.updated_by}</Table.Cell>
+
+                    <Table.Cell>
+                      {/* <Button
+                        gradientMonochrome="info"
+                        pill={true}
+                        outline={true}
+                        onClick={() => {
+                          navigator("/management/clients/" + item.uid);
+                        }}
+                      >
+                        <HiOutlinePencil color="info" />
+                        Edit
+                      </Button>
+                      <DeleteClientComponent client={item} /> */}
+
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
         </div>
       </section>
     </>
@@ -1449,7 +1627,7 @@ export function CreateNote() {
                 outline={false}
                 onClick={submit}
               >
-                Create
+                Create +
               </Button>
             </div>
           </Card>
@@ -1528,6 +1706,176 @@ function DeleteClientComponent(props) {
           </Modal.Body>
         </Modal>
       </Fragment>
+    </>
+  );
+}
+
+export function CreateMailboxDomains() {
+  const { uid } = useParams();
+  const navigate = useNavigate();
+  const [data, setData] = useState({
+    client_uid: uid,
+    client_mail_domain: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function submit() {
+    setIsLoading(true);
+    console.debug(data);
+
+    let r = await createMailboxDomainApi(data);
+    setIsLoading(false);
+    if (r !== null) {
+      navigate(-1);
+    }
+  }
+
+  return (
+    <>
+      <div className="w-full">
+        <section className="flex flex-col gap-4 w-3/4 mx-auto">
+          <Card>
+            <div>
+              <div>
+                <Tooltip content="Go back" placement="right">
+                  <Button
+                    color="light"
+                    pill={true}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                    outline={false}
+                  >
+                    <HiOutlineArrowLeft className="h-6 w-6" />
+                  </Button>
+                </Tooltip>
+              </div>
+              {isLoading ? (
+                <div className="flex flex-row gap-4 pt-3">
+                  <div className="flex-col"></div>
+                  <div className="flex-col">
+                    <Spinner />
+                  </div>
+                  <div className="flex-col"></div>
+                </div>
+              ) : null}
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="domain" value="Domain " />
+              </div>
+              <TextInput
+                id="domain"
+                value={data.client_mail_domain}
+                placeholder="ex: gmail.com"
+                type="text"
+                required={true}
+                onChange={(e) => {
+                  let local_data = { ...data };
+                  local_data.client_mail_domain = e.target.value;
+                  setData(local_data);
+                }}
+              />
+            </div>
+            <div>
+              <Button
+                className="w-full"
+                gradientMonochrome="info"
+                pill={true}
+                outline={false}
+                onClick={submit}
+              >
+                Create +
+              </Button>
+            </div>
+          </Card>
+        </section>
+      </div>
+    </>
+  );
+}
+
+export function CreateMailboxEmails() {
+  const { uid } = useParams();
+  const navigate = useNavigate();
+  const [data, setData] = useState({
+    client_uid: uid,
+    client_mail_email: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function submit() {
+    setIsLoading(true);
+    console.debug(data);
+
+    let r = await createMailboxEmailsApi(data);
+    setIsLoading(false);
+    if (r !== null) {
+      navigate(-1);
+    }
+  }
+
+  return (
+    <>
+      <div className="w-full">
+        <section className="flex flex-col gap-4 w-3/4 mx-auto">
+          <Card>
+            <div>
+              <div>
+                <Tooltip content="Go back" placement="right">
+                  <Button
+                    color="light"
+                    pill={true}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                    outline={false}
+                  >
+                    <HiOutlineArrowLeft className="h-6 w-6" />
+                  </Button>
+                </Tooltip>
+              </div>
+              {isLoading ? (
+                <div className="flex flex-row gap-4 pt-3">
+                  <div className="flex-col"></div>
+                  <div className="flex-col">
+                    <Spinner />
+                  </div>
+                  <div className="flex-col"></div>
+                </div>
+              ) : null}
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="email_user" value="Email " />
+              </div>
+              <TextInput
+                id="email_user"
+                value={data.client_mail_email}
+                placeholder="ex: example@gmail.com"
+                type="text"
+                required={true}
+                onChange={(e) => {
+                  let local_data = { ...data };
+                  local_data.client_mail_email = e.target.value;
+                  setData(local_data);
+                }}
+              />
+            </div>
+            <div>
+              <Button
+                className="w-full"
+                gradientMonochrome="info"
+                pill={true}
+                outline={false}
+                onClick={submit}
+              >
+                Create +
+              </Button>
+            </div>
+          </Card>
+        </section>
+      </div>
     </>
   );
 }

@@ -10,16 +10,10 @@ import { HiPencil } from "react-icons/hi";
 export default function AMgmConfig(props){
     const [configs, setConfigs] = useState([])
     const [isLoading, setIsLoading] = useState(true)
-    const [isSu,setIsSU] = useState(false);
 
     useEffect(()=>{
         async function callMeBaby() {
-            let su = await isSuperUser();
             
-            setIsSU(su)
-            if(!su)
-              return
-
             let r = await getAppConfig();
       
             setConfigs(r);
@@ -41,17 +35,6 @@ export default function AMgmConfig(props){
           );
     }
 
-    if (!isSu) {
-      return (
-      <>
-          <div className="  ">
-          <div className="flex  flex-col  justify-center items-center">
-              <p>You don't have access to see this content.</p>
-          </div>
-          </div>
-      </>
-      );
-  }
 
     return (<>
     <section className="flex flex-col  justify-center items-center">

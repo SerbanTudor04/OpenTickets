@@ -1982,6 +1982,8 @@ def deleteClient():
         if r is None:
             raise Exception("No uid")
     except Exception as e:
+        cursor.close()
+        db.releaseConnection(conn)
         __responseObject = {
         'status': 'error',
         'message': 'The client_uid is invalid',
@@ -2051,6 +2053,151 @@ def getSuperUserDashboard():
     """)
     data["clients_created"]=cursor.fetchone()[0]
 
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+                'status': 'success',
+                'message': 'OK',
+                "data":data
+                
+                }
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/superuser/clients/mailboxes/domains/create", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def createClientMailBoxDomains():
+    data = jsonify(request.json)
+    jsonData = data.json
+    if "client_uid" not in jsonData or "client_mail_domain" not in jsonData :
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid',
+        }
+        return makeReturnResponse(__responseObject), 400
+    
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+            INSERT INTO admin_clients_mails_domains (domain, client_uid, created_at, updated_at, created_by, updated_by) 
+            VALUES(%s, %s, now(), now(), %s, %s);
+
+    """,(jsonData["client_mail_domain"],jsonData["client_uid"],request.user.id,request.user.id))
+
+    log.info(f"User {request.user.username} with id {request.user.id} created a new mailbox domain for client with uid {jsonData['client_uid']}")
+
+    conn.commit()
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+                'status': 'success',
+                'message': 'OK',
+                "data":{}
+                
+                }
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/superuser/clients/mailboxes/emails/create", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def createClientMailBoxEmails():
+    data = jsonify(request.json)
+    jsonData = data.json
+    if "client_uid" not in jsonData or "client_mail_email" not in jsonData :
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid',
+        }
+        return makeReturnResponse(__responseObject), 400
+    
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+            INSERT INTO admin_clients_mails_emails (email, client_uid, created_at, updated_at, created_by, updated_by) 
+            VALUES(%s, %s, now(), now(), %s, %s);
+
+    """,(jsonData["client_mail_email"],jsonData["client_uid"],request.user.id,request.user.id))
+
+    log.info(f"User {request.user.username} with id {request.user.id} created a new email mailbox for client with uid {jsonData['client_uid']}")
+
+    conn.commit()
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+                'status': 'success',
+                'message': 'OK',
+                "data":{}
+                
+                }
+    return makeReturnResponse(__responseObject), 200
+
+
+@server.route("/admin/superuser/clients/mailboxes/emails/get", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def getClientMailboxEmails():
+    data = jsonify(request.json)
+    jsonData = data.json
+    if "client_uid" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid',
+        }
+        return makeReturnResponse(__responseObject), 400
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+    SELECT id, email, client_uid, created_at, updated_at, 
+    (select username from admin_users where id=a.created_by) as created_by, 
+    (select username from admin_users where id=a.updated_by)  as updated_by FROM admin_clients_mails_emails a where client_uid=%s;
+    """,[jsonData["client_uid"]])
+
+    data=[]
+    for row in cursor:
+        data.append(assignQueryToFields(row,["id","email","client_uid","created_at","updated_at","created_by","updated_by"]))
+
+    conn.commit()
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+                'status': 'success',
+                'message': 'OK',
+                "data":data
+                
+                }
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/superuser/clients/mailboxes/domains/get", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def getClientMailboxDomains():
+    data = jsonify(request.json)
+    jsonData = data.json
+    if "client_uid" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid',
+        }
+        return makeReturnResponse(__responseObject), 400
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+    SELECT id, domain, client_uid, created_at, updated_at, (select q.username from admin_users q where q.id=a.created_by) as created_by, (select q.username from admin_users q where q.id=a.updated_by)  as updated_by FROM admin_clients_mails_domains a where client_uid=%s;
+    """,[jsonData["client_uid"]])
+    
+    data=[]
+    for row in cursor:
+        data.append(assignQueryToFields(row,["id","domain","client_uid","created_at","updated_at","created_by","updated_by"]))
+
+    conn.commit()
     cursor.close()
     db.releaseConnection(conn)
     __responseObject = {

@@ -170,3 +170,103 @@ export async function getCountries(){
         return [];
     }
 } 
+
+
+export async function  createMailboxDomainApi(body){
+    let r= await fetch(`${API_ADDRESS}/admin/superuser/clients/mailboxes/domains/create`,{
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(body)
+    
+    })
+    if (!r.ok){
+        return null;
+    }
+    try{
+        let data=   await r.json()
+        return data;
+    }catch{
+        return null;
+    }
+}
+
+export async function  createMailboxEmailsApi(body){
+    let r= await fetch(`${API_ADDRESS}/admin/superuser/clients/mailboxes/emails/create`,{
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(body)
+    
+    })
+    if (!r.ok){
+        return null;
+    }
+    try{
+        let data=   await r.json()
+        return data;
+    }catch{
+        return null;
+    }
+}
+
+
+export async function getMailboxEmailsApi(uid){
+    let r= await fetch(`${API_ADDRESS}/admin/superuser/clients/mailboxes/emails/get`,{
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({client_uid:uid})
+    })
+    if (!r.ok){
+        return [];
+    }
+    try{
+        let data=   await r.json()
+        return data;
+    }catch{
+        return [];
+    }
+}
+
+export async function getMailboxDomainsApi(uid){
+    let r= await fetch(`${API_ADDRESS}/admin/superuser/clients/mailboxes/domains/get`,{
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({client_uid:uid})
+    })
+    if (!r.ok){
+        return [];
+    }
+    try{
+        let data=   await r.json()
+        return data;
+    }catch{
+        return [];
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
