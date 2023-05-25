@@ -2207,3 +2207,66 @@ def getClientMailboxDomains():
                 
                 }
     return makeReturnResponse(__responseObject), 200
+
+
+@server.route("/admin/superuser/clients/mailboxes/emails/delete", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def deleteClientMailBoxEmails():
+    data = jsonify(request.json)
+    jsonData = data.json
+    if "client_uid" not in jsonData and "client_mailbox_emails_id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid or client_mailbox_emails_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+    DELETE FROM admin_clients_mails_emails WHERE id=%s and client_uid =%s;
+    """,[jsonData["client_mailbox_emails_id"],jsonData["client_uid"]])
+
+    conn.commit()
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+                'status': 'success',
+                'message': 'OK',
+                "data":{}
+                
+                }
+    return makeReturnResponse(__responseObject), 200
+
+@server.route("/admin/superuser/clients/mailboxes/domains/delete", methods=["POST"])
+@adminLoginCheck
+@superUserCheck
+def deleteClientMailBoxDomains():
+    data = jsonify(request.json)
+    jsonData = data.json
+    if "client_uid" not in jsonData and "client_mailbox_domains_id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing or invalid client_uid or client_mailbox_domains_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+    DELETE FROM admin_clients_mails_domains WHERE id=%s and client_uid =%s;
+    """,[jsonData["client_mailbox_domains_id"],jsonData["client_uid"]])
+
+    conn.commit()
+    cursor.close()
+    db.releaseConnection(conn)
+    __responseObject = {
+                'status': 'success',
+                'message': 'OK',
+                "data":{}
+                
+                }
+    return makeReturnResponse(__responseObject), 200

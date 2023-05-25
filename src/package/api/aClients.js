@@ -108,6 +108,52 @@ export async function  deleteClient(body){
         return r;
     }
 }
+
+export async function  deleteClientMailboxEmails(body){
+    let r= await fetch(`${API_ADDRESS}/admin/superuser/clients/mailboxes/emails/delete`,{
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(body)
+    
+    })
+    if (!r.ok){
+        return r;
+    }
+    try{
+        let data=   await r.json()
+        return data;
+    }catch{
+        return r;
+    }
+}
+
+
+export async function  deleteClientMailboxDomains(body){
+    let r= await fetch(`${API_ADDRESS}/admin/superuser/clients/mailboxes/domains/delete`,{
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(body)
+    
+    })
+    if (!r.ok){
+        return r;
+    }
+    try{
+        let data=   await r.json()
+        return data;
+    }catch{
+        return r;
+    }
+}
+
 export async function getClients(){
     let r= await fetch(`${API_ADDRESS}/admin/superuser/clients`,{
         credentials: 'include',

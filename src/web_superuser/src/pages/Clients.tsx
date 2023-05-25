@@ -26,6 +26,7 @@ import {
   createMailboxEmailsApi,
   getMailboxEmailsApi,
   getMailboxDomainsApi,
+  deleteClientMailboxEmails,
 } from "../../../package/api/aClients";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -1371,19 +1372,7 @@ export function EditClient() {
                     <Table.Cell>{item.updated_by}</Table.Cell>
 
                     <Table.Cell>
-                      {/* <Button
-                        gradientMonochrome="info"
-                        pill={true}
-                        outline={true}
-                        onClick={() => {
-                          navigator("/management/clients/" + item.uid);
-                        }}
-                      >
-                        <HiOutlinePencil color="info" />
-                        Edit
-                      </Button>
-                      <DeleteClientComponent client={item} /> */}
-
+                    <DeleteClientMailboxEmails client_email={item.domain} client_uid={uid} client_mailbox_domains_id={item.id} />
                     </Table.Cell>
                   </Table.Row>
                 );
@@ -1430,18 +1419,8 @@ export function EditClient() {
                     <Table.Cell>{item.updated_by}</Table.Cell>
 
                     <Table.Cell>
-                      {/* <Button
-                        gradientMonochrome="info"
-                        pill={true}
-                        outline={true}
-                        onClick={() => {
-                          navigator("/management/clients/" + item.uid);
-                        }}
-                      >
-                        <HiOutlinePencil color="info" />
-                        Edit
-                      </Button>
-                      <DeleteClientComponent client={item} /> */}
+                    <DeleteClientMailboxEmails client_email={item.email} client_uid={uid} client_mailbox_emails_id={item.id} />
+
 
                     </Table.Cell>
                   </Table.Row>
@@ -1876,6 +1855,153 @@ export function CreateMailboxEmails() {
           </Card>
         </section>
       </div>
+    </>
+  );
+}
+
+function DeleteClientMailboxEmails(props) {
+  const [isOpenModal, setisOpenModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const navigate = useNavigate();
+
+  async function doDelete() {
+    setIsDeleting(true);
+
+    let r = await deleteClientMailboxEmails({ client_uid: props?.client_uid,client_mailbox_emails_id: String(props?.client_mailbox_emails_id) });
+    setIsDeleting(false);
+    if (r) {
+      navigate(0);
+      return;
+    }
+  }
+
+  function cancel() {
+    setisOpenModal(false);
+  }
+
+  return (
+    <>
+      <Fragment>
+        <Button
+          pill={true}
+          gradientMonochrome="failure"
+          outline={true}
+          onClick={() => {
+            setisOpenModal(true);
+          }}
+        >
+          <HiOutlineTrash /> Delete
+        </Button>
+        <Modal show={isOpenModal} size="md" popup={true} onClose={cancel}>
+          <Modal.Header />
+          <Modal.Body>
+            <div className="text-center">
+              {isDeleting ? (
+                <Spinner className="mx-auto mb-4 h-14 w-14" />
+              ) : (
+                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+              )}
+
+              <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                Are you sure you want to delete{" "}
+                <strong>{props?.client_email}</strong>?
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button
+                  gradientMonochrome="failure"
+                  pill={true}
+                  outline={true}
+                  onClick={doDelete}
+                >
+                  Yes, I'm sure
+                </Button>
+                <Button
+                  gradientMonochrome="info"
+                  pill={true}
+                  outline={true}
+                  onClick={cancel}
+                >
+                  No, cancel
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      </Fragment>
+    </>
+  );
+}
+
+
+function DeleteClientMailboxDomains(props) {
+  const [isOpenModal, setisOpenModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const navigate = useNavigate();
+
+  async function doDelete() {
+    setIsDeleting(true);
+
+    let r = await deleteClientMailboxEmails({ client_uid: props?.client_uid,client_mailbox_domains_id: String(props?.client_mailbox_domains_id) });
+    setIsDeleting(false);
+    if (r) {
+      navigate(0);
+      return;
+    }
+  }
+
+  function cancel() {
+    setisOpenModal(false);
+  }
+
+  return (
+    <>
+      <Fragment>
+        <Button
+          pill={true}
+          gradientMonochrome="failure"
+          outline={true}
+          onClick={() => {
+            setisOpenModal(true);
+          }}
+        >
+          <HiOutlineTrash /> Delete
+        </Button>
+        <Modal show={isOpenModal} size="md" popup={true} onClose={cancel}>
+          <Modal.Header />
+          <Modal.Body>
+            <div className="text-center">
+              {isDeleting ? (
+                <Spinner className="mx-auto mb-4 h-14 w-14" />
+              ) : (
+                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+              )}
+
+              <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                Are you sure you want to delete{" "}
+                <strong>{props?.client_email}</strong>?
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button
+                  gradientMonochrome="failure"
+                  pill={true}
+                  outline={true}
+                  onClick={doDelete}
+                >
+                  Yes, I'm sure
+                </Button>
+                <Button
+                  gradientMonochrome="info"
+                  pill={true}
+                  outline={true}
+                  onClick={cancel}
+                >
+                  No, cancel
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      </Fragment>
     </>
   );
 }
