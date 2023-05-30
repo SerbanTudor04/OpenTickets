@@ -230,7 +230,7 @@ class MailerProcessor:
 
         try:
             cursor.execute("""
-            insert into tickets.tickets (id,code, subject, description, department_id, content, created_at, status,created_by)
+            insert into tickets (id,code, subject, description, department_id, content, created_at, status,created_by)
             values (%s,%s,%s,%s,%s,%s,%s,'OPEN',%s);
                         """, (ticketID, ticketCode, ticketSubject, ticketDescription, None, ticketContent, ticketDateTime,None))
 
