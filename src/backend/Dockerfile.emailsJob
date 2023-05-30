@@ -1,0 +1,12 @@
+FROM python:latest
+
+COPY emails / 
+COPY db.py /
+COPY env.py /
+COPY emailsJob.py /
+COPY structures.py /
+COPY requiements.txt /
+COPY env_docker.json /env.json
+RUN pip3 install -r requiements.txt
+
+CMD ["python","emailsJob.py"]

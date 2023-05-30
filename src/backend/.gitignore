@@ -2,5 +2,6 @@
 *venv*
 
 env.json
+env_docker.json
 env.bak.json
 build
