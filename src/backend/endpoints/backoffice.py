@@ -1904,7 +1904,7 @@ def editClient():
     else:
         fields=["email","phone","address","city","country_id","zipcode","region","full_name","registration_code","code"]
         message='Missing "name" or"email" or"phone" or"address" or"city" or"country_id" or"zipcode" or"region" or"first_name" or"last_name" or"middle_name"'
-    # TODO finish this function
+    
 
     if not validateRequestsFields(jsonData,fields):
         __responseObject = {
