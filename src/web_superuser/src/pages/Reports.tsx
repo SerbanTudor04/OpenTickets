@@ -46,7 +46,9 @@ export default function ReportsTree() {
         <Card className="w-1/2">
             <h1 className="text-2xl font-bold text-left">Reports</h1>
             <hr />
+          <div className="container mx-auto">
           <ReportsTreeView data={data} />
+          </div>
         </Card>
       </section>
     </>
@@ -63,20 +65,29 @@ function ReportsTreeView(props: any) {
           // deepcode ignore ReactMissingArrayKeys: <please specify a reason of ignoring this>
           <li key={String(item.name).replace(" ", "_") + index}>
             {item.childrens !== null ? (
-              <details>
-                <summary className="cursor-pointer decoration-sky-600 text-blue-800 hover:underline">{item.name}</summary>
+              <details className=" [&_svg]:open:-rotate-180">
+                <summary className="flex cursor-pointer  list-none items-center">
+                <div>
+                <svg className="rotate-0 transform text-blue-700 transition-all duration-300" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+                    <div className="decoration-sky-600 text-blue-800 hover:underline">
+                    {index+1}.{item.name}
+                    </div>
+                </summary>
                 <div className="pl-3">
                   <ReportsTreeView data={item.childrens} />
                 </div>
               </details>
             ) : (
-              <a className="cursor-pointer  decoration-sky-600 text-blue-500 hover:underline"
+              <a className="cursor-pointer pl-5 decoration-sky-600 text-blue-500 hover:underline"
                 onClick={() => {
                   if (item.page_id !== null)
                     navigator(`/admin/reports/page/${item.page_id}`);
                 }}
               >
-                {item.name}
+                {index+1}. {item.name}
               </a>
             )}
           </li>
