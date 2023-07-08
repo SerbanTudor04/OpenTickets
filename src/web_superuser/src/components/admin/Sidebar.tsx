@@ -1,5 +1,5 @@
 import { Sidebar } from "flowbite-react";
-import { HiUser,HiInbox,HiOfficeBuilding, HiMenu,  } from "react-icons/hi";
+import { HiUser,HiInbox,HiOfficeBuilding, HiMenu, HiOutlinePresentationChartBar,  } from "react-icons/hi";
 import { HiTableCells,  } from "react-icons/hi2";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { BiDoughnutChart,BiExtension } from "react-icons/bi";
@@ -56,6 +56,13 @@ export default  function ASideBar(props){
           icon={BsFillPeopleFill}
         >
           Clients
+          </Sidebar.Item>
+          <Sidebar.Item
+          onClick={()=>{navigate("/management/reports")}}
+           
+          icon={HiOutlinePresentationChartBar}
+        >
+          Reports
           </Sidebar.Item>
       </Sidebar.ItemGroup>
       

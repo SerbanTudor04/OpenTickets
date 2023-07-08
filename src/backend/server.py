@@ -34,6 +34,7 @@ if __name__ == '__main__':
     import endpoints.backoffice
     import endpoints.tickets
     import endpoints.frontoffice
+    import endpoints.reports
 
     if server.config.get('DEBUG_ENDPOINTS'):
         import endpoints.test

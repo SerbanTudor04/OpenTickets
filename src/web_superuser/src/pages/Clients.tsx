@@ -43,6 +43,7 @@ import {
 } from "react-icons/hi";
 
 import { IoAlbums } from "react-icons/io5";
+import { toast } from "react-toastify";
 
 export default function ClientsPage() {
   const [clients, setClients] = useState([]);
@@ -201,6 +202,7 @@ export function CreateClient() {
 
     setIsLoading(false);
     if (r.status === "success") {
+      toast("Client created successfully");
       navigator(-1);
       return;
     }
@@ -762,13 +764,14 @@ export function EditClient() {
     let l_client = { ...client };
     l_client.client_uid = uid;
 
-    console.debug("client", l_client);
+    // console.debug("client", l_client);
 
     let r = await editClient(l_client);
-    console.log(r);
+    // console.log(r);
     //
     setIsLoading(false);
     if (r.status === "success") {
+      toast("Client updated successfully");
       navigator(-1);
       return;
     }
@@ -1372,7 +1375,7 @@ export function EditClient() {
                     <Table.Cell>{item.updated_by}</Table.Cell>
 
                     <Table.Cell>
-                    <DeleteClientMailboxEmails client_email={item.domain} client_uid={uid} client_mailbox_domains_id={item.id} />
+                    <DeleteClientMailboxDomains client_email={item.domain} client_uid={uid} client_mailbox_domains_id={item.id} />
                     </Table.Cell>
                   </Table.Row>
                 );
@@ -1547,6 +1550,7 @@ export function CreateNote() {
     let r = await createNote(note);
     setIsLoading(false);
     if (r !== null) {
+      toast("Note created with success.")
       navigate(-1);
     }
   }
@@ -1627,6 +1631,7 @@ function DeleteClientComponent(props) {
     let r = await deleteClient({ client_uid: props?.client?.uid });
     setIsDeleting(false);
     if (r) {
+      toast("Client deleted successfully");
       navigate(0);
       return;
     }
@@ -1705,6 +1710,7 @@ export function CreateMailboxDomains() {
     let r = await createMailboxDomainApi(data);
     setIsLoading(false);
     if (r !== null) {
+      toast("Mailbox domain created with success.")
       navigate(-1);
     }
   }
@@ -1785,11 +1791,12 @@ export function CreateMailboxEmails() {
 
   async function submit() {
     setIsLoading(true);
-    console.debug(data);
+    // console.debug(data);
 
     let r = await createMailboxEmailsApi(data);
     setIsLoading(false);
     if (r !== null) {
+      toast("Mailbox email created with success.")
       navigate(-1);
     }
   }
@@ -1870,6 +1877,7 @@ function DeleteClientMailboxEmails(props) {
     let r = await deleteClientMailboxEmails({ client_uid: props?.client_uid,client_mailbox_emails_id: String(props?.client_mailbox_emails_id) });
     setIsDeleting(false);
     if (r) {
+      toast("Mailbox email deleted with success.")
       navigate(0);
       return;
     }
@@ -1944,6 +1952,7 @@ function DeleteClientMailboxDomains(props) {
     let r = await deleteClientMailboxEmails({ client_uid: props?.client_uid,client_mailbox_domains_id: String(props?.client_mailbox_domains_id) });
     setIsDeleting(false);
     if (r) {
+      toast("Mailbox domain deleted with success.")
       navigate(0);
       return;
     }

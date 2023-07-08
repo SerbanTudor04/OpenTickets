@@ -5,6 +5,7 @@ import { getAppConfig, updateAppConfig } from "../../../package/api/aAppData";
 import { isSuperUser } from "../../../package/api/auth";
 import React from "react";
 import { HiPencil } from "react-icons/hi";
+import { toast } from "react-toastify";
 
 
 export default function AMgmConfig(props){
@@ -94,6 +95,7 @@ function UpdateConfig(props){
       console.debug(r)
       setIsUpdating(false);
       if(r){
+        toast(`Config ${item.name} updated successfuly.`)
         navigate(0)
         return
       }
