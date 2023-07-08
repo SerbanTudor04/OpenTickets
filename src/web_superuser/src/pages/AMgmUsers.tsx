@@ -30,6 +30,7 @@ import {
 } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import React from "react";
+import { toast } from "react-toastify";
 export default function AMgmUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -174,7 +175,7 @@ export function EditUser() {
       let u = await getUser(id);
       setCurrentData(u);
       let r = await getDepartments();
-      console.log(r);
+      // console.log(r);
       setDepartemnts(r);
       setIsSavingUser(false);
     }
@@ -189,6 +190,7 @@ export function EditUser() {
 
   function endCreateOrUpdate(r) {
     if (!r) {
+      toast("An unexpected error occured.")
       setIsSavingUser(false);
       return;
     }
@@ -201,7 +203,7 @@ export function EditUser() {
       is_su: false,
       username: null,
     });
-
+    toast("User updated successfully.");
     navigate(0);
   }
 
@@ -395,6 +397,7 @@ export function CreateUser(props) {
   }
   function endCreateOrUpdate(r) {
     if (!r) {
+      toast("An unexpected error occured.")
       setIsSavingUser(false);
       return;
     }
@@ -408,7 +411,7 @@ export function CreateUser(props) {
       is_su: false,
       username: null,
     });
-
+    toast("User created successfully.")
     navigate(0);
   }
 
@@ -566,6 +569,7 @@ function DeleteUser(props) {
     let r = await deleteUser(props?.user?.id);
     setIsDeleting(false);
     if (r) {
+      toast("User deleted successfully")
       navigate(0);
       return;
     }
