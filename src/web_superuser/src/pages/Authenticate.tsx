@@ -4,6 +4,7 @@ import { doLogin } from "../../../package/api/auth";
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import React from "react";
+import { toast } from "react-toastify";
 
 export default function Authenticate() {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,15 +12,30 @@ export default function Authenticate() {
   const [password,setPassword] = useState("");
   const navigator = useNavigate()
 
-  async function callLogin(event){
+  
+  async function callLogin(event:any){
     event.preventDefault();      
     setIsLoading(true)
-    console.log(event.target.value);
-    let token  = await doLogin(email,password);
+    // console.log(event.target.value);
+    
+    
+    let r=await doLogin(email,password);
+
+    if(r.status==403){
+      setIsLoading(false)
+      toast("Wrong email or password")
+      return 
+    }
+    let data = await r.json()
+    let token  = data.auth_token
+
+    console.debug(token)
 
     console.debug("current token",token)
     Cookies.remove("__open-tickets-sessiontoken")
     Cookies.set("__open-tickets-sessiontoken",String(token))
+    
+    
     setIsLoading(false)
 
 
