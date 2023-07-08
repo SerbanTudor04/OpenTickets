@@ -27,6 +27,7 @@ import {
   HiPencil,
 } from "react-icons/hi";
 import React from "react";
+import { toast } from "react-toastify";
 
 export default function ADepartment() {
   const [dept, setDept] = useState([]);
@@ -36,7 +37,6 @@ export default function ADepartment() {
     async function callMeBaby() {
       let r = await getDepartments();
       setDept(r);
-
       setLoading(false);
     }
     callMeBaby();
@@ -168,6 +168,7 @@ export function EditDepartment() {
   }
   function endCreateOrUpdate(r) {
     if (!r) {
+      toast("An error occured while editing the department.")
       setIsSaving(false);
       return;
     }
@@ -177,7 +178,7 @@ export function EditDepartment() {
       name: null,
       description: null,
     });
-
+    toast("Updated Successfully")
     navigate(-1);
   }
 
@@ -298,6 +299,7 @@ export function CreateDepartment() {
   }
   function endCreateOrUpdate(r) {
     if (!r) {
+      toast("An error occured while creating the department.")
       setIsSaving(false);
       return;
     }
@@ -308,7 +310,7 @@ export function CreateDepartment() {
       name: null,
       description: null,
     });
-
+    toast("Created Successfully.")
     navigate(-1);
   }
 
@@ -405,6 +407,7 @@ function DeleteDept(props) {
     let r = await deleteDepartment(props?.dept?.id);
     setIsDeleting(false);
     if (r) {
+      toast("Deleted Successfully.");
       navigate(0);
       return;
     }
