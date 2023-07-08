@@ -33,12 +33,13 @@ export async function doLogin(email,password){
         body: JSON.stringify(body)
     
     })
-    if(!r.ok){
-        console.log(r);
-        return ""
-    }
-    let data = await r.json()
-    return data.auth_token;
+    // if(!r.ok){
+    //     console.log(r);
+    //     return ""
+    // }
+    // let data = await r.json()
+    // return data.auth_token;
+    return r
 }
 
 
