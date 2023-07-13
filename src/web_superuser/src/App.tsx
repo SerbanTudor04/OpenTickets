@@ -12,7 +12,7 @@ import AMgmConfig from "./pages/AMgmConfig";
 import AMgmTemplates, { BlocksCreate, EditBlocks, EditTemplate, TemplatesCreate } from "./pages/AMgmTemplates";
 import React from "react";
 import ClientsPage, { CreateClient, CreateMailboxDomains as CreateMailboxDomains, CreateMailboxEmails, CreateNote, EditClient } from "./pages/Clients";
-import ReportsTree from "./pages/Reports";
+import ReportsTree, { ReportsPageView } from "./pages/Reports";
 
 function App() {
   return (
@@ -186,6 +186,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ReportsTree />
+              </ProtectedRoute>
+            }
+          />
+        <Route
+            path="/management/reports/page/:id"
+            element={
+              <ProtectedRoute>
+                <ReportsPageView />
               </ProtectedRoute>
             }
           />

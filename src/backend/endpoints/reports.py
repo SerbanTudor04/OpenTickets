@@ -48,3 +48,142 @@ def getReportsTree():
     # print(data)
     db.releaseConnection(conn)
     return makeReturnResponse({"status": "success", "message": "Ok", "data":data}), 200
+
+@server.route("/admin/reports/getPageDetails", methods=['POST'])
+@adminLoginCheck
+@superUserCheck
+def getPageDetails():
+
+    data = jsonify(request.json)
+
+    jsonData = data.json
+
+    if "page_id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing page_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+        SELECT id, "name", title, description FROM reports_pages where id=%s;
+    """,[jsonData["page_id"]])
+
+    q= cursor.fetchone()
+
+    if q is None:
+        cursor.close()
+        db.releaseConnection(conn)
+
+        return makeReturnResponse({"status": "invalid", "message": "Page not found"}), 400
+
+    data={
+        "id":q[0],
+        "name":q[1],
+        "title":q[2],
+        "description":q[3]
+    }
+    cursor.close()
+
+    db.releaseConnection(conn)
+    return makeReturnResponse({"status": "success", "message": "Ok", "data":data}), 200
+
+
+@server.route("/admin/reports/getPageComponents", methods=['POST'])
+@adminLoginCheck
+@superUserCheck
+def getPageComponents():
+
+    data = jsonify(request.json)
+
+    jsonData = data.json
+
+    if "page_id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing page_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+       SELECT id, "name", "type", html_code, sql_code, master_id, page_id, title FROM reports_pages_components where page_id=%s;
+
+    """,[jsonData["page_id"]])
+
+    q= cursor.fetchall()
+
+    if q is None:
+        cursor.close()
+        db.releaseConnection(conn) 
+        return makeReturnResponse({"status": "invalid", "message": "Page doesn't have components"}), 400
+
+    data=[]
+    columns = [desc[0] for desc in cursor.description]
+    
+    for i in q:
+        l_row={}
+        for column in columns:
+            l_row[column]=i[columns.index(column)]
+        data.append(l_row)
+
+    cursor.close()
+    db.releaseConnection(conn)
+    return makeReturnResponse({"status": "success", "message": "Ok", "data":data}), 200
+
+
+@server.route("/admin/reports/getPageComponentData", methods=['POST'])
+@adminLoginCheck
+@superUserCheck
+def getPageComponentData():
+
+    data = jsonify(request.json)
+
+    jsonData = data.json
+
+    if "component_id" not in jsonData:
+        __responseObject = {
+            'status': 'invalid',
+            'message': 'Missing component_id',
+        }
+        return makeReturnResponse(__responseObject), 400
+
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(DB_QUERY_STRING)
+
+    cursor.execute("""
+        SELECT  sql_code FROM reports_pages_components where id=%s;
+    """,[jsonData["component_id"]])
+
+    q= cursor.fetchone()
+
+    if q is None:
+        cursor.close()
+        db.releaseConnection(conn) 
+        return makeReturnResponse({"status": "invalid", "message": "Page doesn't have components"}), 400
+
+    SQL_CODE=str(q[0])
+    data=[]
+    if len(SQL_CODE) >0:
+        # deepcode ignore Sqli: it's internal sql code, witch is written by a dev
+        cursor.execute(SQL_CODE)
+
+        columns = [desc[0] for desc in cursor.description]
+
+        for i in cursor.fetchall():
+            l_row={}
+            for column in columns:
+                l_row[column]=i[columns.index(column)]
+            data.append(l_row)
+
+    cursor.close()
+    db.releaseConnection(conn)
+    return makeReturnResponse({"status": "success", "message": "Ok", "data":data}), 200
