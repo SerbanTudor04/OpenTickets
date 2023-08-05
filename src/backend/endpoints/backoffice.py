@@ -308,8 +308,9 @@ def login_user():
         'message': 'Successfully logged in.',
         'auth_token': userToken
     }
-
-    return makeReturnResponse(responseObject), 200
+    resp=makeReturnResponse(responseObject)
+    resp.set_cookie('__open-tickets-sessiontoken', userToken)
+    return  resp, 200
 
 
 @server.route("/admin/create_department", methods=["POST"])
