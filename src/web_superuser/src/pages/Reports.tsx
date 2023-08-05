@@ -1,9 +1,10 @@
-import { Card, Spinner } from "flowbite-react";
+import { Button, Card, Spinner, Tooltip } from "flowbite-react";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { fetchAPIData } from "../../../package/api/utilities";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { HiOutlineArrowLeft } from "react-icons/hi";
 interface ReportsTreeViewProps {
   id: number;
   name: string;
@@ -99,7 +100,7 @@ function ReportsTreeView(props: any) {
                     navigator(`/management/reports/page/${item.page_id}`);
                 }}
               >
-                {index + 1}. {item.name}
+                {index + 1}. {item.name} 
               </a>
             )}
           </li>
@@ -116,7 +117,7 @@ export function ReportsPageView() {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [pageDetails, setPageDetails] = useState<any>(null);
 
- 
+ const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -153,11 +154,30 @@ export function ReportsPageView() {
   return (
     <>
       <section className="flex flex-col  justify-center items-center mx-auto">
+        
         <div id="page_details" className="item-left relative w-3/4">
+        <div className="flex">
+          <div>
+            <Tooltip content="Go back" placement="right">
+                  <Button
+                    color="light"
+                    pill={true}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                    outline={false}
+                  >
+                    <HiOutlineArrowLeft className="h-6 w-6" />
+                  </Button>
+                </Tooltip>
+          </div>
+          <div>
           <h1 className="text-2xl font-bold text-left">{pageDetails?.title}</h1>
           <small className="text-gray-500 text-left">
             {pageDetails?.description}
           </small>
+          </div>
+        </div>
         </div>
 
         <ReportsPageViewComponents id={id}/>
@@ -232,7 +252,8 @@ function ReportsPageViewComponent(props){
 
       let data = await r.json();
       setComponentData(data.data);
-
+      console.log(data.data);
+      
       setIsLoading(false);
     }
     fetchData();
