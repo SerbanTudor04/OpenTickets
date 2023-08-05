@@ -1,5 +1,5 @@
-import { Button, Card, Spinner, Tooltip } from "flowbite-react";
-import React, { useEffect } from "react";
+import { Button, Card, Spinner, Table, Tooltip } from "flowbite-react";
+import React, { Fragment, useEffect } from "react";
 import { useState } from "react";
 import { fetchAPIData } from "../../../package/api/utilities";
 import { useNavigate, useParams } from "react-router-dom";
@@ -100,7 +100,7 @@ function ReportsTreeView(props: any) {
                     navigator(`/management/reports/page/${item.page_id}`);
                 }}
               >
-                {index + 1}. {item.name} 
+                {index + 1}. {item.name}
               </a>
             )}
           </li>
@@ -117,7 +117,7 @@ export function ReportsPageView() {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [pageDetails, setPageDetails] = useState<any>(null);
 
- const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -154,42 +154,42 @@ export function ReportsPageView() {
   return (
     <>
       <section className="flex flex-col  justify-center items-center mx-auto">
-        
         <div id="page_details" className="item-left relative w-3/4">
-        <div className="flex">
-          <div>
-            <Tooltip content="Go back" placement="right">
-                  <Button
-                    color="light"
-                    pill={true}
-                    onClick={() => {
-                      navigate(-1);
-                    }}
-                    outline={false}
-                  >
-                    <HiOutlineArrowLeft className="h-6 w-6" />
-                  </Button>
-                </Tooltip>
+          <div className="flex">
+            <div>
+              <Tooltip content="Go back" placement="right">
+                <Button
+                  color="light"
+                  pill={true}
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                  outline={false}
+                >
+                  <HiOutlineArrowLeft className="h-6 w-6" />
+                </Button>
+              </Tooltip>
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-left">
+                {pageDetails?.title}
+              </h1>
+              <small className="text-gray-500 text-left">
+                {pageDetails?.description}
+              </small>
+            </div>
           </div>
-          <div>
-          <h1 className="text-2xl font-bold text-left">{pageDetails?.title}</h1>
-          <small className="text-gray-500 text-left">
-            {pageDetails?.description}
-          </small>
-          </div>
-        </div>
         </div>
 
-        <ReportsPageViewComponents id={id}/>
+        <ReportsPageViewComponents id={id} />
       </section>
     </>
   );
 }
 
-
-function ReportsPageViewComponents(props){
-  const {id} = props 
-  const [pageComponents, setPageComponents] = useState<any[]>([])
+function ReportsPageViewComponents(props) {
+  const { id } = props;
+  const [pageComponents, setPageComponents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   useEffect(() => {
@@ -224,27 +224,44 @@ function ReportsPageViewComponents(props){
     );
   }
 
-  return (<>
-    {pageComponents.map((item, index) => (
-      <ReportsPageViewComponent item={item} key={item.name+index}/>
-    ))}
-  </>)
+  return (
+    <>
+      {pageComponents.map((item, index) => (
+        <ReportsPageViewComponent item={item} key={item.name + index} />
+      ))}
+    </>
+  );
 }
 
+interface ReportComponentDataQuery {
+  columns: String[];
+  data: any[];
+}
+interface ReportComponentData {
+  html: String | null;
+  query: ReportComponentDataQuery | null;
+}
 
-function ReportsPageViewComponent(props){
-  const {item} = props 
-  const [componentData, setComponentData] = useState<any[]>([])
+function ReportsPageViewComponent(props) {
+  const { item } = props;
+  const [componentData, setComponentData] =
+    useState<ReportComponentData | null>(null);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      let r = await fetchAPIData("/admin/reports/getPageComponentData", "POST", {
-        component_id: item.id,
-      });
+      let r = await fetchAPIData(
+        "/admin/reports/getPageComponentData",
+        "POST",
+        {
+          component_id: item.id,
+        }
+      );
 
       if (r.status >= 400) {
-        toast(`An unexpected error occured while fetching the component ${item.name} data`);
+        toast(
+          `An unexpected error occured while fetching the component ${item.name} data`
+        );
         setIsLoading(false);
 
         return;
@@ -253,12 +270,11 @@ function ReportsPageViewComponent(props){
       let data = await r.json();
       setComponentData(data.data);
       console.log(data.data);
-      
+
       setIsLoading(false);
     }
     fetchData();
   }, []);
-
 
   if (isLoading === true) {
     return (
@@ -271,7 +287,49 @@ function ReportsPageViewComponent(props){
       </>
     );
   }
+  if (componentData?.html !== null)
+    return (
+      <>
+        <section className="w-3/4">
+          <section className="relative w-full mt-3">
+            {componentData?.query !== null ? (
+              <ReportsPageViewComponentQueryDataTable
+                componentData={componentData}
+              />
+            ) : null}
+          </section>
+        </section>
+      </>
+    );
+}
 
-  return (<>
-  </>)
+function ReportsPageViewComponentQueryDataTable({ componentData }) {
+  console.log(componentData);
+
+  return (
+    <Table className="">
+      
+      <Table.Head>
+        {componentData?.query?.columns.map((item) => (
+          <Table.HeadCell key={item}>
+            {String(item).replace("_", " ")}
+          </Table.HeadCell>
+        ))}
+      </Table.Head>
+      <Table.Body className="divide-y">
+        {componentData?.query?.data.map((item:any,index:any) => (
+          <Table.Row key={`tabrow${index}`} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+
+           {item.map((item2:any,index2:any) => (
+                <Table.Cell  className="bg-white dark:border-gray-700 dark:bg-gray-800" key={`tabrowcel${index}${index2}${index+index2}`}>
+                  {item2}
+              </Table.Cell>
+           ))}
+            
+
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  );
 }

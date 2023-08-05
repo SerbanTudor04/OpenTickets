@@ -144,9 +144,9 @@ def getPageComponents():
 @superUserCheck
 def getPageComponentData():
 
-    data = jsonify(request.json)
+    q_data = jsonify(request.json)
 
-    jsonData = data.json
+    jsonData = q_data.json
 
     if "component_id" not in jsonData:
         __responseObject = {
@@ -160,7 +160,7 @@ def getPageComponentData():
     cursor.execute(DB_QUERY_STRING)
 
     cursor.execute("""
-        SELECT  sql_code FROM reports_pages_components where id=%s;
+        SELECT html_code, sql_code FROM reports_pages_components where id=%s;
     """,[jsonData["component_id"]])
 
     q= cursor.fetchone()
@@ -169,21 +169,34 @@ def getPageComponentData():
         cursor.close()
         db.releaseConnection(conn) 
         return makeReturnResponse({"status": "invalid", "message": "Page doesn't have components"}), 400
+   
+    HTML_CODE=q[0]
 
-    SQL_CODE=str(q[0])
-    data=[]
-    if len(SQL_CODE) >0:
+    if HTML_CODE is None or len(str(HTML_CODE))==0:
+        HTML_CODE=""
+
+
+    data={
+        "html":HTML_CODE,
+        "query":None
+    }
+
+    SQL_CODE=q[1]
+    q_data=[]
+    if SQL_CODE is not None and  len(SQL_CODE) >0:
         # deepcode ignore Sqli: it's internal sql code, witch is written by a dev
-        cursor.execute(SQL_CODE)
+        cursor.execute(str(SQL_CODE))
 
         columns = [desc[0] for desc in cursor.description]
 
-        for i in cursor.fetchall():
-            l_row={}
-            for column in columns:
-                l_row[column]=i[columns.index(column)]
-            data.append(l_row)
+        q_data=cursor.fetchall()
 
+        data["query"]={
+            "columns":columns,
+            "data":q_data
+            
+        }
+    # print(data)
     cursor.close()
     db.releaseConnection(conn)
     return makeReturnResponse({"status": "success", "message": "Ok", "data":data}), 200
